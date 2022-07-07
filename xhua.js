@@ -2,7 +2,7 @@
 // @name         图聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.91
+// @version      3.92
 // @description  目标是聚合网页美女图
 // @description:en  The goal is to aggregate web beauty images
 // @author       selang,LARA_SSR
@@ -683,14 +683,14 @@ let site = {
 };
 
 let mainArr = [
-    'https://cdn.jsdelivr.net/gh/CYqiang-sc/hello@master/main.js',
-    'https://cdn.staticaly.com/gh/CYqiang-sc/hello@master/main.js',
+    'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js',
+    'https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js',
     'https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681'
 ];
 
 let fancyboxyArr = [
-    'https://cdn.jsdelivr.net/gh/CYqiang-sc/hello@master/fancybox.js',
-    'https://cdn.staticaly.com/gh/CYqiang-sc/hello@master/fancybox.js',
+    'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js',
+    'https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js',
     'https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js'
 ];
 
@@ -3017,11 +3017,13 @@ function popUpMenu() {
             $('.wp-block-image').hide();
             $('.rebeccalite-post-author').hide();
             $('.wrapper').hide();
+            $('.entry-content').hide();
             //android
         }, function () {
             $('.wp-block-image').show();
             $('.rebeccalite-post-author').show();
             $('.wrapper').show();
+            $('.entry-content').show();
             //android
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
