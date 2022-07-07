@@ -1,9 +1,12 @@
 // ==UserScript==
 // @name         图聚合展示by xhua
+// @name:zh-CN   图聚合展示by xhua
+// @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
 // @version      3.92
 // @description  目标是聚合网页美女图
+// @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
 // @author       selang,LARA_SSR
 //
@@ -85,6 +88,7 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
+// https://tool.lu/markdown/
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
