@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         图聚合展示by xhua
+// @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
 // @version      3.91
 // @description  目标是聚合网页美女图
+// @description:en  The goal is to aggregate web beauty images
 // @author       selang,LARA_SSR
 //
 // @include      /https?\:\/\/(\w+\.)?hentai-cosplay\w+\.com/
