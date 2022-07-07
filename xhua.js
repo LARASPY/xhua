@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         图聚合展示by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.76
+// @version      3.91
 // @description  目标是聚合网页美女图
 // @author       selang,LARA_SSR
 //
@@ -11,7 +11,7 @@
 // @include      /https?\:\/\/www.wndfx\.com/
 // @include      /https?\:\/\/w+\.(?:les|ls)m(\w+)?.\w*/
 // @include      /https?\:\/\/\w+\.win4000\.com/
-// @include      /https?\:\/\/\w+\.192\w+.com/
+// @include      /https?\:\/\/(www|m).192t\w+\.\w+/
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
@@ -19,7 +19,7 @@
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
 // @include      /https?\:\/\/\w+\.95mm\.\w+/
 // @include      /https?\:\/\/\w+\.3gbizhi\.\w+\/\w/
-// @include      /https?\:\/\/\w+.\w+goddess\.\w+\/(?!people\/)/
+// @include      /https?\:\/\/tw.\w*goddess\w+\.\w+\/(?!people\/)/
 // @include      /https?\:\/\/(\w+\.)?meinv\.page/
 // @include      /https?\:\/\/asiansister\.com/
 // @include      /https?\:\/\/yskhd\.com/
@@ -40,7 +40,28 @@
 // @include      /https?\:\/\/jjgirls\.\w+/
 // @include      /https?\:\/\/(\w+\.)?photos18\.\w+/
 // @include      /https?\:\/\/(\w+\.)?pornpics\.\w+/
-// @include      /https?\:\/\/www\.(.*mnt|.*ywt|.*sft|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|.*meitu|.*youwu)\.com/
+// @include      /https?\:\/\/www\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/
+// @include      /https?\:\/\/xartmodel.net/
+// @include      /https?\:\/\/hotgirl.asia/
+// @include      /https?\:\/\/hotgirlchina.com/
+// @include      /https?\:\/\/blog.baobua.com/
+// @include      /https?\:\/\/buondua.com/
+// @include      /https?\:\/\/www.4kup.net/
+// @include      /https?\:\/\/goddess247.com/
+// @include      /https?\:\/\/www.ilovexs.com/
+// @include      /https?\:\/\/mitaku.net/
+// @include      /https?\:\/\/www.nlegs.com/
+// @include      /https?\:\/\/nudecosplaygirls.com/
+// @include      /https?\:\/\/nudebird.biz/
+// @include      /https?\:\/\/idol.gravureprincess.date/
+// @include      /https?\:\/\/asdasfd.net/
+// @include      /https?\:\/\/yellowfever18.com/
+// @include      /https?\:\/\/allasiangirls.net/
+// @include      /https?\:\/\/asdcosplay.com/
+// @include      /https?\:\/\/asianpink.net/
+// @include      /https?\:\/\/ryuryu.tw/
+// @include      /https?\:\/\/(www|m).xinwenba.net/
+// @include      /https?\:\/\/(www|m).meitu131.com/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -66,6 +87,8 @@
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
+
+let isDebugMain = false;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -145,11 +168,11 @@ let site = {
         id: 6,
         name: '192 美女图',
         hostnames: [
-            'www.192tt.com',
+            'www.192tt.top',
             'www.192tb.com',
             'www.192tp.com'
         ],
-        pattern: /https?\:\/\/\w+.192\w+.com/,
+        pattern: /https?\:\/\/(www|m).192t\w+\.\w+/,
         iStatus: false,
         _break: false
     },
@@ -227,9 +250,9 @@ let site = {
         id: 14,
         name: 'Goddess',
         hostnames: [
-            'tw.kissgoddess.com'
+            'tw.kissgoddesssite.com'
         ],
-        pattern: /https?\:\/\/\w+.\w+goddess\.\w+/,
+        pattern: /https?\:\/\/tw.\w*goddess\w+\.\w+/,
         iStatus: false,
         _break: false
     },
@@ -317,7 +340,8 @@ let site = {
         id: 21,
         name: '秀人集',
         hostnames: [
-            'www.xiurenb.net'
+            'www.xiurenb.net',
+            'www.xiurenb.com'
         ],
         pattern: /https?\:\/\/\w+\.(xiure)[A-Za-z]{2,}\.[A-Za-z]{2,}/,
         iStatus: false,
@@ -440,11 +464,233 @@ let site = {
         hostnames: [
             'www.mfsft.com'
         ],
-        pattern: /https?:\/\/(\w+\.)?(.*mnt|.*ywt|.*sft|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|.*meitu|.*youwu)\.com/,
+        pattern: /https?\:\/\/www\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/,
+        iStatus: false,
+        _break: false
+    },
+    xartmodel: {
+        id: 34,
+        name: 'XRTMODEL',
+        hostnames: [
+            'xartmodel.net'
+        ],
+        pattern: /https?\:\/\/xartmodel.net/,
+        iStatus: false,
+        _break: false
+    },
+    hotgirl: {
+        id: 35,
+        name: 'HOTGIRL.asia',
+        hostnames: [
+            'hotgirl.asia'
+        ],
+        pattern: /https?\:\/\/hotgirl.asia/,
+        iStatus: false,
+        _break: false
+    },
+    hotgirlchina: {
+        id: 36,
+        name: 'HOTGIRLchina',
+        hostnames: [
+            'hotgirlchina.com'
+        ],
+        pattern: /https?\:\/\/hotgirlchina.com/,
+        iStatus: false,
+        _break: false
+    },
+    baobua: {
+        id: 37,
+        name: 'BAOBUA.COM',
+        hostnames: [
+            'blog.baobua.com'
+        ],
+        pattern: /https?\:\/\/blog.baobua.com/,
+        iStatus: false,
+        _break: false
+    },
+    buondua: {
+        id: 38,
+        name: 'Buon Dua',
+        hostnames: [
+            'buondua.com'
+        ],
+        pattern: /https?\:\/\/buondua.com/,
+        iStatus: false,
+        _break: false
+    },
+    _4kup: {
+        id: 39,
+        name: '4KUP',
+        hostnames: [
+            'www.4kup.net'
+        ],
+        pattern: /https?\:\/\/www.4kup.net/,
+        iStatus: false,
+        _break: false
+    },
+    goddess247: {
+        id: 40,
+        name: 'Goddess247',
+        hostnames: [
+            'goddess247.com'
+        ],
+        pattern: /https?\:\/\/goddess247.com/,
+        iStatus: false,
+        _break: false
+    },
+    ilovexs: {
+        id: 41,
+        name: 'NongMo.Zone',
+        hostnames: [
+            'www.ilovexs.com'
+        ],
+        pattern: /https?\:\/\/www.ilovexs.com/,
+        iStatus: false,
+        _break: false
+    },
+    mitaku: {
+        id: 42,
+        name: 'Mitaku',
+        hostnames: [
+            'mitaku.net'
+        ],
+        pattern: /https?\:\/\/mitaku.net/,
+        iStatus: false,
+        _break: false
+    },
+    nlegs: {
+        id: 43,
+        name: 'Nlegs',
+        hostnames: [
+            'www.nlegs.com'
+        ],
+        pattern: /https?\:\/\/www.nlegs.com/,
+        iStatus: false,
+        _break: false
+    },
+    nudecosplaygirls: {
+        id: 44,
+        name: 'NUDECOSPLAY',
+        hostnames: [
+            'nudecosplaygirls.com'
+        ],
+        pattern: /https?\:\/\/nudecosplaygirls.com/,
+        iStatus: false,
+        _break: false
+    },
+    nudebird: {
+        id: 45,
+        name: 'NudeBird',
+        hostnames: [
+            'nudebird.biz'
+        ],
+        pattern: /https?\:\/\/nudebird.biz/,
+        iStatus: false,
+        _break: false
+    },
+    gravureprincess: {
+        id: 46,
+        name: 'Idol.gravureprincess',
+        hostnames: [
+            'idol.gravureprincess.date'
+        ],
+        pattern: /https?\:\/\/idol.gravureprincess.date/,
+        iStatus: false,
+        _break: false
+    },
+    asdasfd: {
+        id: 47,
+        name: 'ASD ASFD',
+        hostnames: [
+            'asdasfd.net'
+        ],
+        pattern: /https?\:\/\/asdasfd.net/,
+        iStatus: false,
+        _break: false
+    },
+    yellowfever18: {
+        id: 48,
+        name: 'Yellow Fever',
+        hostnames: [
+            'yellowfever18.com'
+        ],
+        pattern: /https?\:\/\/yellowfever18.com/,
+        iStatus: false,
+        _break: false
+    },
+    allasiangirls: {
+        id: 49,
+        name: 'Asian Girls',
+        hostnames: [
+            'allasiangirls.net'
+        ],
+        pattern: /https?\:\/\/allasiangirls.net/,
+        iStatus: false,
+        _break: false
+    },
+    asdcosplay: {
+        id: 50,
+        name: 'Make Girls',
+        hostnames: [
+            'asdcosplay.com'
+        ],
+        pattern: /https?\:\/\/asdcosplay.com/,
+        iStatus: false,
+        _break: false
+    },
+    asianpink: {
+        id: 51,
+        name: 'Asian Pink',
+        hostnames: [
+            'asianpink.net'
+        ],
+        pattern: /https?\:\/\/asianpink.net/,
+        iStatus: false,
+        _break: false
+    },
+    ryuryu: {
+        id: 52,
+        name: "Cypher's ghost",
+        hostnames: [
+            'ryuryu.tw'
+        ],
+        pattern: /https?\:\/\/ryuryu.tw/,
+        iStatus: false,
+        _break: false
+    },
+    xinwenba: {
+        id: 53,
+        name: "新闻吧",
+        hostnames: [
+            'www.xinwenba.net'
+        ],
+        pattern: /https?\:\/\/(www|m).xinwenba.net/,
+        iStatus: false,
+        _break: false
+    },
+    meitu131: {
+        id: 54,
+        name: "MEITU131",
+        hostnames: [
+            'www.meitu131.com'
+        ],
+        pattern: /https?\:\/\/(www|m).meitu131.com/,
         iStatus: false,
         _break: false
     }
 };
+
+let mainArr = [
+    'https://cdn.jsdelivr.net/gh/CYqiang-sc/hello@master/main.js',
+    'https://cdn.staticaly.com/gh/CYqiang-sc/hello@master/main.js',
+    'https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681'
+];
+
+let fancyboxyArr = [
+    'https://cdn.jsdelivr.net/gh/CYqiang-sc/hello@master/fancybox.js',
+    'https://cdn.staticaly.com/gh/CYqiang-sc/hello@master/fancybox.js',
+    'https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js'
+];
 
 let Alpha_Script = {
     obtainHtml: function (options) {
@@ -533,6 +779,96 @@ function addScript_(statement = null, src = null, isModule = false) {
         });
     }
     return null;
+}
+
+async function startMain_() {
+
+    function log() {
+        if (isDebugMain) {
+            console.log.apply(this, arguments);
+        }
+    };
+
+    function isEmpty(param) {
+        if (param) {
+            var param_type = typeof (param);
+            if (param_type == 'object') {
+                //要判断的是【对象】或【数组】或【null】等
+                if (typeof (param.length) == 'undefined') {
+                    if (JSON.stringify(param) == "{}") {
+                        return true; //空值，空对象
+                    }
+                } else if (param.length == 0) {
+                    return true; //空值，空数组
+                }
+            } else if (param_type == 'string') {
+                //如果要过滤空格等字符
+                var new_param = param.trim();
+                if (new_param.length == 0) {
+                    //空值，例如:带有空格的字符串" "。
+                    return true;
+                }
+            } else if (param_type == 'boolean') {
+                if (!param) {
+                    return true;
+                }
+            } else if (param_type == 'number') {
+                if (!param) {
+                    return true;
+                }
+            }
+            return false; //非空值
+        } else {
+            //空值,例如：
+            //(1)null
+            //(2)可能使用了js的内置的名称，例如：var name=[],这个打印类型是字符串类型。
+            //(3)空字符串''、""。
+            //(4)数字0、00等，如果可以只输入0，则需要另外判断。
+            return true;
+        }
+    }
+
+    function Get_(link) {
+        return new Promise(function (resolve) {
+            $.get(link, data => {
+                resolve(data);
+            });
+        });
+    }
+
+    function delayPromise(ms) {
+        return new Promise(function (resolve) {
+            setTimeout(resolve, ms);
+        });
+    }
+
+    function timeoutPromise(name, promise, ms = 1000) {
+        let timeout = delayPromise(ms).then(function () {
+            throw new Error(name + ': Operation timed out after ' + ms + ' ms');
+        });
+        return Promise.race([promise, timeout]);
+    }
+
+    let initialArrFunction = async function (arr) {
+        for (let index in arr) {
+            let data;
+            try {
+                data = await timeoutPromise(arr[index], Get_(arr[index]));
+                log(data);
+            } catch (error) {
+                debugger
+                log(error);
+                timeoutPromise(arr[index], addScript_(null, arr[index]));
+            }
+            if (!isEmpty(data)) {
+                addScript_(data);
+                break;
+            }
+        }
+    };
+
+    await initialArrFunction(mainArr);
+    await initialArrFunction(fancyboxyArr);
 }
 
 function startFancyBoxScript() {
@@ -633,28 +969,34 @@ function popUpMenu() {
     });
 }
 
-
 (async function () {
     'use strict';
     //清屏
     console.clear();
     // let fancyboxJs = "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.esm.js"
-    await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/main.js");
-    await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js");
-    if (Fancybox4) {
-        //打印开关
-        isDebug = false;
-        log("Fancybox4js isActive!\n");
-    };
+    if (isDebugMain) console.groupCollapsed('StartMain');
+    await startMain_();
+    if (isDebugMain) console.groupEnd('StartMain');
+    await new Promise(function (resolve) {
+        let id = setInterval(function () {
+            try {
+                //打印开关
+                isDebug = isDebugMain;
+                if (Fancybox4) {
+                    log("fancybox4js finished!\n");
+                    clearInterval(id);
+                    resolve();
+                };
+            } catch (error) {
+                log("fancybox4js isn't finished!");
+            }
+        }, 100);
+    });
 
     // debugger
-    if (isDebug) {
-        console.groupCollapsed('urlActivationGroup');
-    }
+    if (isDebug) console.groupCollapsed('urlActivationGroup');
     currentUrlActivation();
-    if (isDebug) {
-        console.groupEnd('urlActivationGroup');
-    }
+    if (isDebug) console.groupEnd('urlActivationGroup');
 
     priorityLog('未实现：');
 
@@ -710,7 +1052,9 @@ function popUpMenu() {
                 "font-weight": "600",
                 "border": "none",
                 "cursor": "pointer",
-                "border-radius": "3px"
+                "border-radius": "3px",
+                "margin-right": "unset",
+                "margin-bottom": "unset",
             });
         };
         let collectPicsTemplateFunc = function (parseImgsFunc, imgStyleFunc) {
@@ -1022,7 +1366,7 @@ function popUpMenu() {
                             if (collectPics) {
                                 collectPics();
                                 hotkeys();
-                                debugger
+                                // debugger
                                 startFancyBoxScript();
                             }
                         }
@@ -1038,745 +1382,6 @@ function popUpMenu() {
         }
     }
 
-    /* --------------------------------------------default-------------------------------------------- */
-    {
-        /* --------------------------------------------yhxz521.com------------------------------------------ */
-        if (false && 'yhxz521.com' === window.location.hostname) {
-            injectBtns().domain('yhxz521.com').removeAD(function () {
-                $('div.atc_new_head').remove(); //移除广告等无必要元素
-                $('div.keywords').remove(); //移除广告等无必要元素
-            }).switchAggregationBtn(function () {
-                $('div.main').hide();
-                $('div.photos').hide();
-                $('div#imgwrap').hide();
-            }, function () {
-                $('div.main').show();
-                $('div.photos').show();
-                $('div#imgwrap').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                log("currentPathname: \n", currentPathname);
-                let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m); //http://www.aitaotu.com/weimei/36129.html//http://yhxz521.com/riben/1534.html
-                log("match: \n", match);
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = '/' + match[2] + '_';
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('div.page a ').html();
-                        debugger
-                        let limitPageMatch = limitPageStr.match(/共(\d+)页/im);
-
-                        if (limitPageMatch != null) {
-                            let totalPics = parseInt(limitPageMatch[1]);
-                            let number = totalPics % 3;
-                            totalPageCnt = Math.floor(totalPics / 1);
-                            if (number > 0) {
-                                totalPageCnt = totalPageCnt + 1;
-                            }
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        let pageUrl = partPreUrl + '/' + match[2] + suffixUrl;
-                        pageUrls.push(pageUrl);
-                        for (let i = 2; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.article_position').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div#disappear img');
-            }, function (imgE) {
-                imgE.style = "width: 70%;height: 70%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------umei.fun--------------------------------------------- */
-        if (false && 'umei.fun' === window.location.hostname) {
-            injectBtns().domain(['umei.fun']).removeAD(function () {
-                $("div[id^='gn_delivery']").remove();
-                $("a[id^='__qdd_ciw_a__']").remove();
-                $('iframe').remove(); //移除广告等无必要元素
-            }).switchAggregationBtn(function () {
-                $('#display_image_detail').hide();
-                $('#paginator').hide();
-            }, function () {
-                $('#display_image_detail').show();
-                $('#paginator').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let match = window.location.pathname.match(/(\/\d+)/im); ///image/cos-cos-1/page/2/""
-
-                //let limitPageStr = $('#paginator').html();
-                //let limitPageMatch = limitPageStr.match(/\/page\/\d+\/\">last/im)[0].match(/\d+/);
-                //let maxpage=limitPageMatch[0];
-
-                if (match !== null) {
-                    {
-                        let partPreUrl = window.location.pathname;
-                        pageUrls.push(partPreUrl);
-                    }
-
-                    $('h2').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.card img'); //class . id#
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.meitulu.com-------------------------------------- */
-        if (false && 'www.meitulu.com' === window.location.hostname) {
-            injectBtns().domain('www.meitulu.com').removeAD(function () {
-                $("a[id^='__tg_ciw_a__']").remove();
-                $("a[id^='__qdd_ciw_a__']").remove();
-                $('iframe').remove(); //移除广告等无必要元素
-            }).switchAggregationBtn(function () {
-                $('div.content').hide();
-                $('body > center').hide();
-            }, function () {
-                $('div.content').show();
-                $('body > center').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                let match = currentPathname.match(/^\/(item\/)(\d+)(?:_\d+)?\.html$/im);
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = match[2];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('a.a1:last').prev().html();
-                        totalPageCnt = parseInt(limitPageStr);
-                        log('totalPageCnt', totalPageCnt);
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl + pageId + suffixUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            }
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.bk3').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.content > center  > img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.17786.com---------------------------------------- */
-        if (false && 'www.17786.com' === window.location.hostname) {
-            injectBtns().domain('www.17786.com').switchAggregationBtn(function () {
-                $('div.img_box').hide();
-                $('div.wt-pagelist').hide();
-                $('div#picBody').hide();
-                $('.articleV2Page').hide();
-            }, function () {
-                $('div.img_box').show();
-                $('div.wt-pagelist').show();
-                $('div#picBody').show();
-                $('.articleV2Page').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                let match = currentPathname.match(/^\/(\d+)(?:_\d+)?\.html$/im); //http://www.17786.com/7745_1.html
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('h2').html();
-                        let limitPageMatch = limitPageStr.match(/\(\d+\/(\d+)\)/im);
-                        if (limitPageMatch != null) {
-                            totalPageCnt = parseInt(limitPageMatch[1]);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.tsmaincont-desc').after(injectComponent);
-                } else {
-                    let match = currentPathname.match(/^\/((?:\w+\/)+)(\d+)(?:_\d+)?\.html$/im); //http://www.17786.com/beautiful/feizhuliutupian/44569.html
-                    if (match != null) {
-                        {
-                            let totalPageCnt = 50;
-                            let partPreUrl = match[1];
-                            let pageId = match[2];
-                            let suffixUrl = '.html';
-                            log('totalPageCnt', totalPageCnt);
-                            for (let i = 1; i <= totalPageCnt; i++) {
-                                let pageUrl = '';
-                                if (i == 1) {
-                                    pageUrl = partPreUrl + pageId + suffixUrl;
-                                } else {
-                                    pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                                }
-                                log('push pageUrl:\n', pageUrl);
-                                pageUrls.push(pageUrl);
-                            }
-                        }
-
-                        $('div.articleV2Desc').after(injectComponent);
-                    }
-                }
-            }).collectPics(function (doc) {
-                let imgObj = $(doc).find('img.IMG_show');
-                if (imgObj.length == 0) {
-                    imgObj = $(doc).find('a#RightUrl img');
-                }
-                return imgObj;
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.nvshens.com-------------------------------------- */
-        if (false && 'www.nvshens.com' === window.location.hostname) {
-            injectBtns().domain('www.nvshens.com').removeAD(function () {
-                $('div[id^=mms]').remove(); //移除广告等无必要元素
-            }).switchAggregationBtn(function () {
-                $('div.ck-box-unit').hide();
-                $('div.photos').hide();
-                $('div#imgwrap').hide();
-            }, function () {
-                $('div.ck-box-unit').show();
-                $('div.photos').show();
-                $('div#imgwrap').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/\/(\d+).?\/(\d+).?\.html)?$/im);//20170507/282.html
-                let match = null
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = '/';
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('div#dinfo span[style="color: #DB0909"]').html();
-                        let limitPageMatch = limitPageStr.match(/(\d+)张照片/im);
-                        if (limitPageMatch != null) {
-                            let totalPics = parseInt(limitPageMatch[1]);
-                            let number = totalPics % 3;
-                            totalPageCnt = Math.floor(totalPics / 3);
-                            if (number > 0) {
-                                totalPageCnt = totalPageCnt + 1;
-                            }
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div#dinfo').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('ul#hgallery img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.aitaotu.com-------------------------------------- */
-        if (false && 'www.aitaotu.com' === window.location.hostname) {
-            injectBtns().domain('www.aitaotu.com').removeAD(function () {
-                setInterval(function () {
-                    $('#lgVshow').remove();
-                    $('div.gg1002').remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                $('div.big-pic').hide();
-                $('div.pages').hide();
-            }, function () {
-                $('div.big-pic').show();
-                $('div.pages').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m); //http://www.aitaotu.com/weimei/36129.html
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = match[2];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('div.photo > div.pages > ul > li:last-child > a').attr('href');
-                        let limitPageMatch = limitPageStr.match(/\/\w+\/(\d+)(?:_(\d+))?\.html/m);
-                        if (limitPageMatch != null) {
-                            totalPageCnt = parseInt(limitPageMatch[2]);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.tsmaincont-desc').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('#big-pic > p > a  > img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.mzitu.com---------------------------------------- */
-        if (false && 'www.mzitu.com' === window.location.hostname) {
-            injectBtns().domain('www.mzitu.com').removeAD(function () {
-
-            }).switchAggregationBtn(function () {
-                $('div.main-image').hide();
-                $('div.pagenavi').hide();
-            }, function () {
-                $('div.main-image').show();
-                $('div.pagenavi').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/\/(\d+)(?:\/\d+)?/m); //http://www.mzitu.com/139218
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '';
-                        let limitPageStr = $('div.pagenavi >a').last().prev().find('span').text().trim();
-                        if (limitPageStr) {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.main-meta').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.main-image > p > a > img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.beautylegmm.com---------------------------------- */
-        if (false && 'www.beautylegmm.com' === window.location.hostname) {
-            injectBtns().domain('www.beautylegmm.com').removeAD(function () {
-                setInterval(function () {
-                    $('iframe').remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                $('div.post').hide();
-                $('div.archives_page_bar').hide();
-            }, function () {
-                $('div.post').show();
-                $('div.archives_page_bar').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(\w+\/beautyleg-\d+\.html)/im); //http://www.beautylegmm.com/Vanessa/beautyleg-1619.html
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '';
-                        let limitPageStr = $('#contents_post > div.post > div > a:not(.next)').last().text().trim();
-                        if (limitPageStr) {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + '?page=' + i + suffixUrl;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.post_title').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('#contents_post > div.post > a  > img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.xgtaotu.com-------------------------------------- */
-        if (false && 'www.xgtutu.com' === window.location.hostname) {
-            injectBtns().domain(['www.xgtaotu.com', 'www.xgtutu.com']).removeAD(function () {
-                $('#divStayTopright').remove();
-            }).switchAggregationBtn(function () {
-                $('div.page').hide();
-            }, function () {
-                $('div.page').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(rentihtml\/zhaopian\/\d+\/\d+)/im); //http://www.xgtutu.com/rentihtml/zhaopian/20200314/82031.html
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('p b a').eq(-2).text().replace(/[\]\[]/img, "").trim();
-                        if (limitPageStr) {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl + pageId + suffixUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            }
-
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div h1').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('p a > img');
-            }, function (imgE) {
-                imgE.style = "max-width: 100%;";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.youzi4.cc---------------------------------------- */
-        if (false && 'www.youzi4.cc' === window.location.hostname) {
-            injectBtns().domain('www.youzi4.cc').removeAD(function () {
-
-            }).switchAggregationBtn(function () {
-                $('#picBody').hide();
-                $('div.page-tag').hide();
-            }, function () {
-                $('#picBody').show();
-                $('div.page-tag').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(\w+.*\/\d+)/im); //http://www.youzi4.cc/mm/19890/19890_1.html
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('div.page-tag> ul > div > div > a ').eq(-2).text().trim();
-                        if (limitPageStr) {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl + pageId + suffixUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            }
-
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.articleV4Desc').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('#picBody p a img');
-            }, function (imgE) {
-                imgE.style = "max-width: 100%;";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.xiumeim.com-------------------------------------- */
-        if (false && 'www.xmeim.com' === window.location.hostname) {
-            injectBtns().domain(['www.xiumeim.com', 'www.xmeim.com']).removeAD(function () {
-
-            }).switchAggregationBtn(function () {
-                $('div.gallary_wrap').hide();
-            }, function () {
-                $('div.gallary_wrap').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(photos\/\w+-\d+)/im); //http://www.xiumeim.com/photos/LUGirls-190942.html
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = '';
-                        let pageId = match[1];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('div.paginator > span.count').text().trim();
-                        let limitPageMatch = limitPageStr.match(/\(共(\d+)页\)/m);
-                        if (limitPageMatch != null) {
-                            totalPageCnt = parseInt(limitPageMatch[1]);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl + pageId + suffixUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + '-' + i + suffixUrl;
-                            }
-
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.album_desc div.inline').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('table > tbody > tr > td > img');
-            }, function (imgE) {
-                imgE.style = "max-width: 100%;";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.mm131.com---------------------------------------- */
-        if (false && 'www.mm131.com' === window.location.hostname) {
-            injectBtns().domain('www.mm131.com').switchAggregationBtn(function () {
-                $('.content-pic').hide();
-                $('.content-page').hide();
-            }, function () {
-                $('.content-pic').show();
-                $('.content-page').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(\w+\/)(\d+)(?:_\d+)?\.html$/im);
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = match[2];
-                        let suffixUrl = '.html';
-                        let limitPageStr = $('span.page-ch:nth-child(1)').text();
-                        let limitPageMatch = limitPageStr.match(/共(\d+)页/m);
-                        if (limitPageMatch != null) {
-                            totalPageCnt = parseInt(limitPageMatch[1]);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl + pageId + suffixUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                            }
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.content-msg').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.content-pic a img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.114tuku.com-------------------------------------- */
-        if (false && 'www.114tuku.com' === window.location.hostname) {
-            injectBtns().domain('www.114tuku.com').removeAD(function () {
-                setInterval(function () {
-                    $('iframe').remove();
-                    $('div[baidu_imageplus_sensitive_judge="true"]').remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                $('#picBody').hide();
-                $('#pages').hide();
-            }, function () {
-                $('#picBody').show();
-                $('#pages').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/\/(\w+?p)\d+\//m);
-                let match = null;
-                if (match !== null) {
-                    if ($('div.content_body a img').length > 0) {
-                        {
-                            let totalPageCnt = 1;
-                            let partPreUrl = match[1];
-                            let pageId = '';
-                            let suffixUrl = '/';
-                            let limitPageStr = $('#pages > a:last-child').prev().text();
-                            if (limitPageStr) {
-                                totalPageCnt = parseInt(limitPageStr);
-                                log('totalPageCnt', totalPageCnt);
-                            }
-                            for (let i = 1; i <= totalPageCnt; i++) {
-                                let pageUrl = partPreUrl + pageId + i + suffixUrl;
-                                log('push pageUrl:\n', pageUrl);
-                                pageUrls.push(pageUrl);
-                            }
-                        }
-                        $('div.tags').after(injectComponent);
-                    }
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.content_body a img');
-            }, function (imgE) {
-                imgE.style = "width: 100%;";
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.meituri.com-------------------------------------- */
-        if (false && 'www.meituri.com' === window.location.hostname) {
-            injectBtns().domain('www.meituri.com').removeAD(function () {
-                setInterval(function () {
-                    $('iframe').remove();
-                    $('div.weixin').remove();
-                    $('div[id^=__jclm_]').remove();
-                    $('center>a').parent().remove();
-                }, 200);
-            }).switchAggregationBtn(function () {
-                $('#pages').hide();
-                $('body > div.content').hide();
-            }, function () {
-                $('#pages').show();
-                $('body > div.content').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(a\/\d+\/)(\d+\.html)?/im);
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = '';
-                        let suffixUrl = '';
-                        let limitPageStr = '';
-                        let text = $('#pages > a').last().text();
-                        if ('下一页' == text) {
-                            limitPageStr = $('#pages > a').last().prev().text();
-                        }
-                        if (limitPageStr != '') {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = '';
-                            if (i == 1) {
-                                pageUrl = partPreUrl;
-                            } else {
-                                pageUrl = partPreUrl + pageId + suffixUrl + i + '.html';
-                            }
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-
-
-                    }
-                    $('div.tuji').append(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.content > img');
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.tuao81.top--------------------------------------- */
-        if (false && 'www.tuao81.top' === window.location.hostname) {
-            injectBtns().domain('www.tuao81.top').removeAD(function () {
-                setInterval(function () {
-                    $('iframe').remove();
-                    $('#v_ads > img').parent().parent().remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                $('div.entry').hide();
-            }, function () {
-                $('div.entry').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/\/(post\/\d+.html)\b/i);
-                let match = null;
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = '';
-                        let suffixUrl = '';
-                        let limitPageStr = '';
-                        let text = $('#dm-fy li').last().text();
-                        if ('下一頁' == text) {
-                            limitPageStr = $('#dm-fy li').last().prev().text();
-                        }
-                        if (limitPageStr != '') {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + suffixUrl + '?page=' + i;
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.postmeta').after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.entry > p > a > img');
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.rosim.cc----------------------------------------- */
-        if (false && 'www.rosim.cc' === window.location.hostname) {
-            injectBtns().domain(['rosim.cc', 'www.rosim.cc']).removeAD(function () {
-                setInterval(function () {
-                    $('iframe').remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                $('div.container>h4').parent().find('div.col-xs-12:eq(2)').hide();
-            }, function () {
-                $('div.container>h4').parent().find('div.col-xs-12:eq(2)').show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                // let match = currentPathname.match(/^\/(item-detail-\d+)(?:-\d+)?.html/im);
-
-                if (match !== null) {
-                    {
-                        let totalPageCnt = 1;
-                        let partPreUrl = match[1];
-                        let pageId = '';
-                        let suffixUrl = '';
-                        let limitPageStr = $('ul.pagination > li').last().find('a').attr('name');
-                        if (limitPageStr != '') {
-                            totalPageCnt = parseInt(limitPageStr);
-                            log('totalPageCnt', totalPageCnt);
-                        }
-                        for (let i = 1; i <= totalPageCnt; i++) {
-                            let pageUrl = partPreUrl + pageId + suffixUrl + '-' + i + '.html';
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                    }
-                    $('div.container>h4').next().after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                return $(doc).find('div.col-xs-12> img.img-responsive ');
-            }).start(); //urlIsFalse
-        }
-        /* --------------------------------------------www.youtube.com-------------------------------------- */
-        if (false && 'www.youtube.com' === window.location.hostname) {
-            let vId = "";
-            let id = setInterval(function () {
-                $('#player-unavailable').not('.hid').addClass('hid');
-                let curVId = Alpha_Script.getParam(dest, 'v');
-                if (curVId != null && vId != curVId) {
-                    log('切换VID');
-                    vId = curVId;
-                    let sid = setInterval(function () {
-                        let swichVIdState = switchVId(vId);
-                        if (swichVIdState) {
-                            clearInterval(sid);
-                        }
-                    }, 100);
-                }
-            }, 100);
-        }
-    }
     /* --------------------------------------------wndfx.com-------------------------------------------- */
     if (site.Wndfx.iStatus) {
         injectBtns().domain('www.wndfx.com').removeAD(function () {
@@ -1839,23 +1444,28 @@ function popUpMenu() {
     /* --------------------------------------------hentai-cosplays.com & Pron--------------------------- */
     if (site.Hentai.iStatus || site.Pron.iStatus) {
         injectBtns().domain(site.Hentai.hostnames.concat(site.Pron.hostnames)).removeAD(function () {
-            $("div[id^='gn_delivery']").remove();
-            $("a[id^='__qdd_ciw_a__']").remove();
-            $('iframe').remove(); //移除广告等无必要元素
-            $("div #social_button").remove();
-            $("div #top_ad").remove();
+            setInterval(function(){
+                $("div[id^='gn_delivery']").remove();
+                $("a[id^='__qdd_ciw_a__']").remove();
+                $('iframe').remove(); //移除广告等无必要元素
+                $("div #social_button").remove();
+                $("div #top_ad").remove();
+                $("#header h1").nextAll().remove();
+            },100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $('#display_image_detail').hide();
             $('#post').hide();
             //android
             $('#detail_list').hide();
+            $('#paginator_area').hide();
             $('.paginator_area').hide();
         }, function () {
             $('#display_image_detail').show();
             $('#post').show();
             //android
             $('#detail_list').show();
+            $('#paginator_area').show();
             $('.paginator_area').show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             // let match = window.location.pathname.match(/(\/page\/\d+\/)$/im); // /image/cos-cos-1/page/2/
@@ -1898,12 +1508,18 @@ function popUpMenu() {
                         pageUrls.push(pageUrl);
                     }
                 }
+
+                let id = setInterval(function(){
+                    if($('#Autopage_number').length>0){
+                        $('#Autopage_number').click();
+                        clearInterval(id);
+                    }
+                },100);
                 if (os.isAndroid) {
                     $('ul#detail_list').prev().after(injectComponent);
                 } else {
                     $('#title+p').after(injectComponent);
                 }
-
             }
         }).collectPics(function (doc) {
             return $(doc).find("div#display_image_detail div a img");
@@ -3692,11 +3308,14 @@ function popUpMenu() {
         }).collectPics(function (doc) {
             let imgE = [];
             let imgEDiv;
-            imgEDiv = $(doc).find(".photos a > div");
+            imgEDiv = $(doc).find(".photos img");
             $(imgEDiv).each(function (index) {
-                let src = $(this).attr("src");
-                log("src: " + src);
-                imgE.push($(`<img src=${src}>`));
+                let src = $(this).attr("src").replace(/\_.*\./g, '.');
+                let isTurn = /\/ad\//g.exec(src);
+                if (isEmpty(isTurn)) {
+                    log("src: " + src);
+                    imgE.push($(`<img src=${src}>`));
+                }
             });
             return $(imgE);
         }, function (imgE) {
@@ -3881,27 +3500,41 @@ function popUpMenu() {
     }
     /* --------------------------------------------www.mfsft.com---------------------------------------- */
     if (site.mfsft.iStatus) {
-        injectBtns().domain(site.mfsft.hostnames).removeAD(async function () {
+        injectBtns().domain(site.mfsft.hostnames).removeAD(function () {
             if (!(window.location.pathname.toString() === "/")) {
                 let items = $(".h").nextUntil(".page");
                 let interestline = items.find(".interestline");
-                $(".h").append(interestline);
-                $(".nav").first().prevAll().remove();
-                $(".nav").first().nextUntil(".b").remove();
-                $(".page").nextUntil(".b").remove();
+                let seacher = $("#search");
+                if (isEmpty(seacher)) {
+                    seacher = $("form[onsubmit]").parent();
+                }
+                log("interestline\n", interestline.prop("outerHTML"));
+                log("seacher\n", seacher.prop("outerHTML"));
+                $(".h").prev().after(interestline);
+                $(".h").prev().after(seacher);
+                // $(".h").prevUntil(".page").remove();
                 items.remove();
             };
             $("head").empty();
             setInterval(function () {
-                $("img[src$=gif]").parent().remove();
-                $("div[classname]").remove();
                 $("#pic").remove();
-                $("span").remove();
-                $("[id^=divStayTop]").remove();
             }, 100);
-            await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
-            addStyle(MSLASS_CSS);
+            // debugger
+            async function asyncFunc() {
+                try {
+                    var a1 = +new Date();
+                    await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
+                    addStyle(MSLASS_CSS);
+                    var a2 = +new Date();
+                    var time = (a2 - a1);
+                    log("time", time);
+                } catch (error) {
+                    err(error);
+                }
+            }
+            asyncFunc();
         }).switchAggregationBtn(function () {
+            // debugger
             activateFancyBox();
             $('#picg').prev().nextAll().hide();
             //android
@@ -3947,6 +3580,987 @@ function popUpMenu() {
             log("imgE: \n" + imgE);
             return $(imgE);
         }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------xartmodel.net---------------------------------------- */
+    if (site.xartmodel.iStatus) {
+        injectBtns().domain(site.xartmodel.hostnames).removeAD(function () {
+            setInterval(function () {
+                $(".penci-rlt-popup").remove();
+                $("#navigation").css("position", "unset");
+                $("iframe").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            // debugger
+            activateFancyBox();
+            $('.wp-block-media-text').next().nextAll().hide();
+            //android
+        }, function () {
+            $('.wp-block-media-text').next().nextAll().show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            pageUrls.push(window.location.pathname);
+            $('.wp-block-media-text').after(injectComponent);
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".inner-item-masonry-gallery img");
+            $(item).each(function () {
+                let src = $(this).attr("src");
+                src = src.replace(/-\d*x.*/g, ".webp");
+                imgE.push($(`<img src=${src}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------hotgirl.asia----------------------------------------- */
+    if (site.hotgirl.iStatus) {
+        injectBtns().domain(site.hotgirl.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('#myimg').hide();
+            $('#pagination').hide();
+            //android
+        }, function () {
+            $('#myimg').show();
+            $('#pagination').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/\/.*?\//m);
+            log("match: \n", match);
+            if (match) {
+                let totalPageCnt = 1;
+                let partPreUrl = match[0];
+                let pageId = '';
+                let suffixUrl = '/';
+                let limitPageMatch = $('#pagination').prop("outerHTML");
+                log("limitPageMatch: " + limitPageMatch);
+                let pageUrl;
+                if (limitPageMatch != null) {
+                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                    log('totalPageCnt', totalPageCnt);
+                }
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    if (i == 1) {
+                        pageUrl = partPreUrl + pageId + suffixUrl;
+                    } else {
+                        pageUrl = partPreUrl + pageId + i + suffixUrl;
+                    }
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+                $('#myimg').parent().prepend(injectComponent);
+            }
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find("#myimg img");
+            $(item).each(function () {
+                let src = $(this).attr("src");
+                imgE.push($(`<img src=${src}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------hotgirlchina.com------------------------------------- */
+    if (site.hotgirlchina.iStatus) {
+        injectBtns().domain(site.hotgirlchina.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+                $("header#header").css("position", "unset");
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.entry-inner').hide();
+            $('.pagination').hide();
+            //android
+        }, function () {
+            $('.entry-inner').show();
+            $('.pagination').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/\/.*?\//m);
+            log("match: \n", match);
+            if (match) {
+                let totalPageCnt = 1;
+                let partPreUrl = match[0];
+                let pageId = '';
+                let suffixUrl = '/';
+                let limitPageMatch = $('.pagination').prop("outerHTML");
+                log("limitPageMatch: " + limitPageMatch);
+                let pageUrl;
+                if (limitPageMatch != null) {
+                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                    log('totalPageCnt', totalPageCnt);
+                }
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    if (i == 1) {
+                        pageUrl = partPreUrl + pageId + suffixUrl;
+                    } else {
+                        pageUrl = partPreUrl + pageId + i + suffixUrl;
+                    }
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+                $('.entry').prepend(injectComponent);
+            }
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".entry-inner img");
+            $(item).each(function () {
+                let src = $(this).attr("src");
+                imgE.push($(`<img src=${src}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------blog.baobua.com-------------------------------------- */
+    if (site.baobua.iStatus) {
+        injectBtns().domain(site.baobua.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.article-body').hide();
+            //android
+        }, function () {
+            $('.article-body').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+
+            pageUrls.push(currentPathname);
+
+            $('.article-tldr').after(injectComponent);
+
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".article-img a");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($(`<img src=${src}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------buondua.com------------------------------------------ */
+    if (site.buondua.iStatus) {
+        injectBtns().domain(site.buondua.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+                $("#popUpLinks a").css("color", "black");
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.article-fulltext').hide();
+            $('.pagination').hide();
+            //android
+        }, function () {
+            // $('.article-fulltext').show();
+            // $('.pagination').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/\/.*/m);
+            log("match: \n", match);
+            if (match) {
+                let totalPageCnt = 1;
+                let partPreUrl = match[0];
+                let pageId = '';
+                let suffixUrl = '';
+                let limitPageMatch = $('.pagination').prop("outerHTML");
+                log("limitPageMatch: " + limitPageMatch);
+                let pageUrl;
+                if (limitPageMatch != null) {
+                    let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                    log('totalPageCnt', totalPageCnt);
+                }
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    if (i == 1) {
+                        pageUrl = partPreUrl + pageId + suffixUrl;
+                    } else {
+                        pageUrl = partPreUrl + pageId + '?page=' + i + suffixUrl;
+                    }
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+                $('.article-tags').after(injectComponent);
+            }
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".article-fulltext img");
+            $(item).each(function () {
+                let src = $(this).attr("data-src");
+                imgE.push($(`<img src=${src}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------www.4kup.net----------------------------------------- */
+    if (site._4kup.iStatus) {
+        injectBtns().domain(site._4kup.hostnames).removeAD(function () {
+            setInterval(() => {
+                $("#popUpLinks a").css("color", "black");
+                $("#top-menu").css("position", "unset");
+            }, 100);
+
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('#gallery').hide();
+            //android
+        }, function () {
+            //$('#gallery').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+
+            pageUrls.push(currentPathname.match(/(?<=\/).*/g)[0]);
+
+            $('#gallery').prev().after(injectComponent);
+
+        }).collectPics(function (doc) {
+            debugger
+            doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
+            log("doc \n", doc)
+            let imgE = [];
+            let item = [];
+            for (let i = 0; i < doc.length; i++) {
+                item.push(doc[i].href);
+            }
+            log("AAAA---: \n", item)
+            item.forEach(function (item_) {
+                imgE.push($(`<img src=${item_}>`));
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------goddess247.com--------------------------------------- */
+    if (site.goddess247.iStatus) {
+        injectBtns().domain(site.goddess247.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.elementor-widget-container img').parent().hide();
+            $('.ihc-locker-wrap').hide();
+            //android
+        }, function () {
+            $('.elementor-widget-container img').parent().show();
+            $('.ihc-locker-wrap').show();
+            //android
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+
+            pageUrls.push(currentPathname);
+
+            $('.elementor-widget-container img').parent().prev().after(injectComponent);
+
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".aligncenter");
+            debugger
+            $(item).each(function () {
+                let src = $(this).attr("src");
+                // log("src :",src);
+                if (/data:image/.test(src)) {
+
+                } else {
+                    imgE.push($(`<img src=${src}>`));
+                }
+            });
+            log("imgE: \n" + imgE);
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------www.ilovexs.com-------------------------------------- */
+    if (site.ilovexs.iStatus) {
+        injectBtns().domain(site.ilovexs.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.entry-content img').hide();
+        }, function () {
+            // $('.entry-content img').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            debugger
+            if (!(match[0] === '')) {
+                pageUrls.push(currentPathname);
+                $('.entry-header').after(injectComponent);
+            }
+        }).collectPics(function (doc) {
+            let item = $(doc).find(".entry-content img");
+            return item;
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------mitaku.net------------------------------------------- */
+    if (site.mitaku.iStatus) {
+        injectBtns().domain(site.mitaku.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.msacwl-slider-wrap').hide();
+        }, function () {
+            $('.msacwl-slider-wrap').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            pageUrls.push(currentPathname);
+            $('.entry-content p').last().after(injectComponent);
+        }).collectPics(function (doc) {
+            let item = $(doc).find(".msacwl-slider-wrap img");
+            return item;
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------www.nlegs.com---------------------------------------- */
+    if (site.nlegs.iStatus) {
+        injectBtns().domain(site.nlegs.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $(".img-div").parent().hide();
+        }, function () {
+            $(".img-div").parent().show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/)girl.*/m);
+            log("match: \n", match);
+            if (!(match[0] === '')) {
+                // let totalPageCnt = 1;
+                // let partPreUrl = match[0];
+                // let pageId = '';
+                // let suffixUrl = '.html';
+                // let limitPageMatch = $('.pagination').prop("outerHTML");
+                // log("limitPageMatch: " + limitPageMatch);
+                // let pageUrl;
+                // if (limitPageMatch != null) {
+                //     let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+                //     totalPageCnt = Math.max.apply(null, totalPics);
+                //     log('totalPageCnt', totalPageCnt);
+                // }
+                // for (let i = 1; i <= totalPageCnt; i++) {
+                //     if (i == 1) {
+                //         pageUrl = partPreUrl + pageId + suffixUrl;
+                //     } else {
+                //         pageUrl = partPreUrl + pageId + "/" + i + suffixUrl;
+                //     }
+                //     log('push pageUrl:\n', pageUrl);
+                //     pageUrls.push(pageUrl);
+                // }
+                pageUrls.push(match);
+                $('.title').first().parent().after(injectComponent);
+            }
+        }).collectPics(async function (doc) {
+            let item = $(doc).find(".img-div").parent();
+            let aImgS = [];
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                src = window.location.origin + src;
+                aImgS.push(src);
+            });
+
+            function parseImgsFunc(doc) {
+                let item = $(doc).find(".img-res");
+                let imgContainerCssSelector = '#c_' + 0;
+                $(".sl-c-pic").remove();
+                item.attr("id", "image");
+                if (imgStyleFunc) {
+                    imgStyleFunc(item);
+                } else {
+                    item.style = "width: 100%;height: 100%";
+                }
+                item.attr('label', 'sl');
+                $(imgContainerCssSelector).append(item.prop('outerHTML'));
+                log("item:\n", item.prop("outerHTML"));
+            }
+
+            function imgStyleFunc(imgE) {
+                $(imgE).attr({
+                    'data-fancybox': 'images',
+                    'width': '100%'
+                });
+            }
+            await new Promise((resolve) => {
+                let num = 0;
+                for (let i = 0; i < aImgS.length; i++) {
+                    let pageUrl = aImgS[i];
+                    // setTimeout(() => {
+                    Alpha_Script.obtainHtml({
+                        url: pageUrl,
+                        headers: Alpha_Script.parseHeaders("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
+                            "Accept-Encoding:gzip, deflate, br\n" +
+                            "Accept-Language:zh-CN,zh;q=0.9\n" +
+                            "cookie:" + document.cookie + "\n" +
+                            "Referer:" + window.location.href + "\n" +
+                            "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+                        ),
+                        method: 'GET',
+                        onload: function () {
+                            return function (response) {
+                                debugger
+                                if (response && response.status && response.status >= 200 && response.status < 300) {
+                                    let html = response.responseText;
+                                    let parser = new DOMParser();
+                                    let doc = parser.parseFromString(html, "text/html");
+                                    parseImgsFunc(doc);
+                                    num++;
+                                    if (num === aImgS.length) {
+                                        resolve();
+                                    }
+                                }
+                            };
+                        }()
+                    });
+                    // }, 100);
+                }
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------nudecosplaygirls.com--------------------------------- */
+    if (site.nudecosplaygirls.iStatus) {
+        injectBtns().domain(site.nudecosplaygirls.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+                $("#popUpLinks a").css("color", "black");
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.g1-content-narrow').hide();
+        }, function () {
+            // $('.g1-content-narrow').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $('.entry-header').first().after(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let item = $(doc).find(".g1-content-narrow img");
+            debugger
+            return item;
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------nudebird.biz----------------------------------------- */
+    if (site.nudebird.iStatus) {
+        injectBtns().domain(site.nudebird.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.entry-content').hide();
+        }, function () {
+            //$('.entry-content').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $('.tags').first().after(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = [];
+            let item = $(doc).find(".entry-content img");
+            debugger
+            $(item).each(function () {
+                if (/lazy/.test(this.className)) {} else {
+                    let src = $(this).attr("src");
+                    imgE.push($("<img src=" + src + "></img>"));
+                }
+            });
+            debugger
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------idol.gravureprincess.date---------------------------- */
+    if (site.gravureprincess.iStatus) {
+        injectBtns().domain(site.gravureprincess.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $(".separator img").slice(1).hide();
+        }, function () {
+            // $('.g1-content-narrow').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $(".separator").first().after(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let item = $(doc).find(".separator img").slice(1);
+            return item;
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------asdasfd.net------------------------------------------ */
+    if (site.asdasfd.iStatus) {
+        injectBtns().domain(site.asdasfd.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $("figure").hide();
+            $(".kt-tabs-title-list").hide();
+        }, function () {
+            $('figure').show();
+            $(".kt-tabs-title-list").show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $(".kt-tabs-title-list").parent().prepend(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+            let item = $(doc).find("div.kt-tabs-content-wrap img");
+            debugger
+            $(item).each(function () {
+                if (/lazy/.test(this.className)) {} else {
+                    let src = $(this).attr("data-orig-file");
+                    imgE.push($("<img src=" + src + "></img>"));
+                }
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------yellowfever18.com------------------------------------ */
+    if (site.yellowfever18.iStatus) {
+        injectBtns().domain(site.yellowfever18.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+                $(".jnews-cookie-law-policy").remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $(".default-view").hide();
+            $("div[id^=ngg-image]").hide();
+
+        }, function () {
+            $('.default-view').show();
+            $("div[id^=ngg-image]").show();
+
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $(".default-view").parent().prepend(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+            let item = $(doc).find(".ngg-gallery-thumbnail a");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------allasiangirls.net------------------------------------ */
+    if (site.allasiangirls.iStatus) {
+        injectBtns().domain(site.allasiangirls.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+                $(".heateor_sss_sharing_ul").remove();
+                $(".row.align-equal.align-center").hide();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $(".aligncenter").hide();
+            $("#comments").hide();
+        }, function () {
+            $('.aligncenter').show();
+            $("#comments").show();
+            $(".row.align-equal.align-center").show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                if ($("div[style^='text-align: center;']").length > 0) {
+                    $("div[style^='text-align: center;']").first().after(injectComponent);
+                } else {
+                    $(".heateor_sss_sharing_title").first().after(injectComponent);
+                }
+
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+
+            let item = $(doc).find(".aligncenter");
+            debugger
+            $(item).each(function () {
+                if (/lazy/.test(this.className)) {} else {
+                    let src = $(this).attr("src");
+                    imgE.push($("<img src=" + src + "></img>"));
+                }
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------asdcosplay.com--------------------------------------- */
+    if (site.asdcosplay.iStatus) {
+        injectBtns().domain(site.asdcosplay.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $("figure").hide();
+
+        }, function () {
+            $('figure').show();
+
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $("table+strong").after(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+            let item = $(doc).find("figure a");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------asianpink.net---------------------------------------- */
+    if (site.asianpink.iStatus) {
+        injectBtns().domain(site.asianpink.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $(".e-gallery-item").parent().hide();
+            $(".elementor-grid").hide();
+        }, function () {
+            // $(".e-gallery-item").parent().show();
+            // $(".elementor-grid").show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $("div[data-elementor-type^=wp]>section").first().after(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+            let item = $(doc).find(".e-gallery-item");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------ryuryu.tw-------------------------------------------- */
+    if (site.ryuryu.iStatus) {
+        injectBtns().domain(site.ryuryu.hostnames).removeAD(function () {
+            setInterval(function () {
+                $("[src*='.gif']").parent().remove();
+            }, 100);
+        }).switchAggregationBtn(function () {
+            activateFancyBox();
+            $("article>section").hide();
+            $("#ghost-portal-root").hide();
+        }, function () {
+            $("#ghost-portal-root").show();
+            $("article>section").show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*/m);
+            log("match: \n", match);
+            if (match[0] !== '') {
+                pageUrls.push(match);
+                $("article>header").append(injectComponent);
+            }
+
+        }).collectPics(function (doc) {
+            let imgE = []
+            let item = $(doc).find("figure img");
+            $(item).each(function () {
+                let src = $(this).attr("src");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
+        }, function (imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------www.xinwenba.net------------------------------------- */
+    if (site.xinwenba.iStatus) {
+        injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
+            activateFancyBox(1);
+            $('.picture').hide();
+            $('div.web').hide();
+            $('div.paging').hide();
+            //android
+            $('.view_img p').hide();
+        }, function () {
+            $('.picture').show();
+            $('div.paging').show();
+            //android
+            $('.view_img p').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/).*(?=-)/m);
+            log("match: \n", match);
+            if (match) {
+                let totalPageCnt = 1;
+                let partPreUrl = match[0];
+                let pageId = '-';
+                let suffixUrl = '.html';
+                let limitPageMatch = $('.paging').prop("outerHTML");
+                log("limitPageMatch: " + limitPageMatch);
+                let pageUrl;
+                if (limitPageMatch != null) {
+                    // let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                    // totalPageCnt = Math.max.apply(null, totalPics);
+                    totalPageCnt = limitPageMatch.match(/(?<=共)\d+/g);
+                    log('totalPageCnt', totalPageCnt[0]);
+                }
+                for (let i = 1; i <= totalPageCnt; i++) {
+
+                    pageUrl = partPreUrl + pageId + i + suffixUrl;
+
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+                if (os.isPc) {
+                    $('.info').after(injectComponent);
+                } else {
+                    $('.text').after(injectComponent);
+                }
+            }
+        }).collectPics(function (doc) {
+            let imgE;
+            imgE = $(doc).find(".view_img img");
+            return imgE;
+        }, function (imgE) {
+            imgE.style = "width: 100%;";
+            $(imgE).attr({
+                'data-fancybox': 'images'
+            });
+        }).start(); //urlIsTrue
+    }
+    /* --------------------------------------------www.meitu131.com------------------------------------ */
+    if (site.meitu131.iStatus) {
+        injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
+            activateFancyBox();
+            $('.work-content>p').hide();
+            $('div#pages').hide();
+
+            //android
+            $('.uk-article-bd').hide();
+            $('.uk-page').hide();
+        }, function () {
+            $('.work-content>p').show();
+            $('div#pages').show();
+            //android
+            $('.uk-article-bd').show();
+            $('.uk-page').show();
+        }).injectAggregationRef(function (injectComponent, pageUrls) {
+            let currentPathname = window.location.pathname;
+            log("currentPathname: \n", currentPathname);
+            let match = currentPathname.match(/(?<=\/)(.+?\/)(\d+).*/m);
+            log("match: \n", match);
+            if (match[1] === 'meinv/') {
+                let totalPageCnt = 1;
+                let partPreUrl = match[1];
+                let pageId = match[2];
+                let suffixUrl = '.html';
+                let limitPageMatch = null;
+                if (os.isPc) {
+                    limitPageMatch = $('div#pages').prop("outerHTML");
+                } else {
+                    limitPageMatch = $('.uk-page').prop("outerHTML");
+                }
+                log("limitPageMatch: " + limitPageMatch);
+                let pageUrl;
+                if (limitPageMatch != null) {
+                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>|<\/span>)/g);
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                    log('totalPageCnt', totalPageCnt);
+                }
+                for (let i = 0; i <= totalPageCnt; i++) {
+                    if (i === 0) {
+                        pageUrl = partPreUrl + pageId;
+                    } else {
+                        pageUrl = partPreUrl + pageId + '/index_' + i + suffixUrl;
+                    }
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+                if (os.isPc) {
+                    $('.work-content').prepend(injectComponent);
+                } else {
+                    $('.uk-article').after(injectComponent);
+                }
+
+            }
+        }).collectPics(function (doc) {
+            let imgE;
+            imgE = $(doc).find('p[align="center"] img');
+            return imgE;
+        }, function (imgE) {
+            imgE.style = "width: 100%;";
             $(imgE).attr({
                 'data-fancybox': 'images'
             });
