@@ -1147,7 +1147,7 @@ function popUpMenu() {
         let match = function () {};
         let mismatch = function () {};
         let meet = function (options) {
-            debugger
+            // debugger
             options = options || {};
             options.domain = options.domain || domain;
             options.match = options.match || match;
@@ -2242,10 +2242,14 @@ function popUpMenu() {
             $('.entry-content figure').hide();
             $("#comments").hide();
             $(".widget_text").hide();
+            $('img[data-fancybox=i]').attr("data-fancybox","images");
+            $('a[data-fancybox=images]').attr("data-fancybox","i");
         }, function () {
             $('.entry-content figure').show();
             $("#comments").show();
             $(".widget_text").show();
+            $('img[data-fancybox=images]').attr("data-fancybox","i");
+            $('a[data-fancybox=i]').attr("data-fancybox","images");
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
             log("currentPathname: \n", currentPathname);
@@ -2254,24 +2258,18 @@ function popUpMenu() {
                 $('.entry-content figure').first().prev().after(injectComponent);
             }
         }).collectPics(function (doc) {
-            let images = $(doc).find('.entry-content figure a');
-            return $(images);
+            let imgE = []
+            let item = $(doc).find(".entry-content figure a");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
         }, function (imgE) {
-            let src = $(imgE).attr('href');
-            if (src) {
-                // $.fn.removeAllAttrs= function() {
-                //     return this.each(function() {
-                //        $.each(this.attributes, function() {
-                //          this.ownerElement.removeAttributeNode(this);
-                //        });
-                //     });
-                //   };
-                // $(imgE).find("img").removeAllAttrs();
-                $(imgE).find("img").removeAttr('src');
-                $(imgE).find("img").attr('src', src);
-                $(imgE).find("img").attr('label', 'sl');
-            }
-            imgE.style = "width: 100%;height: 100%";
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
         }).start(); //urlIsTrue
     }
     /* --------------------------------------------asiansister.com-------------------------------------- */
