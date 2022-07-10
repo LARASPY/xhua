@@ -4,13 +4,13 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.93
+// @version      3.94
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
 // @author       selang,LARA_SSR
 //
-// @include      /https?\:\/\/(\w+\.)?hentai-cosplay\w+\.com/
+// @include      /https?\:\/\/(\w+\.)?hentai-(cosplays|img)\.com/
 // @include      /https?\:\/\/(\w+\.)?porn-image\w+-xxx\.com/
 // @include      /https?\:\/\/www\.umei(\w+)?\.\w+/
 // @include      /https?\:\/\/www.wndfx\.com/
@@ -104,15 +104,27 @@ let imagePluginSwitch = [{
 }]
 
 let site = {
+    HentaiImage: {
+        id: -1,
+        name: 'Hentai Image',
+        hostnames: [
+            'hentai-img.com'
+        ],
+        pattern: /https?\:\/\/(\w+\.)?hentai-(cosplays|img)\.com/,
+        iStatus: false,
+        _break: false,
+        isPutInto: 1
+    },
     Hentai: { //支持中文https://zh.hentai-cosplays.com/
         id: 0,
         name: 'Hentai Cosplay',
         hostnames: [
             'hentai-cosplays.com'
         ],
-        pattern: /https?\:\/\/(\w+\.)?hentai-cosplay\w+\.com/,
+        pattern: /https?\:\/\/(\w+\.)?hentai-(cosplays|img)\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
+        isPutInto: 1
     },
     Pron: { //支持中文https://zh.porn-images-xxx.com/
         id: 1,
@@ -740,7 +752,10 @@ function currentUrlActivation() {
         hostnameArry = site[key].pattern.exec(hostName);
         // log("isActive: ",isActive);
         if (hostnameArry != null) {
-            site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));
+            let isPutInto = isEmpty(site[key].isPutInto);
+            if(isPutInto){
+              site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));  
+            }
             log("site[key].hostName: ", site[key].hostnames);
             isActive = true;
         } else {
@@ -1132,7 +1147,7 @@ function popUpMenu() {
         let match = function () {};
         let mismatch = function () {};
         let meet = function (options) {
-            // debugger
+            debugger
             options = options || {};
             options.domain = options.domain || domain;
             options.match = options.match || match;
@@ -1447,17 +1462,17 @@ function popUpMenu() {
             imgE.style = "width: 100%;height: 100%";
         }).start(); //urlIsTrue
     }
-    /* --------------------------------------------hentai-cosplays.com & Pron--------------------------- */
+    /* --------------------------------------------hentai-cosplays|img.com & Pron----------------------- */
     if (site.Hentai.iStatus || site.Pron.iStatus) {
-        injectBtns().domain(site.Hentai.hostnames.concat(site.Pron.hostnames)).removeAD(function () {
-            setInterval(function(){
+        injectBtns().domain(site.Hentai.hostnames.concat(site.Pron.hostnames).concat(site.HentaiImage.hostnames)).removeAD(function () {
+            setInterval(function () {
                 $("div[id^='gn_delivery']").remove();
                 $("a[id^='__qdd_ciw_a__']").remove();
                 $('iframe').remove(); //移除广告等无必要元素
                 $("div #social_button").remove();
                 $("div #top_ad").remove();
                 $("#header .right-menu").nextAll().remove();
-            },100);
+            }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $('#display_image_detail').hide();
@@ -1476,6 +1491,7 @@ function popUpMenu() {
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             // let match = window.location.pathname.match(/(\/page\/\d+\/)$/im); // /image/cos-cos-1/page/2/
             let limitPageStr = null;
+            let limitPageMatchList = null;
             if (os.isAndroid) {
                 limitPageStr = $('.paginator_area').prop('outerHTML');
             } else {
@@ -1483,8 +1499,12 @@ function popUpMenu() {
             }
 
             log("limitPageStr: ", limitPageStr);
-            let limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
-            if (limitPageMatchList == null) {
+            debugger
+
+            if (!isEmpty(limitPageStr)) {
+                limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
+            }
+            if (isEmpty(limitPageMatchList)) {
                 limitPageMatchList = ['1'];
             }
             let maxpage = Math.max.apply(null, limitPageMatchList);
@@ -1515,12 +1535,12 @@ function popUpMenu() {
                     }
                 }
 
-                let id = setInterval(function(){
-                    if($('#Autopage_number').length>0){
+                let id = setInterval(function () {
+                    if ($('#Autopage_number').length > 0) {
                         $('#Autopage_number').click();
                         clearInterval(id);
                     }
-                },100);
+                }, 100);
                 if (os.isAndroid) {
                     $('ul#detail_list').prev().after(injectComponent);
                 } else {
