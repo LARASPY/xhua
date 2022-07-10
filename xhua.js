@@ -4400,14 +4400,13 @@ function popUpMenu() {
         injectBtns().domain(site.asianpink.hostnames).removeAD(function () {
             setInterval(function () {
                 $("[src*='.gif']").parent().remove();
+                $(".elementor-grid").remove();
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $(".e-gallery-item").parent().hide();
-            $(".elementor-grid").hide();
         }, function () {
-            // $(".e-gallery-item").parent().show();
-            // $(".elementor-grid").show();
+            $(".e-gallery-item").parent().show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
             log("currentPathname: \n", currentPathname);
