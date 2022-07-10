@@ -2237,6 +2237,12 @@ function popUpMenu() {
             $("div[id^=art_],.mobile-bar,[class^=go-to-top],.favorite").css({
                 "z-index": "999"
             });
+            $("div[id^=art_] img").css({
+                'width': 'auto',
+                'height': 'auto',
+                'max-width': '50%',
+                'max-height': '50%'
+            });
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $('.entry-content figure').hide();
