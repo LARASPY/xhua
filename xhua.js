@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -4365,10 +4365,10 @@ function popUpMenu() {
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
-            $("figure").hide();
+            $(".entry-content").hide();
 
         }, function () {
-            $('figure').show();
+            $('.entry-content').show();
 
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
@@ -4377,7 +4377,7 @@ function popUpMenu() {
             log("match: \n", match);
             if (match[0] !== '') {
                 pageUrls.push(match);
-                $("table+strong").after(injectComponent);
+                $(".entry-header").after(injectComponent);
             }
 
         }).collectPics(function (doc) {
