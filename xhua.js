@@ -753,8 +753,8 @@ function currentUrlActivation() {
         // log("isActive: ",isActive);
         if (hostnameArry != null) {
             let isPutInto = isEmpty(site[key].isPutInto);
-            if(isPutInto){
-              site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));  
+            if (isPutInto) {
+                site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));
             }
             log("site[key].hostName: ", site[key].hostnames);
             isActive = true;
@@ -1144,8 +1144,8 @@ function popUpMenu() {
                 }
             }, 100);
         };
-        let match = function () {};
-        let mismatch = function () {};
+        let match = function () { };
+        let mismatch = function () { };
         let meet = function (options) {
             // debugger
             options = options || {};
@@ -1228,8 +1228,8 @@ function popUpMenu() {
                 if (length == 0) {
                     clearInterval(id);
                     zip.generateAsync({
-                            type: "blob"
-                        })
+                        type: "blob"
+                    })
                         .then(function (content) {
                             saveAs(content, packagName + ".zip");
                         });
@@ -2248,20 +2248,28 @@ function popUpMenu() {
             $('.entry-content figure').hide();
             $("#comments").hide();
             $(".widget_text").hide();
-            $('img[data-fancybox=i]').attr("data-fancybox","images");
-            $('a[data-fancybox=images]').attr("data-fancybox","i");
+            $(".blocks-gallery-item").parent().hide();
+
+            $('img[data-fancybox=i]').attr("data-fancybox", "images");
+            $('a[data-fancybox=images]').attr("data-fancybox", "i");
         }, function () {
             $('.entry-content figure').show();
             $("#comments").show();
             $(".widget_text").show();
-            $('img[data-fancybox=images]').attr("data-fancybox","i");
-            $('a[data-fancybox=i]').attr("data-fancybox","images");
+            $(".blocks-gallery-item").parent().show();
+
+            $('img[data-fancybox=images]').attr("data-fancybox", "i");
+            $('a[data-fancybox=i]').attr("data-fancybox", "images");
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
             log("currentPathname: \n", currentPathname);
             if (currentPathname !== null) {
                 pageUrls.push(currentPathname);
-                $('.entry-content figure').first().prev().after(injectComponent);
+                if ($('.entry-content>figure').length > 0) {
+                    $('.entry-content figure').first().prev().after(injectComponent);
+                } else {
+                    $(".blocks-gallery-item").parent().prev().after(injectComponent);
+                }
             }
         }).collectPics(function (doc) {
             let imgE = []
@@ -2338,11 +2346,11 @@ function popUpMenu() {
         }).switchAggregationBtn(function () {
             //FancyBox
             activateFancyBox(1);
-            $("div[class^=article]").slice(1, ).hide();
+            $("div[class^=article]").slice(1,).hide();
             // $("div.article-content > p").next().nextAll().hide();
             $(".single-comment").hide();
         }, function () {
-            $("div[class^=article]").slice(1, ).show();
+            $("div[class^=article]").slice(1,).show();
             // $("div.article-content > p").next().nextAll().show();
             $(".single-comment").show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
@@ -2651,7 +2659,7 @@ function popUpMenu() {
                 $(".entry-content p").nextAll().hide();
             }
             $(".entry-footer").hide();
-        }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
+        }, function () { }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; //
             let match = currentPathname.match(/\w+.*/im);
             log("currentPathname: \n", currentPathname);
@@ -3980,8 +3988,8 @@ function popUpMenu() {
             debugger
             if (!(match[0] === '')) {
                 pageUrls.push(currentPathname);
-                if($('.entry-header').length>1){
-                }else{
+                if ($('.entry-header').length > 1) {
+                } else {
                     $('.entry-header').after(injectComponent);
                 }
             }
@@ -4187,7 +4195,7 @@ function popUpMenu() {
             let item = $(doc).find(".entry-content img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4260,7 +4268,7 @@ function popUpMenu() {
             let item = $(doc).find("div.kt-tabs-content-wrap img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("data-orig-file");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4351,7 +4359,7 @@ function popUpMenu() {
             let item = $(doc).find(".aligncenter");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
