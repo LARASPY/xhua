@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.94
+// @version      3.95
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = true;
+let isDebugMain = false;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -3976,7 +3976,10 @@ function popUpMenu() {
             debugger
             if (!(match[0] === '')) {
                 pageUrls.push(currentPathname);
-                $('.entry-header').after(injectComponent);
+                if($('.entry-header').length>1){
+                }else{
+                    $('.entry-header').after(injectComponent);
+                }
             }
         }).collectPics(function (doc) {
             let item = $(doc).find(".entry-content img");
@@ -4436,15 +4439,18 @@ function popUpMenu() {
     if (site.ryuryu.iStatus) {
         injectBtns().domain(site.ryuryu.hostnames).removeAD(function () {
             setInterval(function () {
+                $(".viewport").prevAll().hide();
                 $("[src*='.gif']").parent().remove();
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $("article>section").hide();
             $("#ghost-portal-root").hide();
+            $(".article-image").hide();
         }, function () {
             $("#ghost-portal-root").show();
             $("article>section").show();
+            $(".article-image").show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
             log("currentPathname: \n", currentPathname);
@@ -4527,7 +4533,7 @@ function popUpMenu() {
             });
         }).start(); //urlIsTrue
     }
-    /* --------------------------------------------www.meitu131.com------------------------------------ */
+    /* --------------------------------------------www.meitu131.com------------------------------------- */
     if (site.meitu131.iStatus) {
         injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
             activateFancyBox();
