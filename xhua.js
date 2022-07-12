@@ -802,7 +802,7 @@ function addScript_(statement = null, src = null, isModule = false) {
     return null;
 }
 
-async function startMain_() {
+async function startMain_(arrs = null) {
 
     function log() {
         if (isDebugMain) {
@@ -890,6 +890,9 @@ async function startMain_() {
 
     await initialArrFunction(mainArr);
     await initialArrFunction(fancyboxyArr);
+    if (!isEmpty(arrs)) {
+        await initialArrFunction(arrs);
+    };
 }
 
 function startFancyBoxScript() {
@@ -1943,7 +1946,13 @@ function popUpMenu() {
             // }, 100);
             debugger
             $("head").empty();
-            await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js")
+            // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js");
+            let arrs = [
+                'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/everiacss.js',
+                'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/everiacss.js',
+                "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js"
+            ]
+            await startMain_(arrs);
             addStyle(everiacss);
         }).switchAggregationBtn(function () {
             //FancyBox
@@ -3072,11 +3081,11 @@ function popUpMenu() {
 
             if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
 
-                let aTags = $('.entry-content p a'); 
-                aTags.each(function(){
+                let aTags = $('.entry-content p a');
+                aTags.each(function () {
                     let text = $(this).text();
                     log(text)
-                    if(!isEmpty(text)){
+                    if (!isEmpty(text)) {
                         button_ = $(this).clone();
                     }
                 });
@@ -3565,7 +3574,13 @@ function popUpMenu() {
             async function asyncFunc() {
                 try {
                     var a1 = +new Date();
-                    await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
+                    // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
+                    let arrs = [
+                        'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/mslasscss.js',
+                        'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/mslasscss.js',
+                        "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js"
+                    ]
+                    await startMain_(arrs);
                     addStyle(MSLASS_CSS);
                     var a2 = +new Date();
                     var time = (a2 - a1);
