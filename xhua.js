@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -2829,6 +2829,10 @@ function popUpMenu() {
     }
     /* --------------------------------------------www.xrmn5.cc & www.xiurenb.net ---------------------- */
     if (site.XiurenJi.iStatus || site.Xrmn.iStatus) {
+        setInterval(function () {
+            $(".main").nextUntil('#popUpContent').remove();
+            $("#popUpContent").nextAll().remove();
+        }, 100);
         if (os.isAndroid || os.isPhone) {
             log("Andriod");
             //https://sleazyfork.org/zh-CN/scripts/440115-xiurenji%E7%A7%80%E4%BA%BA%E9%9B%86%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89
@@ -3068,11 +3072,15 @@ function popUpMenu() {
 
             if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
 
-                button_ = $(".entry-content p a[href$=zip]").first();
-                log("button_:\n", button_)
-                if (button_.length === 0) {
-                    button_ = $(".entry-content p a[href*=gofile]").first();
-                }
+                let aTags = $('.entry-content p a'); 
+                aTags.each(function(){
+                    let text = $(this).text();
+                    log(text)
+                    if(!isEmpty(text)){
+                        button_ = $(this).clone();
+                    }
+                });
+
                 button_.css({
                     "color": "black",
                     "background": "pink",
@@ -3083,14 +3091,9 @@ function popUpMenu() {
                 text = text.match(/\d*:\d*/g);
                 log("-----video--------\n", text)
                 if (isEmpty(text)) {
-
                     let pageUrl = currentPathname;
                     log('push pageUrl:\n', pageUrl);
                     pageUrls.push(pageUrl);
-                    // if ($('.entry-content p').prop("outerHTML") !== undefined) {
-                    //     $('.entry-content p').first().after(injectComponent);
-                    // } else 
-
                     if ($('.wrapper').prop("outerHTML") !== undefined) {
                         $('.wrapper').prev().after(injectComponent);
                     } else {
@@ -3100,7 +3103,6 @@ function popUpMenu() {
                         $("#injectComponent").prev().after(button_);
                     }
                 }
-
             }
         }).collectPics(function (doc) {
             let imgE;
