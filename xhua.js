@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.94
+// @version      3.96
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -753,8 +753,8 @@ function currentUrlActivation() {
         // log("isActive: ",isActive);
         if (hostnameArry != null) {
             let isPutInto = isEmpty(site[key].isPutInto);
-            if(isPutInto){
-              site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));  
+            if (isPutInto) {
+                site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));
             }
             log("site[key].hostName: ", site[key].hostnames);
             isActive = true;
@@ -1144,10 +1144,10 @@ function popUpMenu() {
                 }
             }, 100);
         };
-        let match = function () {};
-        let mismatch = function () {};
+        let match = function () { };
+        let mismatch = function () { };
         let meet = function (options) {
-            debugger
+            // debugger
             options = options || {};
             options.domain = options.domain || domain;
             options.match = options.match || match;
@@ -1228,8 +1228,8 @@ function popUpMenu() {
                 if (length == 0) {
                     clearInterval(id);
                     zip.generateAsync({
-                            type: "blob"
-                        })
+                        type: "blob"
+                    })
                         .then(function (content) {
                             saveAs(content, packagName + ".zip");
                         });
@@ -2237,41 +2237,53 @@ function popUpMenu() {
             $("div[id^=art_],.mobile-bar,[class^=go-to-top],.favorite").css({
                 "z-index": "999"
             });
+            $("div[id^=art_] img").css({
+                'width': 'auto',
+                'height': 'auto',
+                'max-width': '50%',
+                'max-height': '50%'
+            });
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $('.entry-content figure').hide();
             $("#comments").hide();
             $(".widget_text").hide();
+            $(".blocks-gallery-item").parent().hide();
+
+            $('img[data-fancybox=i]').attr("data-fancybox", "images");
+            $('a[data-fancybox=images]').attr("data-fancybox", "i");
         }, function () {
             $('.entry-content figure').show();
             $("#comments").show();
             $(".widget_text").show();
+            $(".blocks-gallery-item").parent().show();
+
+            $('img[data-fancybox=images]').attr("data-fancybox", "i");
+            $('a[data-fancybox=i]').attr("data-fancybox", "images");
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
             log("currentPathname: \n", currentPathname);
             if (currentPathname !== null) {
                 pageUrls.push(currentPathname);
-                $('.entry-content figure').first().prev().after(injectComponent);
+                if ($('.entry-content>figure').length > 0) {
+                    $('.entry-content figure').first().prev().after(injectComponent);
+                } else {
+                    $(".blocks-gallery-item").parent().prev().after(injectComponent);
+                }
             }
         }).collectPics(function (doc) {
-            let images = $(doc).find('.entry-content figure a');
-            return $(images);
+            let imgE = []
+            let item = $(doc).find(".entry-content figure a");
+            $(item).each(function () {
+                let src = $(this).attr("href");
+                imgE.push($("<img src=" + src + "></img>"))
+            });
+            return $(imgE);
         }, function (imgE) {
-            let src = $(imgE).attr('href');
-            if (src) {
-                // $.fn.removeAllAttrs= function() {
-                //     return this.each(function() {
-                //        $.each(this.attributes, function() {
-                //          this.ownerElement.removeAttributeNode(this);
-                //        });
-                //     });
-                //   };
-                // $(imgE).find("img").removeAllAttrs();
-                $(imgE).find("img").removeAttr('src');
-                $(imgE).find("img").attr('src', src);
-                $(imgE).find("img").attr('label', 'sl');
-            }
-            imgE.style = "width: 100%;height: 100%";
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
         }).start(); //urlIsTrue
     }
     /* --------------------------------------------asiansister.com-------------------------------------- */
@@ -2334,11 +2346,11 @@ function popUpMenu() {
         }).switchAggregationBtn(function () {
             //FancyBox
             activateFancyBox(1);
-            $("div[class^=article]").slice(1, ).hide();
+            $("div[class^=article]").slice(1,).hide();
             // $("div.article-content > p").next().nextAll().hide();
             $(".single-comment").hide();
         }, function () {
-            $("div[class^=article]").slice(1, ).show();
+            $("div[class^=article]").slice(1,).show();
             // $("div.article-content > p").next().nextAll().show();
             $(".single-comment").show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
@@ -2647,7 +2659,7 @@ function popUpMenu() {
                 $(".entry-content p").nextAll().hide();
             }
             $(".entry-footer").hide();
-        }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
+        }, function () { }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; //
             let match = currentPathname.match(/\w+.*/im);
             log("currentPathname: \n", currentPathname);
@@ -2817,6 +2829,10 @@ function popUpMenu() {
     }
     /* --------------------------------------------www.xrmn5.cc & www.xiurenb.net ---------------------- */
     if (site.XiurenJi.iStatus || site.Xrmn.iStatus) {
+        setInterval(function () {
+            $(".main").nextUntil('#popUpContent').remove();
+            $("#popUpContent").nextAll().remove();
+        }, 100);
         if (os.isAndroid || os.isPhone) {
             log("Andriod");
             //https://sleazyfork.org/zh-CN/scripts/440115-xiurenji%E7%A7%80%E4%BA%BA%E9%9B%86%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89
@@ -3056,11 +3072,15 @@ function popUpMenu() {
 
             if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
 
-                button_ = $(".entry-content p a[href$=zip]").first();
-                log("button_:\n", button_)
-                if (button_.length === 0) {
-                    button_ = $(".entry-content p a[href*=gofile]").first();
-                }
+                let aTags = $('.entry-content p a'); 
+                aTags.each(function(){
+                    let text = $(this).text();
+                    log(text)
+                    if(!isEmpty(text)){
+                        button_ = $(this).clone();
+                    }
+                });
+
                 button_.css({
                     "color": "black",
                     "background": "pink",
@@ -3071,14 +3091,9 @@ function popUpMenu() {
                 text = text.match(/\d*:\d*/g);
                 log("-----video--------\n", text)
                 if (isEmpty(text)) {
-
                     let pageUrl = currentPathname;
                     log('push pageUrl:\n', pageUrl);
                     pageUrls.push(pageUrl);
-                    // if ($('.entry-content p').prop("outerHTML") !== undefined) {
-                    //     $('.entry-content p').first().after(injectComponent);
-                    // } else 
-
                     if ($('.wrapper').prop("outerHTML") !== undefined) {
                         $('.wrapper').prev().after(injectComponent);
                     } else {
@@ -3088,7 +3103,6 @@ function popUpMenu() {
                         $("#injectComponent").prev().after(button_);
                     }
                 }
-
             }
         }).collectPics(function (doc) {
             let imgE;
@@ -3976,7 +3990,10 @@ function popUpMenu() {
             debugger
             if (!(match[0] === '')) {
                 pageUrls.push(currentPathname);
-                $('.entry-header').after(injectComponent);
+                if ($('.entry-header').length > 1) {
+                } else {
+                    $('.entry-header').after(injectComponent);
+                }
             }
         }).collectPics(function (doc) {
             let item = $(doc).find(".entry-content img");
@@ -4180,7 +4197,7 @@ function popUpMenu() {
             let item = $(doc).find(".entry-content img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4253,7 +4270,7 @@ function popUpMenu() {
             let item = $(doc).find("div.kt-tabs-content-wrap img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("data-orig-file");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4344,7 +4361,7 @@ function popUpMenu() {
             let item = $(doc).find(".aligncenter");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
+                if (/lazy/.test(this.className)) { } else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4365,10 +4382,10 @@ function popUpMenu() {
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
-            $("figure").hide();
+            $(".entry-content").hide();
 
         }, function () {
-            $('figure').show();
+            $('.entry-content').show();
 
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
@@ -4377,7 +4394,7 @@ function popUpMenu() {
             log("match: \n", match);
             if (match[0] !== '') {
                 pageUrls.push(match);
-                $("table+strong").after(injectComponent);
+                $(".entry-header").after(injectComponent);
             }
 
         }).collectPics(function (doc) {
@@ -4400,14 +4417,13 @@ function popUpMenu() {
         injectBtns().domain(site.asianpink.hostnames).removeAD(function () {
             setInterval(function () {
                 $("[src*='.gif']").parent().remove();
+                $(".elementor-grid").remove();
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $(".e-gallery-item").parent().hide();
-            $(".elementor-grid").hide();
         }, function () {
-            // $(".e-gallery-item").parent().show();
-            // $(".elementor-grid").show();
+            $(".e-gallery-item").parent().show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
             log("currentPathname: \n", currentPathname);
@@ -4437,15 +4453,18 @@ function popUpMenu() {
     if (site.ryuryu.iStatus) {
         injectBtns().domain(site.ryuryu.hostnames).removeAD(function () {
             setInterval(function () {
+                $(".viewport").prevAll().hide();
                 $("[src*='.gif']").parent().remove();
             }, 100);
         }).switchAggregationBtn(function () {
             activateFancyBox();
             $("article>section").hide();
             $("#ghost-portal-root").hide();
+            $(".article-image").hide();
         }, function () {
             $("#ghost-portal-root").show();
             $("article>section").show();
+            $(".article-image").show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname;
             log("currentPathname: \n", currentPathname);
@@ -4528,7 +4547,7 @@ function popUpMenu() {
             });
         }).start(); //urlIsTrue
     }
-    /* --------------------------------------------www.meitu131.com------------------------------------ */
+    /* --------------------------------------------www.meitu131.com------------------------------------- */
     if (site.meitu131.iStatus) {
         injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
             activateFancyBox();
