@@ -34,11 +34,20 @@
   >
   > 4.使用`免费私房图`，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。
   >
-  > 代码如下:
+  > 代码如下：
   >
   > ```
   > ! 2022-07-03 https://www.mfsft.com
   > /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com.*/
+  > ```
+  >
+  > 其他去广告代码：🆕
+  >
+  > ```
+  > ! 2022-07-11 https://www.xrmn5.cc
+  > ||tj.plmn5.com^$domain=www.xrmn5.cc
+  > ||*.shop:25688/ty/*
+  > ||www.xrmn5.cc/img/art*$script,domain=www.xrmn5.cc
   > ```
   >
   > 5.<a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
@@ -67,9 +76,9 @@
   > | `推荐` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                                                                                                                                                                          | `推荐` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                                                                                                                                                            |
   > | -----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
   > |      ✔ | <a href='https://www.192tt.top/' target='_blank' target='_blank'><code>192 美女图</code></a>                                                                                                                                                   |      - | <del><a href='https://www.wndfx.com/' target='_blank'><code>Wndfx 妹子图</code></a></del>                                                                                                                                        |
-  > |      - | <del><a href='https://www.lesmao.org' target='_blank'><code>蕾丝猫</code></a></del>                                                                                                                                                            |      ✔ | <a href='https://www.xinwenba.net/web/meinv/' target='_blank'><code>新闻吧</code></a>                                                                                                                                            |
-  > |      ✔ | <a href='https://hentai-img.com/' target='_blank'><code>Hentai Image</code></a>                                                                                                                                                                |      ✔ | <a href='https://hentai-cosplays.com/' target='_blank'><code>Hentai Cosplay</code></a> &amp; <a href='https://zh.hentai-cosplays.com/' target='_blank'><code>zh.Hentai Cosplay</code></a>                                        |
-  > |      ✔ | <a href='https://porn-images-xxx.com/' target='_blank'><code>Porn Image</code></a> &amp; <a href='https://zh.porn-images-xxx.com/' target='_blank'><code>zh.Porn Image</code></a>                                                              |      ✔ | <a href='https://www.meitu131.com/meinv/' target='_blank'><code>MEITU131</code></a>                                                                                                                                              |
+  > |      - | <del><a href='https://www.lesmao.org' target='_blank'><code>蕾丝猫</code></a></del>                                                                                                                                                            |      ✔ | <a href='https://www.xinwenba.net/web/meinv/' target='_blank'><code>新闻吧</code></a> 🆕                                                                                                                                         |
+  > |      ✔ | <a href='https://hentai-img.com/' target='_blank'><code>Hentai Image</code></a> 🆕                                                                                                                                                             |      ✔ | <a href='https://hentai-cosplays.com/' target='_blank'><code>Hentai Cosplay</code></a> &amp; <a href='https://zh.hentai-cosplays.com/' target='_blank'><code>zh.Hentai Cosplay</code></a>                                        |
+  > |      ✔ | <a href='https://porn-images-xxx.com/' target='_blank'><code>Porn Image</code></a> &amp; <a href='https://zh.porn-images-xxx.com/' target='_blank'><code>zh.Porn Image</code></a>                                                              |      ✔ | <a href='https://www.meitu131.com/meinv/' target='_blank'><code>MEITU131</code></a> 🆕                                                                                                                                           |
   > |      - | <del><a href='http://www.win4000.com/meitu.html' target='_blank'><code>美桌</code></a></del>                                                                                                                                                   |      ✔ | <a href='http://www.xiuren.org/' target='_blank'><code>Xiuren 秀人网</code></a>                                                                                                                                                  |
   > |      ✔ | <a href='https://www.micmicidol.com/' target='_blank'><code>Mic Mic Idol</code></a>                                                                                                                                                            |      ✔ | <a href='https://everia.club/' target='_blank'><code>Everia.club</code></a>                                                                                                                                                      |
   > |      ✔ | <a href='https://www.jpxgyw.net' target='_blank'><code>Jpxgyw 美女网</code></a>                                                                                                                                                                |      ✔ | <a href='https://www.jpmn8.com' target='_blank'><code>Jpmn8 精品美女吧</code></a>                                                                                                                                                |
