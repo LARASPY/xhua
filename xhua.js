@@ -878,7 +878,7 @@ async function startMain_(arrs = null) {
                 log(data);
             } catch (error) {
                 debugger
-                log(error);
+                console.log(error);
                 timeoutPromise(arr[index], addScript_(null, arr[index]));
             }
             if (!isEmpty(data)) {
@@ -888,11 +888,12 @@ async function startMain_(arrs = null) {
         }
     };
 
-    await initialArrFunction(mainArr);
-    await initialArrFunction(fancyboxyArr);
     if (!isEmpty(arrs)) {
         await initialArrFunction(arrs);
-    };
+    }else{
+        await initialArrFunction(mainArr);
+        await initialArrFunction(fancyboxyArr);
+    }
 }
 
 function startFancyBoxScript() {
