@@ -2515,6 +2515,7 @@ function popUpMenu() {
             $(".yituyu_box").remove();
             $(".collect-unit").first().remove();
             $(".pic_index_headc").css("position", "sticky");
+            $("#page").nextAll().remove();
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
