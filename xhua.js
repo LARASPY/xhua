@@ -2780,9 +2780,6 @@ function popUpMenu() {
     injectBtns().domain(site.Mrcong.hostnames).removeAD(function () {
         $("body").removeClass();
         $("body").removeAttr("id");
-        $("body").css({
-            "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
-        });
         $("meta").remove();
         $('iframe').remove();
         $("link").each(function () {
@@ -2855,6 +2852,9 @@ function popUpMenu() {
                 pageUrls.push(pageUrl);
             }
             if (os.isPc) {
+                $("body").css({
+                    "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
+                });
                 $(".page-link").last().prev().prev().after(injectComponent);
             }
         }
