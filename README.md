@@ -18,21 +18,21 @@
 
 - **其他**
 
-  > 1.ViewerJs 已退役，FancyBox 全适配
+  > Ⅰ. ViewerJs 已退役，FancyBox 全适配
   >
-  > 2.常用插件
+  > Ⅱ. 常用插件
   >
   > > ✨<mark> **[图片助手(ImageAssistant) 批量图片下载器](https://microsoftedge.microsoft.com/addons/detail/%E5%9B%BE%E7%89%87%E5%8A%A9%E6%89%8Bimageassistant-%E6%89%B9%E9%87%8F%E5%9B%BE%E7%89%87/odphnbhiddhdpoccbialllejaajemdio?hl=zh-CN)**</mark> (如果有下载不下来的图片，可以安装它来下载)
   > >
   > > ✨<mark> **[uBlock Origin](https://microsoftedge.microsoft.com/addons/detail/ublock-origin/odfafepnkmbhccpbejgmiehpchacaeak)** </mark>(如果有太多广告，安装它来去广告)
   >
-  > 3.集成快速打开各网址链接(**`弹框`来源于 hoothin 大佬的[od.js 库](https://sleazyfork.org/zh-CN/scripts/23522-od-js)** )
+  > Ⅲ. 集成快速打开各网址链接(**`弹框`来源于 hoothin 大佬的[od.js 库](https://sleazyfork.org/zh-CN/scripts/23522-od-js)** )
   >
   > > **<kbd>Esc</kbd>：退出网站链接界面。**
   > >
   > > **<kbd>Alt</kbd> + <kbd>F8</kbd>：打开各网站链接界面。**
   >
-  > 4.使用`免费私房图`，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。
+  > Ⅳ. 使用`免费私房图`，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。
   >
   > 代码如下：🆕
   >
@@ -41,7 +41,7 @@
   > /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com.*/
   > ```
   >
-  > 其他去广告代码：🆕
+  > 其他去广告代码：
   >
   > ```
   > ! 2022-07-11 https://www.xrmn5.cc
@@ -50,9 +50,37 @@
   > ||www.xrmn5.cc/img/art*$script,domain=www.xrmn5.cc
   > ```
   >
-  > 5.<a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
+  > Ⅴ. <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
   >
-  > 6.关于手机版的网址链接跳转，如果使用本油猴脚本**可用网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个[`Markdown网站`](http://jbt.github.io/markdown-editor/)，Markdown 代码在<a href='https://github.com/LARASPY/xhua' target='_blank' target='_blank'><code>LARASPY</code></a>git 仓库里面，将仓库里面的[**`README.md`**](https://cdn.staticaly.com/gh/LARASPY/xhua@master/README.md)代码，复制到[`Markdown网站`](http://jbt.github.io/markdown-editor/)里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
+  > Ⅵ. 关于手机版的网址链接跳转，如果使用本油猴脚本**可用网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个[`Markdown网站`](http://jbt.github.io/markdown-editor/)，Markdown 代码在<a href='https://github.com/LARASPY/xhua' target='_blank' target='_blank'><code>LARASPY</code></a>git 仓库里面，将仓库里面的[**`README.md`**](https://cdn.staticaly.com/gh/LARASPY/xhua@master/README.md)代码，复制到[`Markdown网站`](http://jbt.github.io/markdown-editor/)里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
+  >
+  > ***
+  >
+  > **Ⅶ.** 🍁 该脚本应该基本就是这样了，以后有时间在更新了。
+  >
+  > > 首先如果遇到<mark>**网站失效**</mark>,一般就是脚本的域名网址不起作用了。可以自行在<mark>**脚本头部**</mark>添加`@include`匹配项，比如像下面那样（这里以 Mrcong 为例）：🆕🆕🆕
+  > >
+  > > ```
+  > > // @include      /https:\/\/mrcong.net/
+  > > ```
+  > >
+  > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>还有一个地方要添加</mark>，Mrcong 里面的<mark>**hostnames**</mark>也
+  > >
+  > > ```
+  > >     Mrcong: {
+  > >         id: 20,
+  > >         name: 'Mrcong',
+  > >         hostnames: [
+  > >             'mrcong.com',
+  > >             'mrcong.net'
+  > >         ],
+  > >         ......
+  > >     },
+  > > ```
+  > >
+  > > 要添加<mark>域名</mark>，注意是添加`mrcong.net`(前面记得加<mark> , </mark>),不是`https:\/\/mrcong.net`,只要`https:\/\/`后面的域名。
+  >
+  > 基本上就是这样了。祝你使用愉快！
   >
   > ***
 
@@ -75,13 +103,13 @@
   >
   > | `推荐` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                                                                                                                                                                          | `推荐` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                                                                                                                                                            |
   > | -----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  > |      ✔ | <a href='https://www.taotu8.xyz/' target='_blank' target='_blank'><code>192 美女图</code></a>                                                                                                                                                   |      - | <del><a href='https://www.wndfx.com/' target='_blank'><code>Wndfx 妹子图</code></a></del>                                                                                                                                        |
-  > |      - | <del><a href='https://www.lesmao.org' target='_blank'><code>蕾丝猫</code></a></del>                                                                                                                                                            |      ✔ | <a href='https://www.xinwenba.net/web/meinv/' target='_blank'><code>新闻吧</code></a> 🆕                                                                                                                                         |
-  > |      ✔ | <a href='https://hentai-img.com/' target='_blank'><code>Hentai Image</code></a> 🆕                                                                                                                                                             |      ✔ | <a href='https://hentai-cosplays.com/' target='_blank'><code>Hentai Cosplay</code></a> &amp; <a href='https://zh.hentai-cosplays.com/' target='_blank'><code>zh.Hentai Cosplay</code></a>                                        |
-  > |      ✔ | <a href='https://porn-images-xxx.com/' target='_blank'><code>Porn Image</code></a> &amp; <a href='https://zh.porn-images-xxx.com/' target='_blank'><code>zh.Porn Image</code></a>                                                              |      ✔ | <a href='https://www.meitu131.com/meinv/' target='_blank'><code>MEITU131</code></a> 🆕                                                                                                                                           |
+  > |      ✔ | <a href='https://www.taotu8.xyz/' target='_blank' target='_blank'><code>192 美女图</code></a>                                                                                                                                                  |      - | <del><a href='https://www.wndfx.com/' target='_blank'><code>Wndfx 妹子图</code></a></del>                                                                                                                                        |
+  > |      - | <del><a href='https://www.lesmao.org' target='_blank'><code>蕾丝猫</code></a></del>                                                                                                                                                            |      ✔ | <a href='https://www.xinwenba.net/web/meinv/' target='_blank'><code>新闻吧</code></a>                                                                                                                                            |
+  > |      ✔ | <a href='https://hentai-img.com/' target='_blank'><code>Hentai Image</code></a>                                                                                                                                                                |      ✔ | <a href='https://hentai-cosplays.com/' target='_blank'><code>Hentai Cosplay</code></a> &amp; <a href='https://zh.hentai-cosplays.com/' target='_blank'><code>zh.Hentai Cosplay</code></a>                                        |
+  > |      ✔ | <a href='https://porn-images-xxx.com/' target='_blank'><code>Porn Image</code></a> &amp; <a href='https://zh.porn-images-xxx.com/' target='_blank'><code>zh.Porn Image</code></a>                                                              |      ✔ | <a href='https://www.meitu131.com/meinv/' target='_blank'><code>MEITU131</code></a>                                                                                                                                              |
   > |      - | <del><a href='http://www.win4000.com/meitu.html' target='_blank'><code>美桌</code></a></del>                                                                                                                                                   |      ✔ | <a href='http://www.xiuren.org/' target='_blank'><code>Xiuren 秀人网</code></a>                                                                                                                                                  |
   > |      ✔ | <a href='https://www.micmicidol.com/' target='_blank'><code>Mic Mic Idol</code></a>                                                                                                                                                            |      ✔ | <a href='https://everia.club/' target='_blank'><code>Everia.club</code></a>                                                                                                                                                      |
-  > |      ✔ | <a href='https://www.xgmn.vip/' target='_blank'><code>Jpxgyw 美女网</code></a>                                                                                                                                                                |      ✔ | <a href='https://www.jpmn8.com' target='_blank'><code>Jpmn8 精品美女吧</code></a>                                                                                                                                                |
+  > |      ✔ | <a href='https://www.xgmn.vip/' target='_blank'><code>Jpxgyw 美女网</code></a> 🆕                                                                                                                                                              |      ✔ | <a href='https://www.jpmn8.com' target='_blank'><code>Jpmn8 精品美女吧</code></a>                                                                                                                                                |
   > |      ✔ | <a href='https://www.95mm.org' target='_blank'><code>MM 范</code></a>                                                                                                                                                                          |      - | <del><a href='https://www.3gbizhi.com/meinv/' target='_blank'><code>3G 壁纸</code></a></del>                                                                                                                                     |
   > |      ✔ | <a href='https://tw.kissgoddess.com/' target='_blank'><code>Goddess</code></a>                                                                                                                                                                 |      ✔ | <a href='https://meinv.page/' target='_blank'><code>美女百科</code></a>                                                                                                                                                          |
   > |      - | <del><a href='https://asiansister.com/' target='_blank'><code>Asiansister</code></a></del>                                                                                                                                                     |      ✔ | <a href='https://yskhd.com/' target='_blank'><code>优丝库</code></a>                                                                                                                                                             |
