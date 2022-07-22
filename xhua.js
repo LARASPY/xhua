@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = true;
+let isDebugMain = false;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -1095,7 +1095,7 @@ function popUpMenu() {
                         //创建div去装各自
                         $('#c_container').append('<div id="c_' + i + '"></div>');
                         if (!breakPageLoop) {
-                            // debugger
+                            debugger
                             let pageUrl = startUrl + pageUrls[i];
                             Alpha_Script.obtainHtml({
                                 url: pageUrl,
@@ -1114,7 +1114,7 @@ function popUpMenu() {
                                     return function (response) {
                                         debugger
                                         if (isDebug) {
-                                            console.groupCollapsed('imagesGroupOut');
+                                            console.groupCollapsed('imagesGroup_' + _i);
                                         }
                                         log('response pageUrl:\n', _pageUrl);
                                         // response.status=403服务器拒绝爬虫可能通过改cookie的方法来做
@@ -1140,7 +1140,7 @@ function popUpMenu() {
                                             });
                                         }
                                         if (isDebug) {
-                                            console.groupEnd('imagesGroupOut');
+                                            console.groupEnd('imagesGroup_' + _i);
                                         }
                                     };
                                 }()
@@ -2929,11 +2929,11 @@ function popUpMenu() {
                 //FancyBox
                 activateFancyBox();
                 $("div#content>div[style^=text]").hide();
-                $("#content>div").last().hide();
+                $("#content>div>img").hide();
                 $("table[align]").hide();
             }, function () {
                 $("div#content>div[style^=text]").show();
-                $("#content>div").last().show();
+                $("#content>div>img").show();
                 $("table[align]").show();
             }).injectAggregationRef(function (injectComponent, pageUrls) {
                 let currentPathname = window.location.pathname;
@@ -2967,19 +2967,26 @@ function popUpMenu() {
                         log('push pageUrl:\n', pageUrl);
                         pageUrls.push(pageUrl);
                     }
-                    $('#content').prepend(injectComponent);
+                    $('#content img').first().parent().prepend(injectComponent);
                 }
             }).collectPics(function (doc) {
+                let imgE = [];
                 let images;
                 images = $(doc).find('#content img');
                 debugger
-                log("images: \n", images);
-
-                let a_imgTag = aImgTagPackaging(images);
-                log("New a_imgTag Object: \n", $(a_imgTag));
-                return $(a_imgTag);
+                // log("images: \n", images);
+                $(images).each(function () {
+                    let src = $(this).attr("src");
+                    // log($(this).prop("outerHTML")+src);
+                    imgE.push($("<img src=" + src + "></img>"));
+                });
+                log(imgE);
+                return $(imgE);
             }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
+                imgE.style = "max-width: 100%;height: auto";
+                $(imgE).attr({
+                    'data-fancybox': 'images'
+                });
             }).start(); //urlIsTrue
         }
     }
