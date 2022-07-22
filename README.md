@@ -64,7 +64,7 @@
   > > // @include      /https:\/\/mrcong.net/
   > > ```
   > >
-  > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>还有一个地方要添加</mark>，Mrcong 里面的<mark>**hostnames**</mark>也
+  > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>还有一个地方要添加</mark>，比如下面的**Mrcong**里面的<mark>**hostnames**</mark>也
   > >
   > > ```
   > >     Mrcong: {
