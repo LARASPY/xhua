@@ -67,15 +67,15 @@
   > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>**还有一个地方要添加**</mark>，比如下面的<mark>**Mrcong**</mark>里面的<mark>**hostnames**</mark>也
   > >
   > > ```
-  > >     Mrcong: {
-  > >         id: 20,
-  > >         name: 'Mrcong',
-  > >         hostnames: [
-  > >             'mrcong.com',
-  > >             'mrcong.net'
-  > >         ],
-  > >         ......
-  > >     },
+  > > Mrcong: {
+  > >     id: 20,
+  > >     name: 'Mrcong',
+  > >     hostnames: [
+  > >         'mrcong.com',
+  > >         'mrcong.net'
+  > >     ],
+  > >     ......
+  > > },
   > > ```
   > >
   > > 要添加<mark>**域名**</mark>，注意是添加`mrcong.net`(前面记得加<mark> **,** </mark>),不是`https:\/\/mrcong.net`,只要`https:\/\/`后面的域名。
