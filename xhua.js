@@ -16,7 +16,7 @@
 // @include      /https?\:\/\/www.wndfx\.com/
 // @include      /https?\:\/\/w+\.(?:les|ls)m(\w+)?.\w*/
 // @include      /https?\:\/\/\w+\.win4000\.com/
-// @include      /https?\:\/\/(www|m).192t\w+\.\w+/
+// @include      /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
@@ -188,9 +188,10 @@ let site = {
         hostnames: [
             'www.192tt.top',
             'www.192tb.com',
-            'www.192tp.com'
+            'www.192tp.com',
+            'www.taotu8.xyz'
         ],
-        pattern: /https?\:\/\/(www|m).192t\w+\.\w+/,
+        pattern: /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/,
         iStatus: false,
         _break: false
     },
