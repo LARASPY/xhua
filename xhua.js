@@ -88,11 +88,10 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
+
 // https://tool.lu/markdown/
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
-
-//(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
 let isDebugMain = false;
 
