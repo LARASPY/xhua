@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -2923,6 +2923,7 @@ function popUpMenu() {
             injectBtns().domain(site._24fa.hostnames).removeAD(function () {
                 setInterval(function () {
                     $("div[class^='ad']").remove();
+                    $("#content img[src$='gif']").remove();
                 }, 100);
             }).switchAggregationBtn(function () {
                 //FancyBox
@@ -2970,7 +2971,7 @@ function popUpMenu() {
                 }
             }).collectPics(function (doc) {
                 let images;
-                images = $(doc).find('div#content img');
+                images = $(doc).find('#content img');
                 debugger
                 log("images: \n", images);
 
