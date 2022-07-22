@@ -1501,7 +1501,7 @@ function popUpMenu() {
             'data-fancybox': 'images'
         });
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------hentai-cosplays|img.com & Pron----------------------- */
 
@@ -1600,7 +1600,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.lsm.me & www.lesmao.org-------------------------- */
 
@@ -1713,7 +1713,7 @@ function popUpMenu() {
             'data-fancybox': 'images'
         });
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.win4000.com-------------------------------------- */
 
@@ -1760,7 +1760,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.192tp.com---------------------------------------- */
 
@@ -1850,7 +1850,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.xiuren.org--------------------------------------- */
 
@@ -1883,7 +1883,7 @@ function popUpMenu() {
             'data-fancybox': 'images'
         });
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.micmicidol.com----------------------------------- */
 
@@ -1942,7 +1942,7 @@ function popUpMenu() {
 
         // log("imgE: \n", imgE);
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------everia.club------------------------------------------ */
 
@@ -2020,7 +2020,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.jpxgyw.net & www.jpmn8.com----------------------- */
 
@@ -2098,7 +2098,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.95mm.org----------------------------------------- */
 
@@ -2152,7 +2152,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.3gbizhi.com-------------------------------------- */
 
@@ -2213,7 +2213,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------tw.kissgoddess.com----------------------------------- */
 
@@ -2276,7 +2276,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------meinv.page------------------------------------------- */
 
@@ -2331,7 +2331,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------asiansister.com-------------------------------------- */
 
@@ -2379,7 +2379,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------yskhd.com-------------------------------------------- */
 
@@ -2447,7 +2447,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (aImgE) {
         $(aImgE).find("img")[0].style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.dmmtu.com---------------------------------------- */
 
@@ -2507,7 +2507,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.fnvshen.com && xsnvshen.co----------------------- */
 
@@ -2681,7 +2681,7 @@ function popUpMenu() {
         }
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.ikanins.com-------------------------------------- */
 
@@ -2733,7 +2733,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------madoupan.com----------------------------------------- */
 
@@ -2776,7 +2776,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------mrcong.com------------------------------------------- */
 
@@ -2870,7 +2870,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
 
 
     /* --------------------------------------------www.xrmn5.cc & www.xiurenb.net ---------------------- */
@@ -2939,7 +2939,7 @@ function popUpMenu() {
         return $(a_imgTag);
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
-    }).start(); //urlIsTrue
+    }).start();
     /* --------------------------------------------www.112w.cc------------------------------------------ */
 
     injectBtns().domain(site._24fa.hostnames).removeAD(function () {
@@ -3011,7 +3011,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.tuiimg.com--------------------------------------- */
 
@@ -3079,7 +3079,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------nsfwp.buzz------------------------------------------- */
 
@@ -3159,7 +3159,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------mmm131.com------------------------------------------- */
 
@@ -3251,7 +3251,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------asiantolick.com-------------------------------------- */
 
@@ -3284,7 +3284,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.imn5.net-格式------------------------------------ */
 
@@ -3335,7 +3335,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------xchina.club------------------------------------------ */
 
@@ -3410,7 +3410,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------jjgirls.com------------------------------------------ */
 
@@ -3488,7 +3488,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------photos18.com----------------------------------------- */
 
@@ -3533,7 +3533,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------pornpics.com----------------------------------------- */
 
@@ -3583,7 +3583,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.mfsft.com---------------------------------------- */
 
@@ -3676,7 +3676,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------xartmodel.net---------------------------------------- */
 
@@ -3711,7 +3711,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------hotgirl.asia----------------------------------------- */
 
@@ -3771,7 +3771,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------hotgirlchina.com------------------------------------- */
 
@@ -3832,7 +3832,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------blog.baobua.com-------------------------------------- */
 
@@ -3869,7 +3869,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------buondua.com------------------------------------------ */
 
@@ -3930,7 +3930,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.4kup.net----------------------------------------- */
 
@@ -3975,7 +3975,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------goddess247.com--------------------------------------- */
 
@@ -4020,7 +4020,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.ilovexs.com-------------------------------------- */
 
@@ -4053,7 +4053,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------mitaku.net------------------------------------------- */
 
@@ -4079,7 +4079,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.nlegs.com---------------------------------------- */
 
@@ -4186,7 +4186,7 @@ function popUpMenu() {
                 // }, 100);
             }
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------nudecosplaygirls.com--------------------------------- */
 
@@ -4219,7 +4219,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------nudebird.biz----------------------------------------- */
 
@@ -4259,7 +4259,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------idol.gravureprincess.date---------------------------- */
 
@@ -4290,7 +4290,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------asdasfd.net------------------------------------------ */
 
@@ -4331,7 +4331,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------yellowfever18.com------------------------------------ */
 
@@ -4372,7 +4372,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------allasiangirls.net------------------------------------ */
 
@@ -4422,7 +4422,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------asdcosplay.com--------------------------------------- */
 
@@ -4460,7 +4460,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------asianpink.net---------------------------------------- */
 
@@ -4497,7 +4497,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------ryuryu.tw-------------------------------------------- */
 
@@ -4538,7 +4538,7 @@ function popUpMenu() {
             'data-fancybox': 'images',
             'width': '100%'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.xinwenba.net------------------------------------- */
 
@@ -4595,7 +4595,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
     /* --------------------------------------------www.meitu131.com------------------------------------- */
 
@@ -4661,7 +4661,7 @@ function popUpMenu() {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-    }).start(); //urlIsTrue
+    }).start();
 
 })();
 
