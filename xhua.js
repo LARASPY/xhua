@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.98
+// @version      3.99
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -110,10 +110,8 @@ let site = {
         hostnames: [
             'hentai-img.com'
         ],
-        pattern: /https?\:\/\/(\w+\.)?hentai-(cosplays|img)\.com/,
         iStatus: false,
         _break: false,
-        isPutInto: 1
     },
     Hentai: { //支持中文https://zh.hentai-cosplays.com/
         id: 0,
@@ -121,10 +119,8 @@ let site = {
         hostnames: [
             'hentai-cosplays.com'
         ],
-        pattern: /https?\:\/\/(\w+\.)?hentai-(cosplays|img)\.com/,
         iStatus: false,
         _break: false,
-        isPutInto: 1
     },
     Pron: { //支持中文https://zh.porn-images-xxx.com/
         id: 1,
@@ -750,24 +746,59 @@ function priorityLog() {
 }
 
 function currentUrlActivation() {
-    let isActive = false;
-    let hostName = window.location.origin;
+    let origin = window.location.origin;
+    let hostName = window.location.hostname;
     let hostnameArry = null;
-    for (let key in site) {
-        hostnameArry = site[key].pattern.exec(hostName);
-        // log("isActive: ",isActive);
-        if (hostnameArry != null) {
-            let isPutInto = isEmpty(site[key].isPutInto);
-            if (isPutInto) {
-                site[key].hostnames.push(hostnameArry[0].replace(/https?:\/\//i, ""));
+    let isEmpty = function (param) {
+        if (param) {
+            var param_type = typeof (param);
+            if (param_type == 'object') {
+                if (typeof (param.source) == 'undefined' | '') {
+                    return true; //空值，空对象
+                }
             }
-            log("site[key].hostName: ", site[key].hostnames);
-            isActive = true;
+            return false; //非空值
         } else {
-            isActive = false;
+            //空值,例如：
+            //(1)null
+            //(2)可能使用了js的内置的名称，例如：var name=[],这个打印类型是字符串类型。
+            //(3)空字符串''、""。
+            //(4)数字0、00等，如果可以只输入0，则需要另外判断。
+            return true;
         }
-        site[key].iStatus = isActive;
-        log(key, ": ", isActive);
+    }
+    let meet = function (domain) {
+        let matchDomain = false;
+        if (Alpha_Script.isArray(domain)) {
+            for (let i = 0; i < domain.length; i++) {
+                if (domain[i] === hostName) {
+                    matchDomain = true;
+                    break;
+                }
+            }
+        } else {
+            matchDomain = domain === hostName;
+        }
+        return matchDomain;
+    };
+    for (let key in site) {
+        debugger
+        let isPattern = isEmpty(site[key].pattern);
+        debugger
+        if (!isPattern) {
+            hostnameArry = site[key].pattern.exec(origin);
+            if (hostnameArry != null) {
+                let urlHostName = hostnameArry[0].replace(/https?:\/\//i, "");
+                site[key].hostnames.push(urlHostName);
+                log(site[key].name, " : ", "add new hostName: ", urlHostName);
+            }
+        } else {
+            log(site[key].name, " : ", 'pattern is empty, never add new hostName.');
+        }
+        site[key].iStatus = meet(site[key].hostnames);
+        if (site[key].iStatus) {
+            log(site[key].name, ":\n", site[key].hostnames);
+        }
     }
     // log("合并数组: \n", site.Hentai.hostnames.concat(site.Pron.hostnames));
 }
@@ -1054,8 +1085,9 @@ function popUpMenu() {
         let collectPics = null;
         let session = document.cookie;
 
-        log('sessionCookie: ', session);
-
+        if (!isEmpty(session)) {
+            log('sessionCookie: ', session);
+        }
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
                 $('#injectaggregatBtn').val('聚合隐藏');
@@ -1162,7 +1194,7 @@ function popUpMenu() {
             options.match = options.match || match;
             options.mismatch = options.mismatch || mismatch;
 
-            log("Arr(options.domain): \n" + options.domain);
+            // log("Arr(options.domain): \n" + options.domain);
             let matchDomain = false;
             if (Alpha_Script.isArray(options.domain)) {
                 for (let i = 0; i < options.domain.length; i++) {
@@ -1413,1485 +1445,1146 @@ function popUpMenu() {
     }
 
     /* --------------------------------------------wndfx.com-------------------------------------------- */
-    if (site.Wndfx.iStatus) {
-        injectBtns().domain('www.wndfx.com').removeAD(function () {
-            $('div.atc_new_head').remove(); //移除广告等无必要元素
-            $('div.keywords').remove(); //移除广告等无必要元素
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div .article-content').hide();
-            $('div.nav-links').hide();
-            $('div.article-wechats').hide();
-        }, function () {
-            $('div .article-content').show();
-            $('div.nav-links').show();
-            $('div.article-wechats').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            // debugger
-            log("currentPathname: " + currentPathname);
-            let match = currentPathname.match(/\/(.+\/)(\d+)(?:_\d+)?\.html/m); //http://www.aitaotu.com/weimei/36129.html
 
-            if (match !== null) {
-                {
-                    let totalPageCnt = 1;
-                    let partPreUrl = match[1];
-                    let pageId = match[2] + '_';
-                    let suffixUrl = '.html';
-                    let limitPageStr = $('.page_imges a').html();
-                    // debugger
-                    // log('partPreUrl: ', partPreUrl);
-                    // log('pageId: ', pageId);
-                    // log('limitPageStr: ', limitPageStr);
+    injectBtns().domain('www.wndfx.com').removeAD(function () {
+        $('div.atc_new_head').remove(); //移除广告等无必要元素
+        $('div.keywords').remove(); //移除广告等无必要元素
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div .article-content').hide();
+        $('div.nav-links').hide();
+        $('div.article-wechats').hide();
+    }, function () {
+        $('div .article-content').show();
+        $('div.nav-links').show();
+        $('div.article-wechats').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        // debugger
+        log("currentPathname: " + currentPathname);
+        let match = currentPathname.match(/\/(.+\/)(\d+)(?:_\d+)?\.html/m); //http://www.aitaotu.com/weimei/36129.html
 
-                    let limitPageMatch = limitPageStr.match(/(?<=\<\/span\>)\d/im);
-                    // log('limitPageMatch: ', limitPageMatch);
+        if (match !== null) {
+            {
+                let totalPageCnt = 1;
+                let partPreUrl = match[1];
+                let pageId = match[2] + '_';
+                let suffixUrl = '.html';
+                let limitPageStr = $('.page_imges a').html();
+                // debugger
+                // log('partPreUrl: ', partPreUrl);
+                // log('pageId: ', pageId);
+                // log('limitPageStr: ', limitPageStr);
 
-                    if (limitPageMatch != null) {
-                        let totalPics = parseInt(limitPageMatch[0]);
-                        totalPageCnt = totalPics + 1;
-                        log('totalPageCnt: ', totalPageCnt);
-                    }
-                    let pageUrl = partPreUrl + match[2] + suffixUrl;
-                    pageUrls.push(pageUrl);
-                    for (let i = 2; i <= totalPageCnt; i++) {
-                        let pageUrl = partPreUrl + pageId + i + suffixUrl;
-                        log('push pageUrl: ', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
+                let limitPageMatch = limitPageStr.match(/(?<=\<\/span\>)\d/im);
+                // log('limitPageMatch: ', limitPageMatch);
+
+                if (limitPageMatch != null) {
+                    let totalPics = parseInt(limitPageMatch[0]);
+                    totalPageCnt = totalPics + 1;
+                    log('totalPageCnt: ', totalPageCnt);
                 }
-                $('div.mbd_ad').first().after(injectComponent);
+                let pageUrl = partPreUrl + match[2] + suffixUrl;
+                pageUrls.push(pageUrl);
+                for (let i = 2; i <= totalPageCnt; i++) {
+                    let pageUrl = partPreUrl + pageId + i + suffixUrl;
+                    log('push pageUrl: ', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
             }
-        }).collectPics(function (doc) {
-            return $(doc).find('.article-content img');
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
+            $('div.mbd_ad').first().after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        return $(doc).find('.article-content img');
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------hentai-cosplays|img.com & Pron----------------------- */
-    if (site.Hentai.iStatus || site.Pron.iStatus) {
-        injectBtns().domain(site.Hentai.hostnames.concat(site.Pron.hostnames).concat(site.HentaiImage.hostnames)).removeAD(function () {
-            setInterval(function () {
-                $("div[id^='gn_delivery']").remove();
-                $("a[id^='__qdd_ciw_a__']").remove();
-                $('iframe').remove(); //移除广告等无必要元素
-                $("div #social_button").remove();
-                $("div #top_ad").remove();
-                $("#header .right-menu").nextAll().remove();
+
+    injectBtns().domain(site.Hentai.hostnames.concat(site.Pron.hostnames).concat(site.HentaiImage.hostnames)).removeAD(function () {
+        setInterval(function () {
+            $("div[id^='gn_delivery']").remove();
+            $("a[id^='__qdd_ciw_a__']").remove();
+            $('iframe').remove(); //移除广告等无必要元素
+            $("div #social_button").remove();
+            $("div #top_ad").remove();
+            $("#header .right-menu").nextAll().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#display_image_detail').hide();
+        $('#post').hide();
+        //android
+        $('#detail_list').hide();
+        $('#paginator_area').hide();
+        $('.paginator_area').hide();
+    }, function () {
+        $('#display_image_detail').show();
+        $('#post').show();
+        //android
+        $('#detail_list').show();
+        $('#paginator_area').show();
+        $('.paginator_area').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        // let match = window.location.pathname.match(/(\/page\/\d+\/)$/im); // /image/cos-cos-1/page/2/
+        let limitPageStr = null;
+        let limitPageMatchList = null;
+        if (os.isAndroid) {
+            limitPageStr = $('.paginator_area').prop('outerHTML');
+        } else {
+            limitPageStr = $('#main_contents').prop('outerHTML');
+        }
+
+        log("limitPageStr: ", limitPageStr);
+        debugger
+
+        if (!isEmpty(limitPageStr)) {
+            limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
+        }
+        if (isEmpty(limitPageMatchList)) {
+            limitPageMatchList = ['1'];
+        }
+        let maxpage = Math.max.apply(null, limitPageMatchList);
+        // let maxpage = limitPageMatchList.length;
+        log("limitPageMatch: ", limitPageMatchList);
+        log("maxpage: ", maxpage);
+        debugger
+        if (limitPageMatchList !== null) {
+            {
+                let totalPageCnt = maxpage;
+                // bug: \n https://zh.hentai-cosplays.com/image/--835/
+                // /image/333-jc-selfie-images-self-portrait-photos-taken-by-female-junior-high-school-students-have-different-eroticism/
+
+                let partPreUrl = null;
+                let suffixUrl = null;
+                if (partPreUrl == null) {
+                    suffixUrl = "";
+                    partPreUrl = window.location.pathname.match(/\/((?!(page|com))[a-zA-Z])+\/[-a-zA-Z0-9]+\//g);
+                } else {
+                    partPreUrl = window.location.pathname.match(/[a-zA-Z]+\/\w+[-a-zA-Z0-9]+\//g);
+                }
+                suffixUrl = 'page/';
+                log("partPreUrl: ", partPreUrl);
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    let pageUrl = partPreUrl + suffixUrl + i + '/';
+                    log('push pageUrl: ', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
+            }
+
+            let id = setInterval(function () {
+                if ($('#Autopage_number').length > 0) {
+                    $('#Autopage_number').click();
+                    clearInterval(id);
+                }
             }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#display_image_detail').hide();
-            $('#post').hide();
-            //android
-            $('#detail_list').hide();
-            $('#paginator_area').hide();
-            $('.paginator_area').hide();
-        }, function () {
-            $('#display_image_detail').show();
-            $('#post').show();
-            //android
-            $('#detail_list').show();
-            $('#paginator_area').show();
-            $('.paginator_area').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            // let match = window.location.pathname.match(/(\/page\/\d+\/)$/im); // /image/cos-cos-1/page/2/
-            let limitPageStr = null;
-            let limitPageMatchList = null;
             if (os.isAndroid) {
-                limitPageStr = $('.paginator_area').prop('outerHTML');
+                $('ul#detail_list').prev().after(injectComponent);
             } else {
-                limitPageStr = $('#main_contents').prop('outerHTML');
+                $('#title+p').after(injectComponent);
             }
-
-            log("limitPageStr: ", limitPageStr);
-            debugger
-
-            if (!isEmpty(limitPageStr)) {
-                limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
-            }
-            if (isEmpty(limitPageMatchList)) {
-                limitPageMatchList = ['1'];
-            }
-            let maxpage = Math.max.apply(null, limitPageMatchList);
-            // let maxpage = limitPageMatchList.length;
-            log("limitPageMatch: ", limitPageMatchList);
-            log("maxpage: ", maxpage);
-            debugger
-            if (limitPageMatchList !== null) {
-                {
-                    let totalPageCnt = maxpage;
-                    // bug: \n https://zh.hentai-cosplays.com/image/--835/
-                    // /image/333-jc-selfie-images-self-portrait-photos-taken-by-female-junior-high-school-students-have-different-eroticism/
-
-                    let partPreUrl = null;
-                    let suffixUrl = null;
-                    if (partPreUrl == null) {
-                        suffixUrl = "";
-                        partPreUrl = window.location.pathname.match(/\/((?!(page|com))[a-zA-Z])+\/[-a-zA-Z0-9]+\//g);
-                    } else {
-                        partPreUrl = window.location.pathname.match(/[a-zA-Z]+\/\w+[-a-zA-Z0-9]+\//g);
-                    }
-                    suffixUrl = 'page/';
-                    log("partPreUrl: ", partPreUrl);
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl = partPreUrl + suffixUrl + i + '/';
-                        log('push pageUrl: ', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                }
-
-                let id = setInterval(function () {
-                    if ($('#Autopage_number').length > 0) {
-                        $('#Autopage_number').click();
-                        clearInterval(id);
-                    }
-                }, 100);
-                if (os.isAndroid) {
-                    $('ul#detail_list').prev().after(injectComponent);
-                } else {
-                    $('#title+p').after(injectComponent);
-                }
-            }
-        }).collectPics(function (doc) {
-            return $(doc).find("div#display_image_detail div a img");
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-            let src = $(imgE).attr('lazysrc');
-            if (src) {
-                $(imgE).removeAttr('lazysrc');
-                $(imgE).attr('src', src);
-            }
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.lsm.me & www.lesmao.org-------------------------- */
-    if (site.Lesmao.iStatus) {
-        injectBtns().domain(site.Lesmao.hostnames).removeAD(function () {
-            $('#thread-down').remove(); //移除广告等无必要元素
-            $("div .wp").remove();
-
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.adw').hide();
-            $('#thread-page').hide();
-            $("#pic").hide();
-            $(".picvip").hide();
-        }, function () {
-            $('.adw').show();
-            $('#thread-page').show();
-            $("#pic").show();
-            $(".picvip").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let match = window.location.pathname.match(/^\/(thread-\d+-)(\d+)(-\d+\.html)$/im);
-            log("match: \n", match);
-            debugger
-            if (match !== null) {
-                {
-                    let totalPageCnt = 5;
-                    let partPreUrl = match[1];
-                    let suffixUrl = match[3];
-
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl = partPreUrl + i + suffixUrl;
-                        log('push pageUrl:\n', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                }
-                if (os.isAndroid) {
-                    $('.data').after(injectComponent);
-                } else {
-                    $('#thread-pic').after(injectComponent);
-                }
-            }
-        }).collectPics(function (doc) {
-            return $(doc).find('ul > li > img');
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); // urlIsTrue
-    }
-    /* --------------------------------------------www.umei.cc & www.umeitu.com------------------------- */
-    if (site.Umei.iStatus) {
-        injectBtns().domain(site.Umei.hostnames).removeAD(function () {
-            $('union').remove(); //移除广告等无必要元素
-
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            // $('.ImageBody').hide();
-            // $('.NewPages').hide();
-            $('.img-content').hide();
-            $('.gongneng').hide();
-            $('.swiper-box').hide();
-            $('.hb-nav').hide();
-            //android
-            // $('.arc-body').hide();
-            // $(".pages").hide();
-        }, function () {
-            // $('.ImageBody').show();
-            // $('.NewPages').show();
-            $('.img-content').show();
-            $('.gongneng').show();
-            $('.hb-nav').show();
-            //android
-            // $('.arc-body').show();
-            // $(".pages").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let match = currentPathname.match(/^\/(\w+\/\w+(?:\/\w+)?\/)(\d+)(?:_\d+)?\.htm$/im);
-            log("match: \n", match);
-            if (match !== null) {
-                {
-                    let totalPageCnt = 1;
-                    let partPreUrl = match[1];
-                    let pageId = match[2];
-                    let suffixUrl = '.htm';
-                    let limitPageStr = null;
-
-                    limitPageStr = $('.gongneng').prop("outerHTML").toString().match(/\d+(?=\<\/span\>)/g);
-                    totalPageCnt = parseInt(limitPageStr);
-
-                    log("limitPageStr: \n", limitPageStr);
-                    log('totalPageCnt: \n', totalPageCnt);
-
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl = '';
-                        if (i == 1) {
-                            pageUrl = partPreUrl + pageId + suffixUrl;
-                        } else {
-                            pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                        }
-                        log('push pageUrl:\n', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                }
-                $(".main-left").prepend(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            return $(doc).find('.content-box a img');
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.win4000.com-------------------------------------- */
-    if (site.Win4000.iStatus) {
-        injectBtns().domain(site.Win4000.hostnames).removeAD(function () {
-            setInterval(function () {
-                $('iframe').remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div.pic-meinv').hide();
-        }, function () {
-            $('div.pic-meinv').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let match = currentPathname.match(/\/(\w+?\d+)(?:_\d+)?/m);
-            if (match !== null) {
-                {
-                    let totalPageCnt = 1;
-                    let partPreUrl = match[1];
-                    let pageId = '';
-                    let suffixUrl = '.html';
-                    let limitPageStr = $('div.ptitle').text();
-                    let limitPageMatch = limitPageStr.match(/（\d+\/(\d+)）/m);
-                    if (limitPageMatch != null) {
-                        totalPageCnt = parseInt(limitPageMatch[1]);
-                        log('totalPageCnt', totalPageCnt);
-                    }
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                        log('push pageUrl:\n', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                }
-                $('div.ptitle').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            return $(doc).find('div.pic-meinv a  img');
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-            let src = $(imgE).attr('url');
-            if (src) {
-                $(imgE).attr('src', src);
-            }
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.192tp.com---------------------------------------- */
-    if (site._192tp.iStatus) {
-        injectBtns().domain(site._192tp.hostnames).removeAD(function () {
-            setInterval(function () {
-                $('iframe').remove();
-                $('div[class^=ad]').remove();
-                $(".national-content").remove();
-                $("[title~=近期网站一些调整说明]").remove();
-                $(".Rfloat").remove();
-                $(".bgtu-info+p").remove(); //remove选择所有紧跟在 <div> 元素之后的第一个 <p> 元素
-                $("div.infoline span:first-of-type").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#p').hide();
-            $("#back-to-top").hide();
-            //android
-            $('.piclist').hide();
-            $('.btnline').hide();
-            $(".zt_bigpic p").hide();
-
-        }, function () {
-            $('#p').show();
-            $("#back-to-top").show();
-            //android
-            $('.piclist').show();
-            $('.btnline').show();
-            $(".zt_bigpic p").show();
-
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: " + currentPathname);
-            let match = currentPathname.match(/\/(\w+(?:\/\w+)?\/\w+?)(?:_\d+)?\.html/m); //https://www.192tt.com/gq/ugirls/ugu349_2.html,https://www.192tt.com/meitu/81896.html
-            if (match !== null) {
-                {
-                    let totalPageCnt = 1;
-                    let partPreUrl = match[1];
-                    let pageId = '';
-                    let suffixUrl = '.html';
-                    let limitPageStr = $('h1').text();
-                    let limitPageMatch = limitPageStr.match(/\(\d+\/(\d+)\)/m);
-                    log("limitPageStr: " + limitPageStr);
-                    log("limitPageMatch: " + limitPageMatch);
-                    if (limitPageMatch != null) {
-                        totalPageCnt = parseInt(limitPageMatch[1]);
-                        // debugger
-                        log('totalPageCnt: ', totalPageCnt);
-                    }
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl = '';
-                        if (i == 1) {
-                            pageUrl = partPreUrl + pageId + suffixUrl;
-                        } else {
-                            pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                        }
-                        log('push pageUrl: ', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                }
-                if (os.isAndroid) {
-
-                    $('div.infoline').after(injectComponent);
-                } else {
-                    $('div.pictopline').after(injectComponent);
-                }
-            }
-        }).collectPics(function (doc) {
-            debugger
-            if (os.isAndroid) {
-                //去除最后两个空白广告图片
-                $(doc).find('.piclist li:last-child').remove();
-                $(doc).find('.piclist li:last-child').remove();
-                // log("img: \n",$(doc).find('.piclist li img'));
-                return $(doc).find('.piclist li img');
-            } else {
-                return $(doc).find('#p > center img');
-            }
-
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            let src = $(imgE).attr('lazysrc');
-            if (src) {
-                $(imgE).removeAttr('lazysrc');
-                $(imgE).attr('src', src);
-            }
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.xiuren.org--------------------------------------- */
-    if (site.Xiuren.iStatus) {
-        injectBtns().domain('www.xiuren.org').removeAD(function () {
-            setInterval(function () {
-                $('iframe').remove();
-                $("div[id^=an]").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div.post').hide();
-        }, function () {
-            $('div.post').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let match = currentPathname.match(/^\/([\w-]+\.html)\b/im);
-            if (match !== null) {
-                {
-                    pageUrls.push(window.location.pathname.substr(1));
-                }
-                $('#title').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let clone = $(doc).find('div.post span > a').clone();
-            return $(clone).find('img');
-        }, function (imgE) {
-            let src = $(imgE).parent().attr('href');
+        }
+    }).collectPics(function (doc) {
+        return $(doc).find("div#display_image_detail div a img");
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+        let src = $(imgE).attr('lazysrc');
+        if (src) {
+            $(imgE).removeAttr('lazysrc');
             $(imgE).attr('src', src);
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.micmicidol.com----------------------------------- */
-    if (site.Micmicidol.iStatus) {
-        injectBtns().domain(site.Micmicidol.hostnames).removeAD(function () {
-            // $('div#total-wrapper').siblings().remove();
-            $("link").each(function () {
-                let href = $(this).attr('href');
-                let isHrefMatch = /micmicidol/g.exec(href);
-                if (isHrefMatch === null) {
-                    $(this).remove();
-                }
-            });
-            $("script").each(function () {
-                let href = $(this).attr('src');
-                let isHrefMatch = /micmicidol/g.exec(href);
-                if (isHrefMatch === null) {
-                    $(this).remove();
-                }
-            });
-        }).switchAggregationBtn(function () {
+        }
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
 
-            activateFancyBox();
-            // imagePluginSwitch[0].isFancyBoxFullScreen = true;
-            // if (os.isAndroid || os.isPhone) {
-            //     imagePluginSwitch[0].isFancyBoxFullScreen = false;
-            // }
+    /* --------------------------------------------www.lsm.me & www.lesmao.org-------------------------- */
 
-            $('div.post-body').hide();
-        }, function () {
-            $('div.post-body').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: ", currentPathname);
-            let ismainPage = /\/(\d+)\//g.exec(currentPathname);
-            log("ismainPage: \n", ismainPage);
-            if (ismainPage === null) {
+    injectBtns().domain(site.Lesmao.hostnames).removeAD(function () {
+        $('#thread-down').remove(); //移除广告等无必要元素
+        $("div .wp").remove();
 
-            } else if (currentPathname !== null) {
-                {
-                    pageUrls.push(currentPathname);
-                }
-                $('.post-header').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let aImages = $(doc).find('div.post-body > a[href]').clone();
-            return $(aImages);
-        }, function (imgE) {
-            let src = $(imgE).attr('href');
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-            debugger
-            log("src: \n", src);
-            $(imgE).find('img').attr('src', src);
-            $(imgE).find('img').attr('label', 'sl');
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.adw').hide();
+        $('#thread-page').hide();
+        $("#pic").hide();
+        $(".picvip").hide();
+    }, function () {
+        $('.adw').show();
+        $('#thread-page').show();
+        $("#pic").show();
+        $(".picvip").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let match = window.location.pathname.match(/^\/(thread-\d+-)(\d+)(-\d+\.html)$/im);
+        log("match: \n", match);
+        debugger
+        if (match !== null) {
+            {
+                let totalPageCnt = 5;
+                let partPreUrl = match[1];
+                let suffixUrl = match[3];
 
-            // log("imgE: \n", imgE);
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------everia.club------------------------------------------ */
-    if (site.Everia.iStatus) {
-        injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
-            // $("body").removeClass();
-            // $('div[id^=custom_html]').remove();
-            // // $('html script').remove();
-            // // $(".wrapper").siblings().remove();
-            // // $(".wrapper").siblings().css({
-            // //     "position": "unset"
-            // // });
-            // // setInterval(function () {
-            // // $("#jquery-migrate-js").remove();
-            // // $('.padPreload').remove();
-            // // $('#popmagicldr').remove();
-            // $("meta").remove();
-            // $("noscript").remove();
-            // $("link").each(function () {
-            //     // log("link: \n", $(this).prop("outerHTML"));
-            //     let href = $(this).attr('href');
-            //     // log("href: \n",href);
-            //     let isHrefMatch = /everia/g.exec(href);
-            //     // log("isHrefMatch: \n", isHrefMatch);
-            //     if (isHrefMatch === null) {
-            //         // log("isHrefMatch: \n",isHrefMatch);
-            //         $(this).remove();
-            //     }
-            // });
-            // $("script").each(function () {
-            //     let href = $(this).attr('src');
-            //     let isHrefMatch = /everia/g.exec(href);
-            //     if (isHrefMatch === null) {
-            //         $(this).remove();
-            //     }
-            // });
-            // $("script[type^='application/javascript']").remove();
-            // $("script[id^='neve-script']").remove();
-            // $("script[id^='fifu-image']").remove();
-            // }, 100);
-            debugger
-            $("head").empty();
-            // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js");
-            let arrs = [
-                'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/everiacss.js',
-                'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/everiacss.js',
-                "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js"
-            ]
-            await startMain_(arrs);
-            addStyle(everiacss);
-        }).switchAggregationBtn(function () {
-            //FancyBox
-            activateFancyBox(1);
-            $('figure.has-nested-images').hide();
-            $('.separator').hide();
-            $('.entry-content p').css('margin-bottom', 'unset');
-        }, function () {
-            $('figure.has-nested-images').show();
-            $('.separator').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let ismainPage = /\/(\d+)\//g.exec(currentPathname);
-            log("ismainPage: \n", ismainPage);
-            if (ismainPage === null) {
-                log("ismainPage null!!!!");
-            } else if (currentPathname !== null) {
-                {
-                    pageUrls.push(currentPathname);
-                }
-                $('figure.has-nested-images').prev().after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images = $(doc).find('.entry-content img').clone();
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.jpxgyw.net & www.jpmn8.com----------------------- */
-    if (site.Jpxgyw.iStatus || site.Jpmn8.iStatus) {
-        injectBtns().domain(site.Jpxgyw.hostnames.concat(site.Jpmn8.hostnames)).removeAD(function () {
-            $("script").remove();
-            //$(".header").prevAll().remove();
-            $(".footer").nextAll().remove();
-            setInterval(function () {
-                $("style[id]").remove();
-                $(".content > a").remove();
-                $("center > a").remove();
-                // $("body>a").remove();
-                // $(".fancybox__container").nextAll().remove();
-                // $(".footer").nextUntil(".fancybox__container").remove();
-                // $(".container").nextUntil(".footer").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-
-            //FancyBox
-            activateFancyBox();
-
-            $('.pagination').hide();
-            $('.article-content').hide();
-            //android
-            $('.pagination1').last().prev().hide();
-            $('.pagination1').hide();
-        }, function () {
-            $('.pagination').show();
-            //android
-            $('.pagination1').last().prev().show();
-            $('.pagination1').show();
-            $('.article-content').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            debugger
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/([a-zA-Z]+(\/[a-zA-Z]+)?)(?:\/)?(\d+)/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (match !== null) {
-
-                let totalPageCnt = 1;
-                let partPreUrl = match[0];
-                let suffixUrl = '_';
-                debugger
-                let limitPageStr = $('.pagination > ul a').last().prev().text();
-                if (limitPageStr === "") {
-                    limitPageStr = $('.pagination1 > ul a').last().prev().text();
-                }
-                log("limitPageStr: \n", limitPageStr);
-                if (limitPageStr != '') {
-                    totalPageCnt = parseInt(limitPageStr);
-                    log('totalPageCnt: \n', totalPageCnt);
-                }
-                for (let i = 0; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 0) {
-                        pageUrl = partPreUrl + '.html';
-                    } else {
-                        pageUrl = partPreUrl + suffixUrl + i + '.html';
-                    }
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    let pageUrl = partPreUrl + i + suffixUrl;
                     log('push pageUrl:\n', pageUrl);
                     pageUrls.push(pageUrl);
                 }
-                $('.article-header').after(injectComponent);
             }
-        }).collectPics(function (doc) {
-            let images;
-            if (site.Jpxgyw.iStatus) {
-                images = $(doc).find('.article-content > p img');
+            if (os.isAndroid) {
+                $('.data').after(injectComponent);
             } else {
-                images = $(doc).find('p img');
+                $('#thread-pic').after(injectComponent);
             }
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.95mm.org----------------------------------------- */
-    if (site._95mm.iStatus) {
-        injectBtns().domain(site._95mm.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("#post-action").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            // FancyBox
-            activateFancyBox();
+        }
+    }).collectPics(function (doc) {
+        return $(doc).find('ul > li > img');
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); // urlIsTrue
 
-            $('.text-xs b').hide();
-            $(".post-data").hide();
-            $(".post").hide();
-        }, function () {
-            $('.text-xs b').show();
-            $(".post-data").show();
-            $(".post").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(\d+)/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (currentPathname !== null) {
+    /* --------------------------------------------www.umei.cc & www.umeitu.com------------------------- */
 
+    injectBtns().domain(site.Umei.hostnames).removeAD(function () {
+        $('union').remove(); //移除广告等无必要元素
+
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        // $('.ImageBody').hide();
+        // $('.NewPages').hide();
+        $('.img-content').hide();
+        $('.gongneng').hide();
+        $('.swiper-box').hide();
+        $('.hb-nav').hide();
+        //android
+        // $('.arc-body').hide();
+        // $(".pages").hide();
+    }, function () {
+        // $('.ImageBody').show();
+        // $('.NewPages').show();
+        $('.img-content').show();
+        $('.gongneng').show();
+        $('.hb-nav').show();
+        //android
+        // $('.arc-body').show();
+        // $(".pages").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = currentPathname.match(/^\/(\w+\/\w+(?:\/\w+)?\/)(\d+)(?:_\d+)?\.htm$/im);
+        log("match: \n", match);
+        if (match !== null) {
+            {
                 let totalPageCnt = 1;
-                let pageId = match[0];
-                let suffixUrl = '/';
-                debugger
-                let limitPageStr = $('.row h1').text().match(/（\d+\/(\d+)）/im);
+                let partPreUrl = match[1];
+                let pageId = match[2];
+                let suffixUrl = '.htm';
+                let limitPageStr = null;
 
-                log("limitPageStr: \n", limitPageStr);
-                totalPageCnt = limitPageStr[1];
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 1) {
-                        pageUrl = pageId + '.html';
-                    } else {
-                        pageUrl = pageId + suffixUrl + i + '.html';
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-
-                $('.post-meta').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images = $(doc).find('.nc-light-gallery img').clone();
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.3gbizhi.com-------------------------------------- */
-    if (site._3gbizhi.iStatus) {
-        injectBtns().domain(site._3gbizhi.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".loader").next().remove();
-                $(".logo-container").parent().remove();
-                $(".cl script").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-
-            // FancyBox
-            activateFancyBox();
-
-            $(".showcontw").hide();
-        }, function () {
-            $(".showcontw").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(\w+)\/((?!\.html).)*/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (currentPathname !== null) {
-
-                let totalPageCnt = 1;
-                let suffixUrl = '_';
-                let partPreUrl;
-                let pageId = null;
-                debugger
-                let limitPageStr = $('.showtitle h2').text().match(/(\d+\/(\d+))/im);
-                log("limitPageStr: \n", limitPageStr);
-                if (os.isAndroid) {
-
-                } else {
-                    partPreUrl = match[0];
-                    totalPageCnt = limitPageStr[2];
-                    pageId = match[2];
-                }
-
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 1) {
-                        pageUrl = partPreUrl + '.html';
-                    } else {
-                        pageUrl = partPreUrl + suffixUrl + i + '.html';
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-
-                $('.showtitle').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images = $(doc).find('#showimg>a[title] img').clone();
-
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------tw.kissgoddess.com----------------------------------- */
-    if (site.Goddess.iStatus) {
-        injectBtns().domain(site.Goddess.hostnames).removeAD(function () {
-            $("div.td-header-wrap").css({
-                "position": "unset",
-                "z-index": "unset"
-            });
-            $("div.td-header-wrap div").css({
-                "position": "unset",
-                "z-index": "unset"
-            });
-        }).switchAggregationBtn(function () {
-            // FancyBox
-            activateFancyBox();
-
-            $("#pages").hide();
-            $(".td-gallery-content").hide();
-        }, function () {
-            $("#pages").show();
-            $(".td-gallery-content").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(\w+)\/(\d+)/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (match !== null) {
-                let totalPageCnt = 1;
-                let suffixUrl = '_';
-                let partPreUrl = '';
-                debugger
-                let limitPageStr = $('#pages > span[class]').prop("outerHTML").match(/\d+(?=\<\/span\>)/g);
-                log("limitPageStr: \n", limitPageStr);
-                partPreUrl = match[0];
+                limitPageStr = $('.gongneng').prop("outerHTML").toString().match(/\d+(?=\<\/span\>)/g);
                 totalPageCnt = parseInt(limitPageStr);
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 1) {
-                        pageUrl = partPreUrl + '.html';
-                    } else {
-                        pageUrl = partPreUrl + suffixUrl + i + '.html';
-                    }
-                    log('push pageUrl: \n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('.td-post-header').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images = $(doc).find('.td-gallery-content > img');
-            $(images).each(function () {
-                let src = $(this).attr('data-original');
-                if (src) {
-                    $(this).removeAttr('data-original');
-                    $(this).attr('src', src);
-                }
-            });
 
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------meinv.page------------------------------------------- */
-    if (site.Meinv.iStatus) {
-        injectBtns().domain(site.Meinv.hostnames).removeAD(function () {
-            $("div[id^=art_],.mobile-bar,[class^=go-to-top],.favorite").css({
-                "z-index": "999"
-            });
-            $("div[id^=art_] img").css({
-                'width': 'auto',
-                'height': 'auto',
-                'max-width': '50%',
-                'max-height': '50%'
-            });
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.entry-content figure').hide();
-            $("#comments").hide();
-            $(".widget_text").hide();
-            $(".blocks-gallery-item").parent().hide();
-
-            $('img[data-fancybox=i]').attr("data-fancybox", "images");
-            $('a[data-fancybox=images]').attr("data-fancybox", "i");
-        }, function () {
-            $('.entry-content figure').show();
-            $("#comments").show();
-            $(".widget_text").show();
-            $(".blocks-gallery-item").parent().show();
-
-            $('img[data-fancybox=images]').attr("data-fancybox", "i");
-            $('a[data-fancybox=i]').attr("data-fancybox", "images");
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            log("currentPathname: \n", currentPathname);
-            if (currentPathname !== null) {
-                pageUrls.push(currentPathname);
-                if ($('.entry-content>figure').length > 0) {
-                    $('.entry-content figure').first().prev().after(injectComponent);
-                } else {
-                    $(".blocks-gallery-item").parent().prev().after(injectComponent);
-                }
-            }
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find(".entry-content figure a");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"));
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------asiansister.com-------------------------------------- */
-    if (site.Asiansister.iStatus) {
-        injectBtns().domain(site.Asiansister.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("div[class^=AD]").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            //FancyBox
-            activateFancyBox();
-
-            $(".rootContant[style]").first().hide();
-            $(".rootContant[style]").first().next().next().hide();
-            $(".rootContant[style]").first().next().next().next().hide();
-        }, function () {
-            $(".rootContant[style]").first().show();
-            $(".rootContant[style]").first().next().next().show();
-            $(".rootContant[style]").first().next().next().next().show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(?<=\/).*/g);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            let pageUrl;
-            if (match !== null) {
-                debugger
-                pageUrl = match[0];
-                pageUrls.push(pageUrl);
-                $('.rootContant[style]').slice(0, 1).after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images = $(doc).find('.rootContant > img');
-            log("images \n", $(images));
-            $(images).each(function (index) {
-                log("start this Object: \n", $(this));
-                log("this images outerHTML \n", $(this).prop("outerHTML"));
-                let src = $(this).attr('dataurl').match(/(?<=image).*/g);
-                if (src) {
-                    $(this).removeAttr('onclick');
-                    $(this).attr('src', src);
-                }
-            });
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------yskhd.com-------------------------------------------- */
-    if (site.Yskhd.iStatus) {
-        injectBtns().domain(site.Yskhd.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".banner-slider").remove();
-                $(".nav-vip").remove();
-                $(".widget_media_image").remove();
-                $(".header").css("position", "unset");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            //FancyBox
-            activateFancyBox(1);
-            $("div[class^=article]").slice(1, ).hide();
-            // $("div.article-content > p").next().nextAll().hide();
-            $(".single-comment").hide();
-        }, function () {
-            $("div[class^=article]").slice(1, ).show();
-            // $("div.article-content > p").next().nextAll().show();
-            $(".single-comment").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            //https://youpai.netzijin.cn/2022/03/20220329141134503-scaled.jpg
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(?<=\/).*/g);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            let pageUrl;
-            if (match !== null) {
-                pageUrl = match[0];
-                pageUrls.push(pageUrl);
-                $('.article-header').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let re = /-scaled/g;
-            let images;
-            let Ishref = $(doc).find('.gallery-fancy-item > a').attr("href");
-            let isScaled = re.test(Ishref);
-            if (isScaled) {
-                images = $(doc).find('div.gallery img').attr("dataurl", "true");
-            } else {
-                images = $(doc).find('div.gallery img').attr("dataurl", '');
-            }
-            let imgObj = $(images);
-            let a_imgTag = []
-            $(imgObj).each(function (index) {
-                // log("Start this: \n", $(this).prop("outerHTML"));
-                let src;
-                let isScaled = $(this).attr("dataurl");
-                if (isScaled === "true") {
-                    src = $(this).attr('src').replace(/-\d+x\d+/g, '-scaled');
-                } else {
-                    src = $(this).attr('src').replace(/-\d+x\d+/g, '');
-                }
-                $(this).attr('label', 'sl');
-                debugger
-                $(this).attr('src', src);
-                let imageItem = $(this).prop("outerHTML").toString();
-                // log("New this: \n", imageItem);
-                let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
-                construct_aTag.append(imageItem);
-                // log("New construct_Tag: \n", construct_aTag);
-                a_imgTag.push(construct_aTag);
-            });
-            // log("New a_imgTag\n",$(a_imgTag));
-            return $(a_imgTag);
-        }, function (aImgE) {
-            $(aImgE).find("img")[0].style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.dmmtu.com---------------------------------------- */
-    if (site.Dmmtu.iStatus) {
-        injectBtns().domain(site.Dmmtu.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".main-footer").remove();
-                $(".single>span").remove();
-                $("html script").remove();
-            }, 100);
-            $(".bd").first().css({
-                "width": "100%",
-                "height": "100%"
-            });
-        }).switchAggregationBtn(function () {
-
-            //FancyBox
-            activateFancyBox();
-
-            $(".main-body").hide();
-            $(".link_pages").hide();
-        }, function () {
-            $(".main-body").show();
-            $(".link_pages").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
-            let match = currentPathname.match(/(\w+)\/(\d+)/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (match !== null) {
-                let totalPageCnt = 1;
-                let suffixUrl = '_';
-                let partPreUrl = '';
-                debugger
-                let limitPageStr = $('.page-numbers > b').prop("outerHTML");
-                let limitPageTotal = limitPageStr.match(/(?<=共)(\d+)/g);
                 log("limitPageStr: \n", limitPageStr);
-                partPreUrl = match[0];
-                totalPageCnt = parseInt(limitPageTotal);
+                log('totalPageCnt: \n', totalPageCnt);
+
                 for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 1) {
-                        pageUrl = partPreUrl + '.html';
+                    let pageUrl = '';
+                    if (i == 1) {
+                        pageUrl = partPreUrl + pageId + suffixUrl;
                     } else {
-                        pageUrl = partPreUrl + suffixUrl + i + '.html';
+                        pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
                     }
-                    log('push pageUrl: \n', pageUrl);
+                    log('push pageUrl:\n', pageUrl);
                     pageUrls.push(pageUrl);
                 }
-                $('.main-header').after(injectComponent);
             }
-        }).collectPics(function (doc) {
-            let images;
-            images = $(doc).find('.main-body img');
+            $(".main-left").prepend(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        return $(doc).find('.content-box a img');
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
 
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.fnvshen.com && xsnvshen.co----------------------- */
-    if (site.Fnvshen.iStatus) {
-        injectBtns().domain(site.Fnvshen.hostnames).removeAD(function () {
-            // debugger
-            setInterval(function () {
-                $(".yalayi_box").remove();
-                $(".yituyu_box").remove();
-                $(".collect-unit").first().remove();
-                $(".pic_index_headc").css("position", "sticky");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            //FancyBox
-            activateFancyBox();
-            $("#hgallery img[mark!='true']").hide();
-            $("#pages").hide();
-            $(".workContentWrapper>div").slice(1).hide();
-            //android
-            $(".ck-box-unit").hide();
-            $("#idiv").hide();
-            $("#arcbox>p").slice(1).hide();
-            $(".bigpages").hide();
-        }, function () {
-            $("#hgallery img[mark!='true']").show();
-            $("#pages").show();
-            $(".workContentWrapper>div").slice(1).show();
-            //android
-            $(".ck-box-unit").show();
-            $("#idiv").show();
-            $("#arcbox>p").slice(1).show();
-            $(".bigpages").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
+    /* --------------------------------------------www.win4000.com-------------------------------------- */
 
-            let currentHref = window.location.href;
-            let currentPathname = window.location.pathname;
-            log("currentHref: \n", currentHref);
-            let skipGeekGoddess = /xsnvshen/g.exec(currentHref);
-            log("skipGeekGoddess: \n", skipGeekGoddess);
-            if (isEmpty(skipGeekGoddess)) {
-                log("\n-----inject GeekGoddess-----\n");
-                let match = currentPathname.match(/(\w+)\/(\d+)/im);
-                log("match: \n", match);
-                let isGirl = /girl|article/g.exec(currentPathname);
-                log("girl: ", isGirl);
-                if (!isEmpty(isGirl)) {
-                    match = null;
-                } else {
-                    debugger
-                    let isMobileDomain = false;
-                    let mobileDomain = /(?<=https?\:\/\/)(m\.)/.exec(window.location);
-                    if (mobileDomain != null) {
-                        isMobileDomain = true;
-                    }
-                    let limitPageTotal;
-                    let limitPageStr;
-                    if (match !== null) {
-                        let suffixUrl = '/';
-                        let partPreUrl = '';
-                        debugger
-                        if (os.isAndroid || isMobileDomain) {
-                            limitPageStr = $('span.page').prop("outerHTML");
-                            log("limitpag: ", limitPageStr);
-                            limitPageTotal = limitPageStr.match(/\d+(?=\<\/span\>)/g);
-                        } else {
-                            limitPageStr = $('#pages').prop("outerHTML");
-                            limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
-                        }
-
-                        log("limitPageStr: \n", limitPageStr);
-                        let maxpage = Math.max.apply(null, limitPageTotal);
-                        // let maxpage = limitPageTotal.length;
-                        log("limitPageMatch: ", limitPageTotal);
-                        log("maxpage: ", maxpage);
-                        partPreUrl = match[0];
-                        for (let i = 1; i <= maxpage; i++) {
-                            let pageUrl;
-                            if (i === 1) {
-                                pageUrl = partPreUrl + '.html';
-                            } else {
-                                pageUrl = partPreUrl + suffixUrl + i + '.html';
-                            }
-                            log('push pageUrl:\n', pageUrl);
-                            pageUrls.push(pageUrl);
-                        }
-                        if (os.isAndroid || isMobileDomain) {
-                            $('.content .ck-footer').prev().after(injectComponent);
-                        } else {
-                            $('#hgallery').prepend(injectComponent);
-                        }
-
-                    }
+    injectBtns().domain(site.Win4000.hostnames).removeAD(function () {
+        setInterval(function () {
+            $('iframe').remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div.pic-meinv').hide();
+    }, function () {
+        $('div.pic-meinv').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = currentPathname.match(/\/(\w+?\d+)(?:_\d+)?/m);
+        if (match !== null) {
+            {
+                let totalPageCnt = 1;
+                let partPreUrl = match[1];
+                let pageId = '';
+                let suffixUrl = '.html';
+                let limitPageStr = $('div.ptitle').text();
+                let limitPageMatch = limitPageStr.match(/（\d+\/(\d+)）/m);
+                if (limitPageMatch != null) {
+                    totalPageCnt = parseInt(limitPageMatch[1]);
+                    log('totalPageCnt', totalPageCnt);
                 }
-            } else {
-                log("\n-----inject xsnvshen-----\n");
-                let pageUrl = currentPathname;
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
-                let Skip = /hd/g.exec(currentPathname);
-                // log("Skip: " + Skip);
-                if (isEmpty(Skip)) {
-                    if (os.isPc) {
-                        $('.workContentWrapper').prepend(injectComponent);
-                    } else {
-                        $(".poster-nav").after(injectComponent);
-                    }
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    let pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                    log('push pageUrl:\n', pageUrl);
+                    pageUrls.push(pageUrl);
                 }
             }
-        }).collectPics(function (doc) {
+            $('div.ptitle').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        return $(doc).find('div.pic-meinv a  img');
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+        let src = $(imgE).attr('url');
+        if (src) {
+            $(imgE).attr('src', src);
+        }
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
 
-            let currentHref = window.location.href;
-            log("currentHref: \n", currentHref);
-            let skipGeekGoddess = /xsnvshen/g.exec(currentHref);
-            log("skipGeekGoddess: \n", skipGeekGoddess);
-            if (isEmpty(skipGeekGoddess)) {
-                log("\n-----collectPics GeekGoddess-----\n");
-                let mobileDomain = /(?<=https?\:\/\/)(m\.)/g.exec(window.location);
-                let images;
-                if (os.isAndroid || mobileDomain) {
-                    images = $(doc).find('.ck-img-info img');
-                } else {
-                    images = $(doc).find('#hgallery img');
-                }
-                $(images).attr("mark", "ture");
-                let a_imgTag = aImgTagPackaging(images);
-                log("New a_imgTag Object: \n", $(a_imgTag));
-                return $(a_imgTag);
-            } else {
-                debugger
-                log("\n-----collectPics xsnvshen-----\n");
-                let imgE = [];
-                let currentImgSrc;
-                let limitPageStr;
-                let limitPageMatch;
-                // num传入的数字，n需要的字符长度 PrefixInteger(11, 5) //"00011"
-                let PrefixInteger = function (num, n) {
-                    return (Array(n).join(0) + num).slice(-n);
-                }
-                if (os.isPc) {
-                    currentImgSrc = $("img#bigImg").attr("src").replace("//", "/");
-                    limitPageStr = $('.swpt-time').prop("outerHTML");
-                    limitPageMatch = limitPageStr.match(/共(.*?)<\/span>/g).toString().match(/\d*/g);
-                } else {
-                    //android
-                    currentImgSrc = $("#arcbox img").first().attr("src").replace("//", "/");
-                    limitPageStr = $('div em span').first().prop("outerHTML");
-                    limitPageMatch = limitPageStr.match(/\d+(?=<\/span>)/g);
-                }
-                log("currentImgSrc: " + currentImgSrc);
+    /* --------------------------------------------www.192tp.com---------------------------------------- */
+
+    injectBtns().domain(site._192tp.hostnames).removeAD(function () {
+        setInterval(function () {
+            $('iframe').remove();
+            $('div[class^=ad]').remove();
+            $(".national-content").remove();
+            $("[title~=近期网站一些调整说明]").remove();
+            $(".Rfloat").remove();
+            $(".bgtu-info+p").remove(); //remove选择所有紧跟在 <div> 元素之后的第一个 <p> 元素
+            $("div.infoline span:first-of-type").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#p').hide();
+        $("#back-to-top").hide();
+        //android
+        $('.piclist').hide();
+        $('.btnline').hide();
+        $(".zt_bigpic p").hide();
+
+    }, function () {
+        $('#p').show();
+        $("#back-to-top").show();
+        //android
+        $('.piclist').show();
+        $('.btnline').show();
+        $(".zt_bigpic p").show();
+
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: " + currentPathname);
+        let match = currentPathname.match(/\/(\w+(?:\/\w+)?\/\w+?)(?:_\d+)?\.html/m); //https://www.192tt.com/gq/ugirls/ugu349_2.html,https://www.192tt.com/meitu/81896.html
+        if (match !== null) {
+            {
+                let totalPageCnt = 1;
+                let partPreUrl = match[1];
+                let pageId = '';
+                let suffixUrl = '.html';
+                let limitPageStr = $('h1').text();
+                let limitPageMatch = limitPageStr.match(/\(\d+\/(\d+)\)/m);
                 log("limitPageStr: " + limitPageStr);
                 log("limitPageMatch: " + limitPageMatch);
-
-                let partPreUrls = currentImgSrc.match(/(?<=\/).*\//g);
-                log("partPreUrl: " + partPreUrls);
-
-                if (!isEmpty(partPreUrls)) {
-                    let protocol = window.location.protocol;
-                    let totalPageCnt = Math.max.apply(null, limitPageMatch);
-                    log("totalPageCnt: " + totalPageCnt);
-                    let suffixUrl = '.jpg';
-                    for (let i = 0; i < totalPageCnt; i++) {
-                        let pageUrl = partPreUrls + PrefixInteger(i, 3) + suffixUrl;
-                        let startUrl = protocol + '//' + pageUrl;
-                        let img = `<img style="width: 100%; height: 100%;" src=${startUrl}>`
-                        log('push pageUrl: ', startUrl);
-                        imgE.push($(img));
-                    }
+                if (limitPageMatch != null) {
+                    totalPageCnt = parseInt(limitPageMatch[1]);
+                    // debugger
+                    log('totalPageCnt: ', totalPageCnt);
                 }
-                let a_imgTag = aImgTagPackaging($(imgE));
-                log("New a_imgTag Object: \n", $(a_imgTag));
-                return $(a_imgTag);
+                for (let i = 1; i <= totalPageCnt; i++) {
+                    let pageUrl = '';
+                    if (i == 1) {
+                        pageUrl = partPreUrl + pageId + suffixUrl;
+                    } else {
+                        pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                    }
+                    log('push pageUrl: ', pageUrl);
+                    pageUrls.push(pageUrl);
+                }
             }
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.ikanins.com-------------------------------------- */
-    if (site.Ikanins.iStatus) {
-        injectBtns().domain(site.Ikanins.hostnames).removeAD(function () {
-            debugger
-            setInterval(function () {
-                $(".widget_custom_html").remove();
+            if (os.isAndroid) {
 
-            }, 100);
-        }).switchAggregationBtn(function () {
-            //FancyBox
-            activateFancyBox();
-
-            let len = $("div[id^=attachment]").length;
-            if (len > 0) {
-                $("div[id^=attachment]").css({
-                    "width": "100%",
-                    "height": "100%"
-                });
-                $("div[id^=attachment]").next().nextAll().hide();
+                $('div.infoline').after(injectComponent);
             } else {
-                $(".entry-content p").nextAll().hide();
+                $('div.pictopline').after(injectComponent);
             }
-            $(".entry-footer").hide();
-        }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; //
-            let match = currentPathname.match(/\w+.*/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            debugger
-            if (match !== null) {
-                let partPreUrl = '';
-                debugger
-                partPreUrl = match[0];
-                log('push pageUrl:\n', partPreUrl);
-                pageUrls.push(partPreUrl);
-                if ($("div[id^=attachment]").length > 0) {
-                    $('div[id^=attachment]').after(injectComponent);
-                } else {
-                    $('.entry-content .entry').prepend(injectComponent);
-                }
-            }
-        }).collectPics(function (doc) {
-            let images;
-            images = $(doc).find('.entry-content p img');
-
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------madoupan.com----------------------------------------- */
-    if (site.Madoupan.iStatus) {
-        injectBtns().domain(site.Madoupan.hostnames).removeAD(function () {
-            debugger
-            setInterval(function () {
-                $(".single-comment").remove();
-                $(".header").css("position", "unset");
-            }, 100);
-        }).switchAggregationBtn(function () {
-
-            //FancyBox
-            activateFancyBox();
-
-            $("div[class^=article]").nextAll().hide();
-        }, function () {
-
-            $("div[class^=article]").nextAll().show();
-            $('div.article-content').hide();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname; //
-            let match = currentPathname.match(/\w+.*/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            debugger
-            if (match !== null) {
-                let partPreUrl = '';
-                debugger
-                partPreUrl = match[0];
-                log('push pageUrl:\n', partPreUrl);
-                pageUrls.push(partPreUrl);
-                $('.article-header').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let images;
-            images = $(doc).find('div.article-content img');
-
-            let a_imgTag = aImgTagPackaging(images);
-            log("New a_imgTag Object: \n", $(a_imgTag));
-            return $(a_imgTag);
-        }, function (imgE) {
-            imgE.style = "width: 100%;height: 100%";
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------mrcong.com------------------------------------------- */
-    if (site.Mrcong.iStatus) {
-        if (os.isAndroid || os.isPhone) {
-            //https://sleazyfork.org/zh-CN/scripts/440114-mrcong%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89
+        }
+    }).collectPics(function (doc) {
+        debugger
+        if (os.isAndroid) {
+            //去除最后两个空白广告图片
+            $(doc).find('.piclist li:last-child').remove();
+            $(doc).find('.piclist li:last-child').remove();
+            // log("img: \n",$(doc).find('.piclist li img'));
+            return $(doc).find('.piclist li img');
         } else {
-            injectBtns().domain(site.Mrcong.hostnames).removeAD(function () {
-                $("body").removeClass();
-                $("body").removeAttr("id");
-                $("body").css({
-                    "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
-                });
-                $("meta").remove();
-                $('iframe').remove();
-                $("link").each(function () {
-                    let href = $(this).attr('href');
-                    let isHrefMatch = /mrcong/g.exec(href);
-                    if (isHrefMatch === null) {
-                        $(this).remove();
-                    }
-                });
-                $("script").each(function () {
-                    let href = $(this).attr('src');
-                    let isHrefMatch = /mrcong/g.exec(href);
-                    if (isHrefMatch === null) {
-                        $(this).remove();
-                    }
-                });
-                // $("div.wrapper-outer").siblings().remove();
-                setInterval(function () {
-                    $("link[href^='https://smallfunnybears']").remove();
-                    $("script[src^='https://smallfunnybears.com']").remove();
-                    $("script[src^='https://stats.wp.com']").remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                //FancyBox
-                activateFancyBox();
-                $(".page-link").hide();
-                $(".page-link").last().prev().hide();
-            }, function () {
-                $(".page-link").show();
-                $(".page-link").last().prev().show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                let match = currentPathname.match(/\w+.*?\//im);
-                log("currentPathname: \n", currentPathname);
-                log("match: \n", match);
-                let misMatch = ["tag/", "category/", "sets/", "top/", "tim-kiem/"];
+            return $(doc).find('#p > center img');
+        }
+
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        let src = $(imgE).attr('lazysrc');
+        if (src) {
+            $(imgE).removeAttr('lazysrc');
+            $(imgE).attr('src', src);
+        }
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.xiuren.org--------------------------------------- */
+
+    injectBtns().domain('www.xiuren.org').removeAD(function () {
+        setInterval(function () {
+            $('iframe').remove();
+            $("div[id^=an]").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div.post').hide();
+    }, function () {
+        $('div.post').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = currentPathname.match(/^\/([\w-]+\.html)\b/im);
+        if (match !== null) {
+            {
+                pageUrls.push(window.location.pathname.substr(1));
+            }
+            $('#title').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let clone = $(doc).find('div.post span > a').clone();
+        return $(clone).find('img');
+    }, function (imgE) {
+        let src = $(imgE).parent().attr('href');
+        $(imgE).attr('src', src);
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.micmicidol.com----------------------------------- */
+
+    injectBtns().domain(site.Micmicidol.hostnames).removeAD(function () {
+        // $('div#total-wrapper').siblings().remove();
+        $("link").each(function () {
+            let href = $(this).attr('href');
+            let isHrefMatch = /micmicidol/g.exec(href);
+            if (isHrefMatch === null) {
+                $(this).remove();
+            }
+        });
+        $("script").each(function () {
+            let href = $(this).attr('src');
+            let isHrefMatch = /micmicidol/g.exec(href);
+            if (isHrefMatch === null) {
+                $(this).remove();
+            }
+        });
+    }).switchAggregationBtn(function () {
+
+        activateFancyBox();
+        // imagePluginSwitch[0].isFancyBoxFullScreen = true;
+        // if (os.isAndroid || os.isPhone) {
+        //     imagePluginSwitch[0].isFancyBoxFullScreen = false;
+        // }
+
+        $('div.post-body').hide();
+    }, function () {
+        $('div.post-body').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: ", currentPathname);
+        let ismainPage = /\/(\d+)\//g.exec(currentPathname);
+        log("ismainPage: \n", ismainPage);
+        if (ismainPage === null) {
+
+        } else if (currentPathname !== null) {
+            {
+                pageUrls.push(currentPathname);
+            }
+            $('.post-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let aImages = $(doc).find('div.post-body > a[href]').clone();
+        return $(aImages);
+    }, function (imgE) {
+        let src = $(imgE).attr('href');
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+        debugger
+        log("src: \n", src);
+        $(imgE).find('img').attr('src', src);
+        $(imgE).find('img').attr('label', 'sl');
+
+        // log("imgE: \n", imgE);
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------everia.club------------------------------------------ */
+
+    injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
+        // $("body").removeClass();
+        // $('div[id^=custom_html]').remove();
+        // // $('html script').remove();
+        // // $(".wrapper").siblings().remove();
+        // // $(".wrapper").siblings().css({
+        // //     "position": "unset"
+        // // });
+        // // setInterval(function () {
+        // // $("#jquery-migrate-js").remove();
+        // // $('.padPreload').remove();
+        // // $('#popmagicldr').remove();
+        // $("meta").remove();
+        // $("noscript").remove();
+        // $("link").each(function () {
+        //     // log("link: \n", $(this).prop("outerHTML"));
+        //     let href = $(this).attr('href');
+        //     // log("href: \n",href);
+        //     let isHrefMatch = /everia/g.exec(href);
+        //     // log("isHrefMatch: \n", isHrefMatch);
+        //     if (isHrefMatch === null) {
+        //         // log("isHrefMatch: \n",isHrefMatch);
+        //         $(this).remove();
+        //     }
+        // });
+        // $("script").each(function () {
+        //     let href = $(this).attr('src');
+        //     let isHrefMatch = /everia/g.exec(href);
+        //     if (isHrefMatch === null) {
+        //         $(this).remove();
+        //     }
+        // });
+        // $("script[type^='application/javascript']").remove();
+        // $("script[id^='neve-script']").remove();
+        // $("script[id^='fifu-image']").remove();
+        // }, 100);
+        debugger
+        $("head").empty();
+        // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js");
+        let arrs = [
+            'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/everiacss.js',
+            'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/everiacss.js',
+            "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js"
+        ]
+        await startMain_(arrs);
+        addStyle(everiacss);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox(1);
+        $('figure.has-nested-images').hide();
+        $('.separator').hide();
+        $('.entry-content p').css('margin-bottom', 'unset');
+    }, function () {
+        $('figure.has-nested-images').show();
+        $('.separator').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let ismainPage = /\/(\d+)\//g.exec(currentPathname);
+        log("ismainPage: \n", ismainPage);
+        if (ismainPage === null) {
+            log("ismainPage null!!!!");
+        } else if (currentPathname !== null) {
+            {
+                pageUrls.push(currentPathname);
+            }
+            $('figure.has-nested-images').prev().after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images = $(doc).find('.entry-content img').clone();
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.jpxgyw.net & www.jpmn8.com----------------------- */
+
+    injectBtns().domain(site.Jpxgyw.hostnames.concat(site.Jpmn8.hostnames)).removeAD(function () {
+        $("script").remove();
+        //$(".header").prevAll().remove();
+        $(".footer").nextAll().remove();
+        setInterval(function () {
+            $("style[id]").remove();
+            $(".content > a").remove();
+            $("center > a").remove();
+            // $("body>a").remove();
+            // $(".fancybox__container").nextAll().remove();
+            // $(".footer").nextUntil(".fancybox__container").remove();
+            // $(".container").nextUntil(".footer").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+
+        //FancyBox
+        activateFancyBox();
+
+        $('.pagination').hide();
+        $('.article-content').hide();
+        //android
+        $('.pagination1').last().prev().hide();
+        $('.pagination1').hide();
+    }, function () {
+        $('.pagination').show();
+        //android
+        $('.pagination1').last().prev().show();
+        $('.pagination1').show();
+        $('.article-content').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        debugger
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/([a-zA-Z]+(\/[a-zA-Z]+)?)(?:\/)?(\d+)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (match !== null) {
+
+            let totalPageCnt = 1;
+            let partPreUrl = match[0];
+            let suffixUrl = '_';
+            debugger
+            let limitPageStr = $('.pagination > ul a').last().prev().text();
+            if (limitPageStr === "") {
+                limitPageStr = $('.pagination1 > ul a').last().prev().text();
+            }
+            log("limitPageStr: \n", limitPageStr);
+            if (limitPageStr != '') {
+                totalPageCnt = parseInt(limitPageStr);
+                log('totalPageCnt: \n', totalPageCnt);
+            }
+            for (let i = 0; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 0) {
+                    pageUrl = partPreUrl + '.html';
+                } else {
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.article-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images;
+        if (site.Jpxgyw.iStatus) {
+            images = $(doc).find('.article-content > p img');
+        } else {
+            images = $(doc).find('p img');
+        }
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.95mm.org----------------------------------------- */
+
+    injectBtns().domain(site._95mm.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("#post-action").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        // FancyBox
+        activateFancyBox();
+
+        $('.text-xs b').hide();
+        $(".post-data").hide();
+        $(".post").hide();
+    }, function () {
+        $('.text-xs b').show();
+        $(".post-data").show();
+        $(".post").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(\d+)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (currentPathname !== null) {
+
+            let totalPageCnt = 1;
+            let pageId = match[0];
+            let suffixUrl = '/';
+            debugger
+            let limitPageStr = $('.row h1').text().match(/（\d+\/(\d+)）/im);
+
+            log("limitPageStr: \n", limitPageStr);
+            totalPageCnt = limitPageStr[1];
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = pageId + '.html';
+                } else {
+                    pageUrl = pageId + suffixUrl + i + '.html';
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+
+            $('.post-meta').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images = $(doc).find('.nc-light-gallery img').clone();
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.3gbizhi.com-------------------------------------- */
+
+    injectBtns().domain(site._3gbizhi.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".loader").next().remove();
+            $(".logo-container").parent().remove();
+            $(".cl script").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+
+        // FancyBox
+        activateFancyBox();
+
+        $(".showcontw").hide();
+    }, function () {
+        $(".showcontw").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(\w+)\/((?!\.html).)*/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (currentPathname !== null) {
+
+            let totalPageCnt = 1;
+            let suffixUrl = '_';
+            let partPreUrl;
+            let pageId = null;
+            debugger
+            let limitPageStr = $('.showtitle h2').text().match(/(\d+\/(\d+))/im);
+            log("limitPageStr: \n", limitPageStr);
+            if (os.isAndroid) {
+
+            } else {
+                partPreUrl = match[0];
+                totalPageCnt = limitPageStr[2];
+                pageId = match[2];
+            }
+
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = partPreUrl + '.html';
+                } else {
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+
+            $('.showtitle').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images = $(doc).find('#showimg>a[title] img').clone();
+
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------tw.kissgoddess.com----------------------------------- */
+
+    injectBtns().domain(site.Goddess.hostnames).removeAD(function () {
+        $("div.td-header-wrap").css({
+            "position": "unset",
+            "z-index": "unset"
+        });
+        $("div.td-header-wrap div").css({
+            "position": "unset",
+            "z-index": "unset"
+        });
+    }).switchAggregationBtn(function () {
+        // FancyBox
+        activateFancyBox();
+
+        $("#pages").hide();
+        $(".td-gallery-content").hide();
+    }, function () {
+        $("#pages").show();
+        $(".td-gallery-content").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(\w+)\/(\d+)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = '_';
+            let partPreUrl = '';
+            debugger
+            let limitPageStr = $('#pages > span[class]').prop("outerHTML").match(/\d+(?=\<\/span\>)/g);
+            log("limitPageStr: \n", limitPageStr);
+            partPreUrl = match[0];
+            totalPageCnt = parseInt(limitPageStr);
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = partPreUrl + '.html';
+                } else {
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
+                }
+                log('push pageUrl: \n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.td-post-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images = $(doc).find('.td-gallery-content > img');
+        $(images).each(function () {
+            let src = $(this).attr('data-original');
+            if (src) {
+                $(this).removeAttr('data-original');
+                $(this).attr('src', src);
+            }
+        });
+
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------meinv.page------------------------------------------- */
+
+    injectBtns().domain(site.Meinv.hostnames).removeAD(function () {
+        $("div[id^=art_],.mobile-bar,[class^=go-to-top],.favorite").css({
+            "z-index": "999"
+        });
+        $("div[id^=art_] img").css({
+            'width': 'auto',
+            'height': 'auto',
+            'max-width': '50%',
+            'max-height': '50%'
+        });
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.entry-content figure').hide();
+        $("#comments").hide();
+        $(".widget_text").hide();
+        $(".blocks-gallery-item").parent().hide();
+
+        $('img[data-fancybox=i]').attr("data-fancybox", "images");
+        $('a[data-fancybox=images]').attr("data-fancybox", "i");
+    }, function () {
+        $('.entry-content figure').show();
+        $("#comments").show();
+        $(".widget_text").show();
+        $(".blocks-gallery-item").parent().show();
+
+        $('img[data-fancybox=images]').attr("data-fancybox", "i");
+        $('a[data-fancybox=i]').attr("data-fancybox", "images");
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        log("currentPathname: \n", currentPathname);
+        if (currentPathname !== null) {
+            pageUrls.push(currentPathname);
+            if ($('.entry-content>figure').length > 0) {
+                $('.entry-content figure').first().prev().after(injectComponent);
+            } else {
+                $(".blocks-gallery-item").parent().prev().after(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find(".entry-content figure a");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------asiansister.com-------------------------------------- */
+
+    injectBtns().domain(site.Asiansister.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("div[class^=AD]").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+
+        $(".rootContant[style]").first().hide();
+        $(".rootContant[style]").first().next().next().hide();
+        $(".rootContant[style]").first().next().next().next().hide();
+    }, function () {
+        $(".rootContant[style]").first().show();
+        $(".rootContant[style]").first().next().next().show();
+        $(".rootContant[style]").first().next().next().next().show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(?<=\/).*/g);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let pageUrl;
+        if (match !== null) {
+            debugger
+            pageUrl = match[0];
+            pageUrls.push(pageUrl);
+            $('.rootContant[style]').slice(0, 1).after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images = $(doc).find('.rootContant > img');
+        log("images \n", $(images));
+        $(images).each(function (index) {
+            log("start this Object: \n", $(this));
+            log("this images outerHTML \n", $(this).prop("outerHTML"));
+            let src = $(this).attr('dataurl').match(/(?<=image).*/g);
+            if (src) {
+                $(this).removeAttr('onclick');
+                $(this).attr('src', src);
+            }
+        });
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------yskhd.com-------------------------------------------- */
+
+    injectBtns().domain(site.Yskhd.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".banner-slider").remove();
+            $(".nav-vip").remove();
+            $(".widget_media_image").remove();
+            $(".header").css("position", "unset");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox(1);
+        $("div[class^=article]").slice(1, ).hide();
+        // $("div.article-content > p").next().nextAll().hide();
+        $(".single-comment").hide();
+    }, function () {
+        $("div[class^=article]").slice(1, ).show();
+        // $("div.article-content > p").next().nextAll().show();
+        $(".single-comment").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        //https://youpai.netzijin.cn/2022/03/20220329141134503-scaled.jpg
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(?<=\/).*/g);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let pageUrl;
+        if (match !== null) {
+            pageUrl = match[0];
+            pageUrls.push(pageUrl);
+            $('.article-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let re = /-scaled/g;
+        let images;
+        let Ishref = $(doc).find('.gallery-fancy-item > a').attr("href");
+        let isScaled = re.test(Ishref);
+        if (isScaled) {
+            images = $(doc).find('div.gallery img').attr("dataurl", "true");
+        } else {
+            images = $(doc).find('div.gallery img').attr("dataurl", '');
+        }
+        let imgObj = $(images);
+        let a_imgTag = []
+        $(imgObj).each(function (index) {
+            // log("Start this: \n", $(this).prop("outerHTML"));
+            let src;
+            let isScaled = $(this).attr("dataurl");
+            if (isScaled === "true") {
+                src = $(this).attr('src').replace(/-\d+x\d+/g, '-scaled');
+            } else {
+                src = $(this).attr('src').replace(/-\d+x\d+/g, '');
+            }
+            $(this).attr('label', 'sl');
+            debugger
+            $(this).attr('src', src);
+            let imageItem = $(this).prop("outerHTML").toString();
+            // log("New this: \n", imageItem);
+            let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
+            construct_aTag.append(imageItem);
+            // log("New construct_Tag: \n", construct_aTag);
+            a_imgTag.push(construct_aTag);
+        });
+        // log("New a_imgTag\n",$(a_imgTag));
+        return $(a_imgTag);
+    }, function (aImgE) {
+        $(aImgE).find("img")[0].style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.dmmtu.com---------------------------------------- */
+
+    injectBtns().domain(site.Dmmtu.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".main-footer").remove();
+            $(".single>span").remove();
+            $("html script").remove();
+        }, 100);
+        $(".bd").first().css({
+            "width": "100%",
+            "height": "100%"
+        });
+    }).switchAggregationBtn(function () {
+
+        //FancyBox
+        activateFancyBox();
+
+        $(".main-body").hide();
+        $(".link_pages").hide();
+    }, function () {
+        $(".main-body").show();
+        $(".link_pages").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
+        let match = currentPathname.match(/(\w+)\/(\d+)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = '_';
+            let partPreUrl = '';
+            debugger
+            let limitPageStr = $('.page-numbers > b').prop("outerHTML");
+            let limitPageTotal = limitPageStr.match(/(?<=共)(\d+)/g);
+            log("limitPageStr: \n", limitPageStr);
+            partPreUrl = match[0];
+            totalPageCnt = parseInt(limitPageTotal);
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = partPreUrl + '.html';
+                } else {
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
+                }
+                log('push pageUrl: \n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.main-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images;
+        images = $(doc).find('.main-body img');
+
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.fnvshen.com && xsnvshen.co----------------------- */
+
+    injectBtns().domain(site.Fnvshen.hostnames).removeAD(function () {
+        // debugger
+        setInterval(function () {
+            $(".yalayi_box").remove();
+            $(".yituyu_box").remove();
+            $(".collect-unit").first().remove();
+            $(".pic_index_headc").css("position", "sticky");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+        $("#hgallery img[mark!='true']").hide();
+        $("#pages").hide();
+        $(".workContentWrapper>div").slice(1).hide();
+        //android
+        $(".ck-box-unit").hide();
+        $("#idiv").hide();
+        $("#arcbox>p").slice(1).hide();
+        $(".bigpages").hide();
+    }, function () {
+        $("#hgallery img[mark!='true']").show();
+        $("#pages").show();
+        $(".workContentWrapper>div").slice(1).show();
+        //android
+        $(".ck-box-unit").show();
+        $("#idiv").show();
+        $("#arcbox>p").slice(1).show();
+        $(".bigpages").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+
+        let currentHref = window.location.href;
+        let currentPathname = window.location.pathname;
+        log("currentHref: \n", currentHref);
+        let skipGeekGoddess = /xsnvshen/g.exec(currentHref);
+        log("skipGeekGoddess: \n", skipGeekGoddess);
+        if (isEmpty(skipGeekGoddess)) {
+            log("\n-----inject GeekGoddess-----\n");
+            let match = currentPathname.match(/(\w+)\/(\d+)/im);
+            log("match: \n", match);
+            let isGirl = /girl|article/g.exec(currentPathname);
+            log("girl: ", isGirl);
+            if (!isEmpty(isGirl)) {
+                match = null;
+            } else {
                 debugger
-                misMatch.forEach(function (value) {
-                    if (match) {
-                        let frontEndMatching = match[0];
-                        if (value === frontEndMatching) {
-                            match = null;
-                        }
-                    }
-                });
+                let isMobileDomain = false;
+                let mobileDomain = /(?<=https?\:\/\/)(m\.)/.exec(window.location);
+                if (mobileDomain != null) {
+                    isMobileDomain = true;
+                }
                 let limitPageTotal;
                 let limitPageStr;
                 if (match !== null) {
-                    let totalPageCnt = 1;
-                    let suffixUrl = '';
-                    let partPreUrl = null;
-                    let pageId = null;
+                    let suffixUrl = '/';
+                    let partPreUrl = '';
                     debugger
-                    limitPageStr = $('.page-link').prop("outerHTML");
-                    limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
+                    if (os.isAndroid || isMobileDomain) {
+                        limitPageStr = $('span.page').prop("outerHTML");
+                        log("limitpag: ", limitPageStr);
+                        limitPageTotal = limitPageStr.match(/\d+(?=\<\/span\>)/g);
+                    } else {
+                        limitPageStr = $('#pages').prop("outerHTML");
+                        limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
+                    }
+
                     log("limitPageStr: \n", limitPageStr);
-                    totalPageCnt = Math.max.apply(null, limitPageTotal);
+                    let maxpage = Math.max.apply(null, limitPageTotal);
                     // let maxpage = limitPageTotal.length;
                     log("limitPageMatch: ", limitPageTotal);
-                    log("maxpage: ", totalPageCnt);
+                    log("maxpage: ", maxpage);
                     partPreUrl = match[0];
-                    for (let i = 1; i <= totalPageCnt; i++) {
+                    for (let i = 1; i <= maxpage; i++) {
                         let pageUrl;
                         if (i === 1) {
-                            pageUrl = partPreUrl;
-                        } else {
-                            pageUrl = partPreUrl + suffixUrl + i;
-                        }
-                        log('push pageUrl:\n', pageUrl);
-                        pageUrls.push(pageUrl);
-                    }
-                    $(".page-link").last().prev().prev().after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                let images;
-                images = $(doc).find('.entry img');
-
-                let a_imgTag = aImgTagPackaging(images);
-                log("New a_imgTag Object: \n", $(a_imgTag));
-                return $(a_imgTag);
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsTrue
-        }
-    }
-    /* --------------------------------------------www.xrmn5.cc & www.xiurenb.net ---------------------- */
-    if (site.XiurenJi.iStatus || site.Xrmn.iStatus) {
-        setInterval(function () {
-            $(".main").nextUntil('#popUpContent').remove();
-            $("#popUpContent").nextAll().remove();
-        }, 100);
-        if (os.isAndroid || os.isPhone) {
-            log("Andriod");
-            //https://sleazyfork.org/zh-CN/scripts/440115-xiurenji%E7%A7%80%E4%BA%BA%E9%9B%86%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89
-        } else {
-            injectBtns().domain(site.XiurenJi.hostnames.concat(site.Xrmn.hostnames)).removeAD(function () {
-                setInterval(function () {
-                    $("div[class^='ad']").remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                //FancyBox
-                activateFancyBox();
-                $(".content").hide();
-            }, function () {
-                $(".content").show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                let match
-                if (site.XiurenJi.iStatus) {
-                    match = currentPathname.match(/(\w+)\/(\d+)/im);
-                } else {
-                    match = currentPathname.match(/([A-Za-z]+).([0-9]+).([0-9]+(_[0-9]*)?)/im);
-                }
-
-                log("currentPathname: \n", currentPathname);
-                log("match: \n", match);
-                let limitPageTotal;
-                let limitPageStr;
-                if (match !== null) {
-                    let totalPageCnt = 1;
-                    let suffixUrl = '_';
-                    let partPreUrl = null;
-                    let pageId = null;
-                    // debugger
-                    limitPageStr = $('.page').prop("outerHTML");
-                    limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
-                    log("limitPageStr: \n", limitPageStr);
-                    totalPageCnt = Math.max.apply(null, limitPageTotal);
-                    // let maxpage = limitPageTotal.length;
-                    log("limitPageMatch: ", limitPageTotal);
-                    log("maxpage: ", totalPageCnt);
-                    partPreUrl = match[0];
-                    for (let i = 0; i <= totalPageCnt; i++) {
-                        let pageUrl;
-                        if (i === 0) {
                             pageUrl = partPreUrl + '.html';
                         } else {
                             pageUrl = partPreUrl + suffixUrl + i + '.html';
@@ -2899,1748 +2592,2077 @@ function popUpMenu() {
                         log('push pageUrl:\n', pageUrl);
                         pageUrls.push(pageUrl);
                     }
-                    $('.item_title').last().after(injectComponent);
-                }
-            }).collectPics(function (doc) {
-                let images;
-                images = $(doc).find('.content img');
-                // debugger
-                log("images: \n", images);
-
-                let a_imgTag = aImgTagPackaging(images);
-                log("New a_imgTag Object: \n", $(a_imgTag));
-                return $(a_imgTag);
-            }, function (imgE) {
-                imgE.style = "width: 100%;height: 100%";
-            }).start(); //urlIsTrue
-        }
-    }
-    /* --------------------------------------------www.112w.cc------------------------------------------ */
-    if (site._24fa.iStatus) {
-        if (os.isAndroid || os.isPhone) {
-            log("Andriod");
-            //https://sleazyfork.org/zh-CN/scripts/441994-24fa%E5%85%A8%E9%87%8F%E5%9B%BE%E7%89%87%E5%8A%A0%E8%BC%89
-        } else {
-            injectBtns().domain(site._24fa.hostnames).removeAD(function () {
-                setInterval(function () {
-                    $("div[class^='ad']").remove();
-                    $("#content img[src$='gif']").remove();
-                }, 100);
-            }).switchAggregationBtn(function () {
-                //FancyBox
-                activateFancyBox();
-                $("div#content>div[style^=text]").hide();
-                $("#content>div>img").hide();
-                $("table[align]").hide();
-            }, function () {
-                $("div#content>div[style^=text]").show();
-                $("#content>div>img").show();
-                $("table[align]").show();
-            }).injectAggregationRef(function (injectComponent, pageUrls) {
-                let currentPathname = window.location.pathname;
-                let match;
-                match = currentPathname.match(/([A-Za-z]+).([0-9]+).([0-9]+(_[0-9]*)?)/im);
-                log("currentPathname: \n", currentPathname);
-                log("match: \n", match);
-                let limitPageTotal;
-                let limitPageStr;
-                if (match !== null) {
-                    let totalPageCnt = 1;
-                    let suffixUrl = 'p';
-                    let partPreUrl = null;
-                    let pageId = null;
-                    // debugger
-                    limitPageStr = $('table[align]').prop("outerHTML");
-                    limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
-                    log("limitPageStr: \n", limitPageStr);
-                    totalPageCnt = Math.max.apply(null, limitPageTotal);
-                    // let maxpage = limitPageTotal.length;
-                    log("limitPageMatch: ", limitPageTotal);
-                    log("maxpage: ", totalPageCnt);
-                    partPreUrl = match[0];
-                    for (let i = 1; i <= totalPageCnt; i++) {
-                        let pageUrl;
-                        if (i === 1) {
-                            pageUrl = partPreUrl + '.aspx';
-                        } else {
-                            pageUrl = partPreUrl + suffixUrl + i + '.aspx';
-                        }
-                        log('push pageUrl:\n', pageUrl);
-                        pageUrls.push(pageUrl);
+                    if (os.isAndroid || isMobileDomain) {
+                        $('.content .ck-footer').prev().after(injectComponent);
+                    } else {
+                        $('#hgallery').prepend(injectComponent);
                     }
-                    $('#content img').first().parent().prepend(injectComponent);
+
                 }
-            }).collectPics(function (doc) {
-                let imgE = [];
-                let images;
-                images = $(doc).find('#content img');
-                debugger
-                // log("images: \n", images);
-                $(images).each(function () {
-                    let src = $(this).attr("src");
-                    // log($(this).prop("outerHTML")+src);
-                    imgE.push($("<img src=" + src + "></img>"));
-                });
-                log(imgE);
-                return $(imgE);
-            }, function (imgE) {
-                imgE.style = "max-width: 100%;height: auto";
-                $(imgE).attr({
-                    'data-fancybox': 'images'
-                });
-            }).start(); //urlIsTrue
-        }
-    }
-    /* --------------------------------------------www.tuiimg.com--------------------------------------- */
-    if (site.tuiimg.iStatus) {
-        injectBtns().domain(site.tuiimg.hostnames).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.content').hide();
-            $('.page').hide();
-            $('.tips').hide();
-            $('.send').hide();
-            $('#downappM').hide();
-            //android
-        }, function () {
-            $('.send').show();
-            // $('.content').show();
-            // $('.page').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let limitPageStr = $('span.all').prop("outerHTML");
-            log("limitPageStr: " + limitPageStr);
-            if (limitPageStr !== undefined) {
-                let pageUrl = currentPathname;
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
-                $('div.content').prev().after(injectComponent);
             }
-        }).collectPics(function (doc) {
+        } else {
+            log("\n-----inject xsnvshen-----\n");
+            let pageUrl = currentPathname;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            let Skip = /hd/g.exec(currentPathname);
+            // log("Skip: " + Skip);
+            if (isEmpty(Skip)) {
+                if (os.isPc) {
+                    $('.workContentWrapper').prepend(injectComponent);
+                } else {
+                    $(".poster-nav").after(injectComponent);
+                }
+            }
+        }
+    }).collectPics(function (doc) {
+
+        let currentHref = window.location.href;
+        log("currentHref: \n", currentHref);
+        let skipGeekGoddess = /xsnvshen/g.exec(currentHref);
+        log("skipGeekGoddess: \n", skipGeekGoddess);
+        if (isEmpty(skipGeekGoddess)) {
+            log("\n-----collectPics GeekGoddess-----\n");
+            let mobileDomain = /(?<=https?\:\/\/)(m\.)/g.exec(window.location);
+            let images;
+            if (os.isAndroid || mobileDomain) {
+                images = $(doc).find('.ck-img-info img');
+            } else {
+                images = $(doc).find('#hgallery img');
+            }
+            $(images).attr("mark", "ture");
+            let a_imgTag = aImgTagPackaging(images);
+            log("New a_imgTag Object: \n", $(a_imgTag));
+            return $(a_imgTag);
+        } else {
             debugger
-            let imgE = []
-            let currentImgSrc = $(".content img").attr("src").replace("//", "/");
+            log("\n-----collectPics xsnvshen-----\n");
+            let imgE = [];
+            let currentImgSrc;
+            let limitPageStr;
+            let limitPageMatch;
+            // num传入的数字，n需要的字符长度 PrefixInteger(11, 5) //"00011"
+            let PrefixInteger = function (num, n) {
+                return (Array(n).join(0) + num).slice(-n);
+            }
+            if (os.isPc) {
+                currentImgSrc = $("img#bigImg").attr("src").replace("//", "/");
+                limitPageStr = $('.swpt-time').prop("outerHTML");
+                limitPageMatch = limitPageStr.match(/共(.*?)<\/span>/g).toString().match(/\d*/g);
+            } else {
+                //android
+                currentImgSrc = $("#arcbox img").first().attr("src").replace("//", "/");
+                limitPageStr = $('div em span').first().prop("outerHTML");
+                limitPageMatch = limitPageStr.match(/\d+(?=<\/span>)/g);
+            }
             log("currentImgSrc: " + currentImgSrc);
-            let hostName = currentImgSrc.match(/(?<=\/).*?(?=\/)/m);
-
-            let partPreUrl = currentImgSrc.match(/(?<=\w\/).*(?=\/)/m);
-            log("partPreUrl: " + partPreUrl);
-
-            let limitPageStr = $('span.all').prop("outerHTML");
             log("limitPageStr: " + limitPageStr);
-            if (limitPageStr != null) {
+            log("limitPageMatch: " + limitPageMatch);
 
-                let limitPageMatch = limitPageStr.match(/(?<=\/)\d+/m);
-                log("limitPageMatch: " + limitPageMatch);
-                let totalPageCnt = limitPageMatch[0];
+            let partPreUrls = currentImgSrc.match(/(?<=\/).*\//g);
+            log("partPreUrl: " + partPreUrls);
 
-                let pageId = '';
-                let suffixUrl = '.jpg';
-
+            if (!isEmpty(partPreUrls)) {
                 let protocol = window.location.protocol;
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl = '';
-                    pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
-
-                    let startUrl = protocol + '//' + hostName + '/' + pageUrl;
-                    let img = `<img src=${startUrl}>`
+                let totalPageCnt = Math.max.apply(null, limitPageMatch);
+                log("totalPageCnt: " + totalPageCnt);
+                let suffixUrl = '.jpg';
+                for (let i = 0; i < totalPageCnt; i++) {
+                    let pageUrl = partPreUrls + PrefixInteger(i, 3) + suffixUrl;
+                    let startUrl = protocol + '//' + pageUrl;
+                    let img = `<img style="width: 100%; height: 100%;" src=${startUrl}>`
                     log('push pageUrl: ', startUrl);
                     imgE.push($(img));
                 }
             }
+            let a_imgTag = aImgTagPackaging($(imgE));
+            log("New a_imgTag Object: \n", $(a_imgTag));
+            return $(a_imgTag);
+        }
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
 
-            return $(imgE);
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
+    /* --------------------------------------------www.ikanins.com-------------------------------------- */
 
-            $(imgE).attr({
-                'data-fancybox': 'images'
+    injectBtns().domain(site.Ikanins.hostnames).removeAD(function () {
+        debugger
+        setInterval(function () {
+            $(".widget_custom_html").remove();
+
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+
+        let len = $("div[id^=attachment]").length;
+        if (len > 0) {
+            $("div[id^=attachment]").css({
+                "width": "100%",
+                "height": "100%"
             });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------nsfwp.buzz------------------------------------------- */
-    if (site.nsfwp.iStatus) {
-        injectBtns().domain(site.nsfwp.hostnames).removeAD(function () {
-            let inputElement = $("input.acpwd-pass");
-            let outerHTML = inputElement.prop("outerHTML");
-            log("inputElement: " + outerHTML);
-            if (outerHTML !== undefined) {
-                let password = $(".acpwd-info-message").prop("outerHTML").match(/(?<=password:)\w+(?=\<)/m);
-                log("password:" + password[0]);
-                inputElement.val(`${password[0]}`);
-                $("input.acpwd-submit").click();
+            $("div[id^=attachment]").next().nextAll().hide();
+        } else {
+            $(".entry-content p").nextAll().hide();
+        }
+        $(".entry-footer").hide();
+    }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; //
+        let match = currentPathname.match(/\w+.*/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        debugger
+        if (match !== null) {
+            let partPreUrl = '';
+            debugger
+            partPreUrl = match[0];
+            log('push pageUrl:\n', partPreUrl);
+            pageUrls.push(partPreUrl);
+            if ($("div[id^=attachment]").length > 0) {
+                $('div[id^=attachment]').after(injectComponent);
+            } else {
+                $('.entry-content .entry').prepend(injectComponent);
             }
-            $(":root").css({
-                "--primary-color": "unset",
-                "--accent-color": "unset"
-            });
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.wp-block-image').hide();
-            $('.rebeccalite-post-author').hide();
-            $('.wrapper').hide();
-            $('.entry-content').hide();
-            //android
-        }, function () {
-            $('.wp-block-image').show();
-            $('.rebeccalite-post-author').show();
-            $('.wrapper').show();
-            $('.entry-content').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let button_ = null;
+        }
+    }).collectPics(function (doc) {
+        let images;
+        images = $(doc).find('.entry-content p img');
 
-            if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
 
-                let aTags = $('.entry-content p a');
-                aTags.each(function () {
-                    let text = $(this).text();
-                    log(text);
-                    if (!isEmpty(text)) {
-                        button_ = $(this).clone();
-                    }
-                });
+    /* --------------------------------------------madoupan.com----------------------------------------- */
 
-                button_.css({
-                    "color": "black",
-                    "background": "pink",
-                    "text-decoration": "none"
-                }).text("原内容下载");
+    injectBtns().domain(site.Madoupan.hostnames).removeAD(function () {
+        debugger
+        setInterval(function () {
+            $(".single-comment").remove();
+            $(".header").css("position", "unset");
+        }, 100);
+    }).switchAggregationBtn(function () {
 
-                let text = $(".entry-content p").last().text();
-                text = text.match(/\d*:\d*/g);
-                log("-----video--------\n", text);
-                if (isEmpty(text)) {
-                    let pageUrl = currentPathname;
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                    if ($('.wrapper').prop("outerHTML") !== undefined) {
-                        $('.wrapper').prev().after(injectComponent);
-                    } else {
-                        $('.entry-header').after(injectComponent);
-                    }
-                    if (!isEmpty(button_)) {
-                        $("#injectComponent").prev().after(button_);
-                    }
+        //FancyBox
+        activateFancyBox();
+
+        $("div[class^=article]").nextAll().hide();
+    }, function () {
+
+        $("div[class^=article]").nextAll().show();
+        $('div.article-content').hide();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname; //
+        let match = currentPathname.match(/\w+.*/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        debugger
+        if (match !== null) {
+            let partPreUrl = '';
+            debugger
+            partPreUrl = match[0];
+            log('push pageUrl:\n', partPreUrl);
+            pageUrls.push(partPreUrl);
+            $('.article-header').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let images;
+        images = $(doc).find('div.article-content img');
+
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------mrcong.com------------------------------------------- */
+
+    injectBtns().domain(site.Mrcong.hostnames).removeAD(function () {
+        $("body").removeClass();
+        $("body").removeAttr("id");
+        $("body").css({
+            "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
+        });
+        $("meta").remove();
+        $('iframe').remove();
+        $("link").each(function () {
+            let href = $(this).attr('href');
+            let isHrefMatch = /mrcong/g.exec(href);
+            if (isHrefMatch === null) {
+                $(this).remove();
+            }
+        });
+        $("script").each(function () {
+            let href = $(this).attr('src');
+            let isHrefMatch = /mrcong/g.exec(href);
+            if (isHrefMatch === null) {
+                $(this).remove();
+            }
+        });
+        // $("div.wrapper-outer").siblings().remove();
+        setInterval(function () {
+            $("link[href^='https://smallfunnybears']").remove();
+            $("script[src^='https://smallfunnybears.com']").remove();
+            $("script[src^='https://stats.wp.com']").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+        $(".page-link").hide();
+        $(".page-link").last().prev().hide();
+    }, function () {
+        $(".page-link").show();
+        $(".page-link").last().prev().show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = currentPathname.match(/\w+.*?\//im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let misMatch = ["tag/", "category/", "sets/", "top/", "tim-kiem/"];
+        debugger
+        misMatch.forEach(function (value) {
+            if (match) {
+                let frontEndMatching = match[0];
+                if (value === frontEndMatching) {
+                    match = null;
                 }
             }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find(".entry-content img");
-            // log("ImgE: " +imgE);
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------mmm131.com------------------------------------------- */
-    if (site.mmm131.iStatus) {
-        injectBtns().domain(site.mmm131.hostnames).removeAD(function () {
-            console.time('global');
-            new Promise(function (resolve, reject) {
-                setTimeout(() => {
-                    resolve();
-                }, 100);
-            }).then(() => {
-                console.timeEnd('global');
-                $('#page').nextAll().hide();
-            });
-            setInterval(function () {
-                $(".downBox").remove();
-                $(".bannert_ios").remove();
-                $("#content a[style]").remove();
-                $("div[class^=banner]").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#page').nextAll().hide();
-            $('.content-tips').hide();
-            $('.content-pic').hide();
-            $('.content-page').hide();
-            //android
-            $(".tips").hide();
-            $(".paging").hide();
-            $(".post-content ").hide();
-        }, function () {
-            $('#page').nextAll().show();
-            $('.content-tips').show();
-            $('.content-pic').show();
-            $('.content-page').show();
-            //android
-            $(".tips").show();
-            $(".post-content ").show();
-            $(".paging").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let match = null;
-            match = currentPathname.match(/(\w+)\/(\d+)/im);
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            let limitPageTotal;
-            let limitPageStr;
-            if (match !== null) {
-                let totalPageCnt = 1;
-                let suffixUrl = '_';
-                let partPreUrl = null;
-                if (os.isPc) {
-                    limitPageStr = $('.content-page');
+        });
+        let limitPageTotal;
+        let limitPageStr;
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = '';
+            let partPreUrl = null;
+            let pageId = null;
+            debugger
+            limitPageStr = $('.page-link').prop("outerHTML");
+            limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
+            log("limitPageStr: \n", limitPageStr);
+            totalPageCnt = Math.max.apply(null, limitPageTotal);
+            // let maxpage = limitPageTotal.length;
+            log("limitPageMatch: ", limitPageTotal);
+            log("maxpage: ", totalPageCnt);
+            partPreUrl = match[0];
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = partPreUrl;
                 } else {
-                    limitPageStr = $('.paging');
+                    pageUrl = partPreUrl + suffixUrl + i;
                 }
-                limitPageStr = limitPageStr.prop("outerHTML");
-                limitPageTotal = limitPageStr.match(/\d+(?=页)/g);
-                log("limitPageStr: \n", limitPageStr);
-                totalPageCnt = limitPageTotal[0];
-                log("limitPageMatch: ", limitPageTotal);
-                log("totalPageCnt: ", totalPageCnt);
-                partPreUrl = match[0];
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    let pageUrl;
-                    if (i === 1) {
-                        pageUrl = partPreUrl + '.html';
-                    } else {
-                        pageUrl = partPreUrl + suffixUrl + i + '.html';
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                if (os.isPc) {
-                    $('.content-msg').after(injectComponent);
-                } else {
-                    $('.tips').after(injectComponent);
-                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
             }
-        }).collectPics(function (doc) {
-            let imgE;
             if (os.isPc) {
-                imgE = $(doc).find(".content-pic img");
-            } else {
-                imgE = $(doc).find(".post-content img");
+                $(".page-link").last().prev().prev().after(injectComponent);
             }
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------asiantolick.com-------------------------------------- */
-    if (site.asiantolick.iStatus) {
-        injectBtns().domain(site.asiantolick.hostnames).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div.spotlight-group').hide();
-            //android
-        }, function () {
-            $('div.spotlight-group').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            let match = null;
-            match = currentPathname.split("\/");
-            log("currentPathname: \n", currentPathname);
-            log("match: \n", match);
-            if (match !== null) {
-                let pageUrl = currentPathname;
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
+        }
+    }).collectPics(function (doc) {
+        let images;
+        images = $(doc).find('.entry img');
 
-                $('#metadata_qrcode').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find("img.miniaturaImg");
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.imn5.net-格式------------------------------------ */
-    if (site.imn5.iStatus) {
-        injectBtns().domain(site.imn5.hostnames).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div.imgwebp').hide();
-            $('div.page').hide();
-            //android
-        }, function () {
-            $('div.imgwebp').show();
-            $('div.page').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[1];
-                let pageId = match[2];
-                let suffixUrl = '.html';
-                let limitPageMatch = $('div.page').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+
+
+    /* --------------------------------------------www.xrmn5.cc & www.xiurenb.net ---------------------- */
+
+    injectBtns().domain(site.XiurenJi.hostnames.concat(site.Xrmn.hostnames)).removeAD(function () {
+        setInterval(function () {
+            $("div[class^='ad']").remove();
+            $(".main").nextUntil('#popUpContent').remove();
+            $("#popUpContent").nextAll().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+        $(".content").hide();
+    }, function () {
+        $(".content").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match;
+        if (site.XiurenJi.iStatus) {
+            match = currentPathname.match(/(\w+)\/(\d+)/im);
+        } else {
+            match = currentPathname.match(/([A-Za-z]+).([0-9]+).([0-9]+(_[0-9]*)?)/im);
+        }
+
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let limitPageTotal;
+        let limitPageStr;
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = '_';
+            let partPreUrl = null;
+            let pageId = null;
+            // debugger
+            limitPageStr = $('.page').prop("outerHTML");
+            limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
+            log("limitPageStr: \n", limitPageStr);
+            totalPageCnt = Math.max.apply(null, limitPageTotal);
+            // let maxpage = limitPageTotal.length;
+            log("limitPageMatch: ", limitPageTotal);
+            log("maxpage: ", totalPageCnt);
+            partPreUrl = match[0];
+            for (let i = 0; i <= totalPageCnt; i++) {
                 let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 0; i < totalPageCnt; i++) {
-                    if (i == 0) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('.jianjie').first().after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find(".imgwebp img");
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------xchina.club------------------------------------------ */
-    if (site.xchina.iStatus) {
-        injectBtns().domain(site.xchina.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("div.ad").remove();
-                $("div.push-bottom").remove();
-                $("div[class*=ad]").remove();
-                $("div.push-top").remove();
-                $("div.center").remove();
-                $(".blocker ").remove();
-                $("body").css("overflow", "unset");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div.photos').hide();
-            $('div.pager').hide();
-            //android
-        }, function () {
-            $('div.photos').show();
-            $('div.pager').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentHref = window.location.href;
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/(.+?\/)(.*)(?:\/\d+)?(?=\.)/m);
-            log("match: \n", match);
-            let skip0 = currentHref.match(/(?<=\/photos\/)model/g);
-            let skip1 = currentHref.match(/photos?/g);
-            log("skip: " + skip0);
-            if (match && isEmpty(skip0) && !isEmpty(skip1)) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[1];
-                let pageId = match[2];
-                let suffixUrl = '.html';
-                let limitPageMatch = $('div.pager').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    if (i == 1) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('div.article').slice(1, 2).after(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let imgEDiv;
-            imgEDiv = $(doc).find(".photos img");
-            $(imgEDiv).each(function (index) {
-                let src = $(this).attr("src").replace(/\_.*\./g, '.');
-                let isTurn = /\/ad\//g.exec(src);
-                if (isEmpty(isTurn)) {
-                    log("src: " + src);
-                    imgE.push($(`<img src=${src}>`));
-                }
-            });
-            return $(imgE);
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------jjgirls.com------------------------------------------ */
-    if (site.jjgirls.iStatus) {
-        injectBtns().domain(site.jjgirls.hostnames).removeAD(function () {
-            let href = window.location.href;
-            if (!/mobile/g.exec(href)) {
-                setInterval(function () {
-                    $("div[class^=a]").remove();
-                    $("h2").remove();
-                    $("h3").remove();
-                    $("#footer").remove();
-                    $('a[href*=sex]').remove();
-                    $("a").css("color", "black");
-                }, 100);
-            } else {
-                setInterval(function () {
-                    $("#camb").remove();
-                    $('a[href*=sex]').remove();
-                    $("a").css("color", "black");
-                }, 100);
-            }
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('div[class^=p] a').hide();
-            $('#player').hide();
-            //android
-        }, function () {
-            $('div[class^=p] a').show();
-            $('#player').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let matchSplitArr = currentPathname.split("\/");
-            log("matchSplit: \n", matchSplitArr);
-
-            let match = matchSplitArr.filter(function (s) {
-                return s && s.trim();
-            });
-            // let match = trimSpace(matchSplitArr);
-            if (!/[a-zA-Z_-]/g.exec(match.slice(-1))) {
-                match.pop();
-            }
-            match = match.join("/");
-            log("match: \n", match);
-            if (currentPathname !== "\/" && currentPathname.match(/uncensored|japanese/g)) {
-
-
-                let pageUrl = currentPathname;
-
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
-                if (os.isPc) {
-                    $('div[class^=p]').first().parent().prepend(injectComponent);
+                if (i === 0) {
+                    pageUrl = partPreUrl + '.html';
                 } else {
-                    $('#nav').after(injectComponent);
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
                 }
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let imgA = $(doc).find("div[class^=p] a");
-            $(imgA).each(function () {
-                let href = $(this).attr("href");
-                // log("href: \n"+href);
-                if (/\.jpg/g.exec(href)) {
-                    log("href: \n" + href);
-                    imgE.push($(`<img src=${href}></img>`));
-                }
-            });
-
-            return $(imgE);
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------photos18.com----------------------------------------- */
-    if (site.photos18.iStatus) {
-        injectBtns().domain(site.photos18.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".fixed-bottom").remove();
-                $(".main-footer").remove();
-                $("body script").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#app').hide();
-            $('#content').hide();
-            $('#links').hide();
-            //android
-        }, function () {
-            $('#app').show();
-            //$('#content').show();
-            $('#links').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname.match(/(?<=\/).*/g)[0];
-            log("currentPathname: \n", currentPathname);
-            if (currentPathname) {
-                let pageUrl = currentPathname;
-                // pageUrl = pageUrl.split("\/");
-                // pageUrl = pageUrl.filter(function(s){
-                //     return s && s.trim();
-                // });
-                // pageUrl = pageUrl.join("/");
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
-                $('#app').first().after(injectComponent);
             }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find("#content img");
-            log("imgE: \n" + imgE);
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------pornpics.com----------------------------------------- */
-    if (site.pornpics.iStatus) {
-        injectBtns().domain(site.pornpics.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("#cookie-contract").remove();
-                $("div[class^=sponsor]").remove();
-                $(".c-model").remove();
-                $(".loading-modal").remove();
-                $("li.r-frame").remove();
-                $(".rel-link h2").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#main').hide();
-
-            //android
-        }, function () {
-            // $('#main').show();
-
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname.match(/(?<=\/).*/g)[0];
-            log("currentPathname: \n", currentPathname);
-            if (currentPathname && /galleries/g.exec(currentPathname)) {
-                let pageUrl = currentPathname;
-                // pageUrl = pageUrl.split("\/");
-                // pageUrl = pageUrl.filter(function(s){
-                //     return s && s.trim();
-                // });
-                // pageUrl = pageUrl.join("/");
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
-                $('div.title-section').after(injectComponent);
+            if (os.isPc) {
+                $('.item_title').last().after(injectComponent);
             }
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find("a.rel-link");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.mfsft.com---------------------------------------- */
-    if (site.mfsft.iStatus) {
-        injectBtns().domain(site.mfsft.hostnames).removeAD(function () {
-            if (!(window.location.pathname.toString() === "/")) {
-                let items = $(".h").nextUntil(".page");
-                let interestline = items.find(".interestline");
-                let seacher = $("#search");
-                if (isEmpty(seacher)) {
-                    seacher = $("form[onsubmit]").parent();
-                }
-                log("interestline\n", interestline.prop("outerHTML"));
-                log("seacher\n", seacher.prop("outerHTML"));
-                $(".h").prev().after(interestline);
-                $(".h").prev().after(seacher);
-                // $(".h").prevUntil(".page").remove();
-                items.remove();
-            };
-            $("head").empty();
-            setInterval(function () {
-                $("#pic").remove();
-            }, 100);
+        }
+    }).collectPics(function (doc) {
+        let images;
+        images = $(doc).find('.content img');
+        // debugger
+        log("images: \n", images);
+
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
+    }, function (imgE) {
+        imgE.style = "width: 100%;height: 100%";
+    }).start(); //urlIsTrue
+    /* --------------------------------------------www.112w.cc------------------------------------------ */
+
+    injectBtns().domain(site._24fa.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("div[class^='ad']").remove();
+            $("#content img[src$='gif']").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        //FancyBox
+        activateFancyBox();
+        $("div#content>div[style^=text]").hide();
+        $("#content>div>img").hide();
+        $("table[align]").hide();
+    }, function () {
+        $("div#content>div[style^=text]").show();
+        $("#content>div>img").show();
+        $("table[align]").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match;
+        match = currentPathname.match(/([A-Za-z]+).([0-9]+).([0-9]+(_[0-9]*)?)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let limitPageTotal;
+        let limitPageStr;
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = 'p';
+            let partPreUrl = null;
+            let pageId = null;
             // debugger
-            async function asyncFunc() {
-                try {
-                    var a1 = +new Date();
-                    // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
-                    let arrs = [
-                        'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/mslasscss.js',
-                        'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/mslasscss.js',
-                        "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js"
-                    ]
-                    await startMain_(arrs);
-                    addStyle(MSLASS_CSS);
-                    var a2 = +new Date();
-                    var time = (a2 - a1);
-                    log("time", time);
-                } catch (error) {
-                    err(error);
-                }
-            }
-            asyncFunc();
-        }).switchAggregationBtn(function () {
-            // debugger
-            activateFancyBox();
-            $('#picg').prev().nextAll().hide();
-            //android
-        }, function () {
-            $('#picg').prev().nextAll().show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[1];
-                let pageId = match[2];
-                let suffixUrl = '.html';
-                let limitPageMatch = $('.pagelist b').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
+            limitPageStr = $('table[align]').prop("outerHTML");
+            limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
+            log("limitPageStr: \n", limitPageStr);
+            totalPageCnt = Math.max.apply(null, limitPageTotal);
+            // let maxpage = limitPageTotal.length;
+            log("limitPageMatch: ", limitPageTotal);
+            log("maxpage: ", totalPageCnt);
+            partPreUrl = match[0];
+            for (let i = 1; i <= totalPageCnt; i++) {
                 let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    if (i == 1) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('.page').prepend(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".page img");
-            $(item).each(function () {
-                let src = $(this).attr("src");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------xartmodel.net---------------------------------------- */
-    if (site.xartmodel.iStatus) {
-        injectBtns().domain(site.xartmodel.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".penci-rlt-popup").remove();
-                $("#navigation").css("position", "unset");
-                $("iframe").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            // debugger
-            activateFancyBox();
-            $('.wp-block-media-text').next().nextAll().hide();
-            //android
-        }, function () {
-            $('.wp-block-media-text').next().nextAll().show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            pageUrls.push(window.location.pathname);
-            $('.wp-block-media-text').after(injectComponent);
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".inner-item-masonry-gallery img");
-            $(item).each(function () {
-                let src = $(this).attr("src");
-                src = src.replace(/-\d*x.*/g, ".webp");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------hotgirl.asia----------------------------------------- */
-    if (site.hotgirl.iStatus) {
-        injectBtns().domain(site.hotgirl.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#myimg').hide();
-            $('#pagination').hide();
-            //android
-        }, function () {
-            $('#myimg').show();
-            $('#pagination').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/.*?\//m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[0];
-                let pageId = '';
-                let suffixUrl = '/';
-                let limitPageMatch = $('#pagination').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    if (i == 1) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('#myimg').parent().prepend(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find("#myimg img");
-            $(item).each(function () {
-                let src = $(this).attr("src");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------hotgirlchina.com------------------------------------- */
-    if (site.hotgirlchina.iStatus) {
-        injectBtns().domain(site.hotgirlchina.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $("header#header").css("position", "unset");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.entry-inner').hide();
-            $('.pagination').hide();
-            //android
-        }, function () {
-            $('.entry-inner').show();
-            $('.pagination').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/.*?\//m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[0];
-                let pageId = '';
-                let suffixUrl = '/';
-                let limitPageMatch = $('.pagination').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    if (i == 1) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('.entry').prepend(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".entry-inner img");
-            $(item).each(function () {
-                let src = $(this).attr("src");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------blog.baobua.com-------------------------------------- */
-    if (site.baobua.iStatus) {
-        injectBtns().domain(site.baobua.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.article-body').hide();
-            //android
-        }, function () {
-            $('.article-body').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-
-            pageUrls.push(currentPathname);
-
-            $('.article-tldr').after(injectComponent);
-
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".article-img a");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------buondua.com------------------------------------------ */
-    if (site.buondua.iStatus) {
-        injectBtns().domain(site.buondua.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $("#popUpLinks a").css("color", "black");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.article-fulltext').hide();
-            $('.pagination').hide();
-            //android
-        }, function () {
-            // $('.article-fulltext').show();
-            // $('.pagination').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/\/.*/m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[0];
-                let pageId = '';
-                let suffixUrl = '';
-                let limitPageMatch = $('.pagination').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
-                    if (i == 1) {
-                        pageUrl = partPreUrl + pageId + suffixUrl;
-                    } else {
-                        pageUrl = partPreUrl + pageId + '?page=' + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                $('.article-tags').after(injectComponent);
-            }
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".article-fulltext img");
-            $(item).each(function () {
-                let src = $(this).attr("data-src");
-                imgE.push($(`<img src=${src}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.4kup.net----------------------------------------- */
-    if (site._4kup.iStatus) {
-        injectBtns().domain(site._4kup.hostnames).removeAD(function () {
-            setInterval(() => {
-                $("#popUpLinks a").css("color", "black");
-                $("#top-menu").css("position", "unset");
-            }, 100);
-
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('#gallery').hide();
-            //android
-        }, function () {
-            //$('#gallery').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-
-            pageUrls.push(currentPathname.match(/(?<=\/).*/g)[0]);
-
-            $('#gallery').prev().after(injectComponent);
-
-        }).collectPics(function (doc) {
-            debugger
-            doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
-            log("doc \n", doc);
-            let imgE = [];
-            let item = [];
-            for (let i = 0; i < doc.length; i++) {
-                item.push(doc[i].href);
-            }
-            log("AAAA---: \n", item);
-            item.forEach(function (item_) {
-                imgE.push($(`<img src=${item_}>`));
-            });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------goddess247.com--------------------------------------- */
-    if (site.goddess247.iStatus) {
-        injectBtns().domain(site.goddess247.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.elementor-widget-container img').parent().hide();
-            $('.ihc-locker-wrap').hide();
-            //android
-        }, function () {
-            $('.elementor-widget-container img').parent().show();
-            $('.ihc-locker-wrap').show();
-            //android
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-
-            pageUrls.push(currentPathname);
-
-            $('.elementor-widget-container img').parent().prev().after(injectComponent);
-
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".aligncenter");
-            debugger
-            $(item).each(function () {
-                let src = $(this).attr("src");
-                // log("src :",src);
-                if (/data:image/.test(src)) {
-
+                if (i === 1) {
+                    pageUrl = partPreUrl + '.aspx';
                 } else {
-                    imgE.push($(`<img src=${src}>`));
+                    pageUrl = partPreUrl + suffixUrl + i + '.aspx';
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            if (os.isPc) {
+                $('#content img').first().parent().prepend(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let images;
+        images = $(doc).find('#content img');
+        debugger
+        // log("images: \n", images);
+        $(images).each(function () {
+            let src = $(this).attr("src");
+            // log($(this).prop("outerHTML")+src);
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        log(imgE);
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "max-width: 100%;height: auto";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.tuiimg.com--------------------------------------- */
+
+    injectBtns().domain(site.tuiimg.hostnames).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.content').hide();
+        $('.page').hide();
+        $('.tips').hide();
+        $('.send').hide();
+        $('#downappM').hide();
+        //android
+    }, function () {
+        $('.send').show();
+        // $('.content').show();
+        // $('.page').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let limitPageStr = $('span.all').prop("outerHTML");
+        log("limitPageStr: " + limitPageStr);
+        if (limitPageStr !== undefined) {
+            let pageUrl = currentPathname;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('div.content').prev().after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        debugger
+        let imgE = []
+        let currentImgSrc = $(".content img").attr("src").replace("//", "/");
+        log("currentImgSrc: " + currentImgSrc);
+        let hostName = currentImgSrc.match(/(?<=\/).*?(?=\/)/m);
+
+        let partPreUrl = currentImgSrc.match(/(?<=\w\/).*(?=\/)/m);
+        log("partPreUrl: " + partPreUrl);
+
+        let limitPageStr = $('span.all').prop("outerHTML");
+        log("limitPageStr: " + limitPageStr);
+        if (limitPageStr != null) {
+
+            let limitPageMatch = limitPageStr.match(/(?<=\/)\d+/m);
+            log("limitPageMatch: " + limitPageMatch);
+            let totalPageCnt = limitPageMatch[0];
+
+            let pageId = '';
+            let suffixUrl = '.jpg';
+
+            let protocol = window.location.protocol;
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl = '';
+                pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
+
+                let startUrl = protocol + '//' + hostName + '/' + pageUrl;
+                let img = `<img src=${startUrl}>`
+                log('push pageUrl: ', startUrl);
+                imgE.push($(img));
+            }
+        }
+
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------nsfwp.buzz------------------------------------------- */
+
+    injectBtns().domain(site.nsfwp.hostnames).removeAD(function () {
+        let inputElement = $("input.acpwd-pass");
+        let outerHTML = inputElement.prop("outerHTML");
+        log("inputElement: " + outerHTML);
+        if (outerHTML !== undefined) {
+            let password = $(".acpwd-info-message").prop("outerHTML").match(/(?<=password:)\w+(?=\<)/m);
+            log("password:" + password[0]);
+            inputElement.val(`${password[0]}`);
+            $("input.acpwd-submit").click();
+        }
+        $(":root").css({
+            "--primary-color": "unset",
+            "--accent-color": "unset"
+        });
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.wp-block-image').hide();
+        $('.rebeccalite-post-author').hide();
+        $('.wrapper').hide();
+        $('.entry-content').hide();
+        //android
+    }, function () {
+        $('.wp-block-image').show();
+        $('.rebeccalite-post-author').show();
+        $('.wrapper').show();
+        $('.entry-content').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let button_ = null;
+
+        if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
+
+            let aTags = $('.entry-content p a');
+            aTags.each(function () {
+                let text = $(this).text();
+                log(text);
+                if (!isEmpty(text)) {
+                    button_ = $(this).clone();
                 }
             });
-            log("imgE: \n" + imgE);
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------www.ilovexs.com-------------------------------------- */
-    if (site.ilovexs.iStatus) {
-        injectBtns().domain(site.ilovexs.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.entry-content img').hide();
-        }, function () {
-            // $('.entry-content img').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            debugger
-            if (!(match[0] === '')) {
-                pageUrls.push(currentPathname);
-                if ($('.entry-header').length > 1) {} else {
+
+            button_.css({
+                "color": "black",
+                "background": "pink",
+                "text-decoration": "none"
+            }).text("原内容下载");
+
+            let text = $(".entry-content p").last().text();
+            text = text.match(/\d*:\d*/g);
+            log("-----video--------\n", text);
+            if (isEmpty(text)) {
+                let pageUrl = currentPathname;
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+                if ($('.wrapper').prop("outerHTML") !== undefined) {
+                    $('.wrapper').prev().after(injectComponent);
+                } else {
                     $('.entry-header').after(injectComponent);
                 }
+                if (!isEmpty(button_)) {
+                    $("#injectComponent").prev().after(button_);
+                }
             }
-        }).collectPics(function (doc) {
-            let item = $(doc).find(".entry-content img");
-            return item;
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------mitaku.net------------------------------------------- */
-    if (site.mitaku.iStatus) {
-        injectBtns().domain(site.mitaku.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find(".entry-content img");
+        // log("ImgE: " +imgE);
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------mmm131.com------------------------------------------- */
+
+    injectBtns().domain(site.mmm131.hostnames).removeAD(function () {
+        console.time('global');
+        new Promise(function (resolve, reject) {
+            setTimeout(() => {
+                resolve();
             }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.msacwl-slider-wrap').hide();
-        }, function () {
-            $('.msacwl-slider-wrap').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
+        }).then(() => {
+            console.timeEnd('global');
+            $('#page').nextAll().hide();
+        });
+        setInterval(function () {
+            $(".downBox").remove();
+            $(".bannert_ios").remove();
+            $("#content a[style]").remove();
+            $("div[class^=banner]").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#page').nextAll().hide();
+        $('.content-tips').hide();
+        $('.content-pic').hide();
+        $('.content-page').hide();
+        //android
+        $(".tips").hide();
+        $(".paging").hide();
+        $(".post-content ").hide();
+    }, function () {
+        $('#page').nextAll().show();
+        $('.content-tips').show();
+        $('.content-pic').show();
+        $('.content-page').show();
+        //android
+        $(".tips").show();
+        $(".post-content ").show();
+        $(".paging").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = null;
+        match = currentPathname.match(/(\w+)\/(\d+)/im);
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        let limitPageTotal;
+        let limitPageStr;
+        if (match !== null) {
+            let totalPageCnt = 1;
+            let suffixUrl = '_';
+            let partPreUrl = null;
+            if (os.isPc) {
+                limitPageStr = $('.content-page');
+            } else {
+                limitPageStr = $('.paging');
+            }
+            limitPageStr = limitPageStr.prop("outerHTML");
+            limitPageTotal = limitPageStr.match(/\d+(?=页)/g);
+            log("limitPageStr: \n", limitPageStr);
+            totalPageCnt = limitPageTotal[0];
+            log("limitPageMatch: ", limitPageTotal);
+            log("totalPageCnt: ", totalPageCnt);
+            partPreUrl = match[0];
+            for (let i = 1; i <= totalPageCnt; i++) {
+                let pageUrl;
+                if (i === 1) {
+                    pageUrl = partPreUrl + '.html';
+                } else {
+                    pageUrl = partPreUrl + suffixUrl + i + '.html';
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            if (os.isPc) {
+                $('.content-msg').after(injectComponent);
+            } else {
+                $('.tips').after(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        if (os.isPc) {
+            imgE = $(doc).find(".content-pic img");
+        } else {
+            imgE = $(doc).find(".post-content img");
+        }
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------asiantolick.com-------------------------------------- */
+
+    injectBtns().domain(site.asiantolick.hostnames).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div.spotlight-group').hide();
+        //android
+    }, function () {
+        $('div.spotlight-group').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        let match = null;
+        match = currentPathname.split("\/");
+        log("currentPathname: \n", currentPathname);
+        log("match: \n", match);
+        if (match !== null) {
+            let pageUrl = currentPathname;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+
+            $('#metadata_qrcode').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find("img.miniaturaImg");
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.imn5.net-格式------------------------------------ */
+
+    injectBtns().domain(site.imn5.hostnames).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div.imgwebp').hide();
+        $('div.page').hide();
+        //android
+    }, function () {
+        $('div.imgwebp').show();
+        $('div.page').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = $('div.page').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 0; i < totalPageCnt; i++) {
+                if (i == 0) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.jianjie').first().after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find(".imgwebp img");
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------xchina.club------------------------------------------ */
+
+    injectBtns().domain(site.xchina.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("div.ad").remove();
+            $("div.push-bottom").remove();
+            $("div[class*=ad]").remove();
+            $("div.push-top").remove();
+            $("div.center").remove();
+            $(".blocker ").remove();
+            $("body").css("overflow", "unset");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div.photos').hide();
+        $('div.pager').hide();
+        //android
+    }, function () {
+        $('div.photos').show();
+        $('div.pager').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentHref = window.location.href;
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/(.+?\/)(.*)(?:\/\d+)?(?=\.)/m);
+        log("match: \n", match);
+        let skip0 = currentHref.match(/(?<=\/photos\/)model/g);
+        let skip1 = currentHref.match(/photos?/g);
+        log("skip: " + skip0);
+        if (match && isEmpty(skip0) && !isEmpty(skip1)) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = $('div.pager').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('div.article').slice(1, 2).after(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let imgEDiv;
+        imgEDiv = $(doc).find(".photos img");
+        $(imgEDiv).each(function (index) {
+            let src = $(this).attr("src").replace(/\_.*\./g, '.');
+            let isTurn = /\/ad\//g.exec(src);
+            if (isEmpty(isTurn)) {
+                log("src: " + src);
+                imgE.push($(`<img src=${src}>`));
+            }
+        });
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------jjgirls.com------------------------------------------ */
+
+    injectBtns().domain(site.jjgirls.hostnames).removeAD(function () {
+        let href = window.location.href;
+        if (!/mobile/g.exec(href)) {
+            setInterval(function () {
+                $("div[class^=a]").remove();
+                $("h2").remove();
+                $("h3").remove();
+                $("#footer").remove();
+                $('a[href*=sex]').remove();
+                $("a").css("color", "black");
+            }, 100);
+        } else {
+            setInterval(function () {
+                $("#camb").remove();
+                $('a[href*=sex]').remove();
+                $("a").css("color", "black");
+            }, 100);
+        }
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('div[class^=p] a').hide();
+        $('#player').hide();
+        //android
+    }, function () {
+        $('div[class^=p] a').show();
+        $('#player').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let matchSplitArr = currentPathname.split("\/");
+        log("matchSplit: \n", matchSplitArr);
+
+        let match = matchSplitArr.filter(function (s) {
+            return s && s.trim();
+        });
+        // let match = trimSpace(matchSplitArr);
+        if (!/[a-zA-Z_-]/g.exec(match.slice(-1))) {
+            match.pop();
+        }
+        match = match.join("/");
+        log("match: \n", match);
+        if (currentPathname !== "\/" && currentPathname.match(/uncensored|japanese/g)) {
+
+
+            let pageUrl = currentPathname;
+
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            if (os.isPc) {
+                $('div[class^=p]').first().parent().prepend(injectComponent);
+            } else {
+                $('#nav').after(injectComponent);
+            }
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let imgA = $(doc).find("div[class^=p] a");
+        $(imgA).each(function () {
+            let href = $(this).attr("href");
+            // log("href: \n"+href);
+            if (/\.jpg/g.exec(href)) {
+                log("href: \n" + href);
+                imgE.push($(`<img src=${href}></img>`));
+            }
+        });
+
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------photos18.com----------------------------------------- */
+
+    injectBtns().domain(site.photos18.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".fixed-bottom").remove();
+            $(".main-footer").remove();
+            $("body script").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#app').hide();
+        $('#content').hide();
+        $('#links').hide();
+        //android
+    }, function () {
+        $('#app').show();
+        //$('#content').show();
+        $('#links').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname.match(/(?<=\/).*/g)[0];
+        log("currentPathname: \n", currentPathname);
+        if (currentPathname) {
+            let pageUrl = currentPathname;
+            // pageUrl = pageUrl.split("\/");
+            // pageUrl = pageUrl.filter(function(s){
+            //     return s && s.trim();
+            // });
+            // pageUrl = pageUrl.join("/");
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('#app').first().after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find("#content img");
+        log("imgE: \n" + imgE);
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------pornpics.com----------------------------------------- */
+
+    injectBtns().domain(site.pornpics.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("#cookie-contract").remove();
+            $("div[class^=sponsor]").remove();
+            $(".c-model").remove();
+            $(".loading-modal").remove();
+            $("li.r-frame").remove();
+            $(".rel-link h2").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#main').hide();
+
+        //android
+    }, function () {
+        // $('#main').show();
+
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname.match(/(?<=\/).*/g)[0];
+        log("currentPathname: \n", currentPathname);
+        if (currentPathname && /galleries/g.exec(currentPathname)) {
+            let pageUrl = currentPathname;
+            // pageUrl = pageUrl.split("\/");
+            // pageUrl = pageUrl.filter(function(s){
+            //     return s && s.trim();
+            // });
+            // pageUrl = pageUrl.join("/");
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('div.title-section').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find("a.rel-link");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.mfsft.com---------------------------------------- */
+
+    injectBtns().domain(site.mfsft.hostnames).removeAD(function () {
+        if (!(window.location.pathname.toString() === "/")) {
+            let items = $(".h").nextUntil(".page");
+            let interestline = items.find(".interestline");
+            let seacher = $("#search");
+            if (isEmpty(seacher)) {
+                seacher = $("form[onsubmit]").parent();
+            }
+            log("interestline\n", interestline.prop("outerHTML"));
+            log("seacher\n", seacher.prop("outerHTML"));
+            $(".h").prev().after(interestline);
+            $(".h").prev().after(seacher);
+            // $(".h").prevUntil(".page").remove();
+            items.remove();
+        };
+        $("head").empty();
+        setInterval(function () {
+            $("#pic").remove();
+        }, 100);
+        // debugger
+        async function asyncFunc() {
+            try {
+                var a1 = +new Date();
+                // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
+                let arrs = [
+                    'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/mslasscss.js',
+                    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/mslasscss.js',
+                    "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js"
+                ]
+                await startMain_(arrs);
+                addStyle(MSLASS_CSS);
+                var a2 = +new Date();
+                var time = (a2 - a1);
+                log("time", time);
+            } catch (error) {
+                err(error);
+            }
+        }
+        asyncFunc();
+    }).switchAggregationBtn(function () {
+        // debugger
+        activateFancyBox();
+        $('#picg').prev().nextAll().hide();
+        //android
+    }, function () {
+        $('#picg').prev().nextAll().show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/(.+?\/)(\d+)(?:_\d+)?\.html/m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = $('.pagelist b').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.page').prepend(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".page img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------xartmodel.net---------------------------------------- */
+
+    injectBtns().domain(site.xartmodel.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".penci-rlt-popup").remove();
+            $("#navigation").css("position", "unset");
+            $("iframe").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        // debugger
+        activateFancyBox();
+        $('.wp-block-media-text').next().nextAll().hide();
+        //android
+    }, function () {
+        $('.wp-block-media-text').next().nextAll().show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        pageUrls.push(window.location.pathname);
+        $('.wp-block-media-text').after(injectComponent);
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".inner-item-masonry-gallery img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            src = src.replace(/-\d*x.*/g, ".webp");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------hotgirl.asia----------------------------------------- */
+
+    injectBtns().domain(site.hotgirl.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#myimg').hide();
+        $('#pagination').hide();
+        //android
+    }, function () {
+        $('#myimg').show();
+        $('#pagination').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/.*?\//m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[0];
+            let pageId = '';
+            let suffixUrl = '/';
+            let limitPageMatch = $('#pagination').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('#myimg').parent().prepend(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find("#myimg img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------hotgirlchina.com------------------------------------- */
+
+    injectBtns().domain(site.hotgirlchina.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $("header#header").css("position", "unset");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.entry-inner').hide();
+        $('.pagination').hide();
+        //android
+    }, function () {
+        $('.entry-inner').show();
+        $('.pagination').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/.*?\//m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[0];
+            let pageId = '';
+            let suffixUrl = '/';
+            let limitPageMatch = $('.pagination').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.entry').prepend(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".entry-inner img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------blog.baobua.com-------------------------------------- */
+
+    injectBtns().domain(site.baobua.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.article-body').hide();
+        //android
+    }, function () {
+        $('.article-body').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+
+        pageUrls.push(currentPathname);
+
+        $('.article-tldr').after(injectComponent);
+
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".article-img a");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------buondua.com------------------------------------------ */
+
+    injectBtns().domain(site.buondua.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $("#popUpLinks a").css("color", "black");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.article-fulltext').hide();
+        $('.pagination').hide();
+        //android
+    }, function () {
+        // $('.article-fulltext').show();
+        // $('.pagination').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/.*/m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[0];
+            let pageId = '';
+            let suffixUrl = '';
+            let limitPageMatch = $('.pagination').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '?page=' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            $('.article-tags').after(injectComponent);
+        }
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".article-fulltext img");
+        $(item).each(function () {
+            let src = $(this).attr("data-src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.4kup.net----------------------------------------- */
+
+    injectBtns().domain(site._4kup.hostnames).removeAD(function () {
+        setInterval(() => {
+            $("#popUpLinks a").css("color", "black");
+            $("#top-menu").css("position", "unset");
+        }, 100);
+
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#gallery').hide();
+        //android
+    }, function () {
+        //$('#gallery').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+
+        pageUrls.push(currentPathname.match(/(?<=\/).*/g)[0]);
+
+        $('#gallery').prev().after(injectComponent);
+
+    }).collectPics(function (doc) {
+        debugger
+        doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
+        log("doc \n", doc);
+        let imgE = [];
+        let item = [];
+        for (let i = 0; i < doc.length; i++) {
+            item.push(doc[i].href);
+        }
+        log("AAAA---: \n", item);
+        item.forEach(function (item_) {
+            imgE.push($(`<img src=${item_}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------goddess247.com--------------------------------------- */
+
+    injectBtns().domain(site.goddess247.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.elementor-widget-container img').parent().hide();
+        $('.ihc-locker-wrap').hide();
+        //android
+    }, function () {
+        $('.elementor-widget-container img').parent().show();
+        $('.ihc-locker-wrap').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+
+        pageUrls.push(currentPathname);
+
+        $('.elementor-widget-container img').parent().prev().after(injectComponent);
+
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".aligncenter");
+        debugger
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            // log("src :",src);
+            if (/data:image/.test(src)) {
+
+            } else {
+                imgE.push($(`<img src=${src}>`));
+            }
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------www.ilovexs.com-------------------------------------- */
+
+    injectBtns().domain(site.ilovexs.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.entry-content img').hide();
+    }, function () {
+        // $('.entry-content img').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        debugger
+        if (!(match[0] === '')) {
             pageUrls.push(currentPathname);
-            $('.entry-content p').last().after(injectComponent);
-        }).collectPics(function (doc) {
-            let item = $(doc).find(".msacwl-slider-wrap img");
-            return item;
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
+            if ($('.entry-header').length > 1) {} else {
+                $('.entry-header').after(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let item = $(doc).find(".entry-content img");
+        return item;
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------mitaku.net------------------------------------------- */
+
+    injectBtns().domain(site.mitaku.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.msacwl-slider-wrap').hide();
+    }, function () {
+        $('.msacwl-slider-wrap').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        pageUrls.push(currentPathname);
+        $('.entry-content p').last().after(injectComponent);
+    }).collectPics(function (doc) {
+        let item = $(doc).find(".msacwl-slider-wrap img");
+        return item;
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------www.nlegs.com---------------------------------------- */
-    if (site.nlegs.iStatus) {
-        injectBtns().domain(site.nlegs.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".img-div").parent().hide();
-        }, function () {
-            $(".img-div").parent().show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/)girl.*/m);
-            log("match: \n", match);
-            if (!(match[0] === '')) {
-                // let totalPageCnt = 1;
-                // let partPreUrl = match[0];
-                // let pageId = '';
-                // let suffixUrl = '.html';
-                // let limitPageMatch = $('.pagination').prop("outerHTML");
-                // log("limitPageMatch: " + limitPageMatch);
-                // let pageUrl;
-                // if (limitPageMatch != null) {
-                //     let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
-                //     totalPageCnt = Math.max.apply(null, totalPics);
-                //     log('totalPageCnt', totalPageCnt);
-                // }
-                // for (let i = 1; i <= totalPageCnt; i++) {
-                //     if (i == 1) {
-                //         pageUrl = partPreUrl + pageId + suffixUrl;
-                //     } else {
-                //         pageUrl = partPreUrl + pageId + "/" + i + suffixUrl;
-                //     }
-                //     log('push pageUrl:\n', pageUrl);
-                //     pageUrls.push(pageUrl);
-                // }
-                pageUrls.push(match);
-                $('.title').first().parent().after(injectComponent);
+
+    injectBtns().domain(site.nlegs.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".img-div").parent().hide();
+    }, function () {
+        $(".img-div").parent().show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/)girl.*/m);
+        log("match: \n", match);
+        if (!(match[0] === '')) {
+            // let totalPageCnt = 1;
+            // let partPreUrl = match[0];
+            // let pageId = '';
+            // let suffixUrl = '.html';
+            // let limitPageMatch = $('.pagination').prop("outerHTML");
+            // log("limitPageMatch: " + limitPageMatch);
+            // let pageUrl;
+            // if (limitPageMatch != null) {
+            //     let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+            //     totalPageCnt = Math.max.apply(null, totalPics);
+            //     log('totalPageCnt', totalPageCnt);
+            // }
+            // for (let i = 1; i <= totalPageCnt; i++) {
+            //     if (i == 1) {
+            //         pageUrl = partPreUrl + pageId + suffixUrl;
+            //     } else {
+            //         pageUrl = partPreUrl + pageId + "/" + i + suffixUrl;
+            //     }
+            //     log('push pageUrl:\n', pageUrl);
+            //     pageUrls.push(pageUrl);
+            // }
+            pageUrls.push(match);
+            $('.title').first().parent().after(injectComponent);
+        }
+    }).collectPics(async function (doc) {
+        let item = $(doc).find(".img-div").parent();
+        let aImgS = [];
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            src = window.location.origin + src;
+            aImgS.push(src);
+        });
+
+        function parseImgsFunc(doc) {
+            let item = $(doc).find(".img-res");
+            let imgContainerCssSelector = '#c_' + 0;
+            $(".sl-c-pic").remove();
+            item.attr("id", "image");
+            if (imgStyleFunc) {
+                imgStyleFunc(item);
+            } else {
+                item.style = "width: 100%;height: 100%";
             }
-        }).collectPics(async function (doc) {
-            let item = $(doc).find(".img-div").parent();
-            let aImgS = [];
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                src = window.location.origin + src;
-                aImgS.push(src);
+            item.attr('label', 'sl');
+            $(imgContainerCssSelector).append(item.prop('outerHTML'));
+            log("item:\n", item.prop("outerHTML"));
+        }
+
+        function imgStyleFunc(imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
             });
-
-            function parseImgsFunc(doc) {
-                let item = $(doc).find(".img-res");
-                let imgContainerCssSelector = '#c_' + 0;
-                $(".sl-c-pic").remove();
-                item.attr("id", "image");
-                if (imgStyleFunc) {
-                    imgStyleFunc(item);
-                } else {
-                    item.style = "width: 100%;height: 100%";
-                }
-                item.attr('label', 'sl');
-                $(imgContainerCssSelector).append(item.prop('outerHTML'));
-                log("item:\n", item.prop("outerHTML"));
-            }
-
-            function imgStyleFunc(imgE) {
-                $(imgE).attr({
-                    'data-fancybox': 'images',
-                    'width': '100%'
-                });
-            }
-            await new Promise((resolve) => {
-                let num = 0;
-                for (let i = 0; i < aImgS.length; i++) {
-                    let pageUrl = aImgS[i];
-                    // setTimeout(() => {
-                    Alpha_Script.obtainHtml({
-                        url: pageUrl,
-                        headers: Alpha_Script.parseHeaders("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
-                            "Accept-Encoding:gzip, deflate, br\n" +
-                            "Accept-Language:zh-CN,zh;q=0.9\n" +
-                            "cookie:" + document.cookie + "\n" +
-                            "Referer:" + window.location.href + "\n" +
-                            "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
-                        ),
-                        method: 'GET',
-                        onload: function () {
-                            return function (response) {
-                                debugger
-                                if (response && response.status && response.status >= 200 && response.status < 300) {
-                                    let html = response.responseText;
-                                    let parser = new DOMParser();
-                                    let doc = parser.parseFromString(html, "text/html");
-                                    parseImgsFunc(doc);
-                                    num++;
-                                    if (num === aImgS.length) {
-                                        resolve();
-                                    }
+        }
+        await new Promise((resolve) => {
+            let num = 0;
+            for (let i = 0; i < aImgS.length; i++) {
+                let pageUrl = aImgS[i];
+                // setTimeout(() => {
+                Alpha_Script.obtainHtml({
+                    url: pageUrl,
+                    headers: Alpha_Script.parseHeaders("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
+                        "Accept-Encoding:gzip, deflate, br\n" +
+                        "Accept-Language:zh-CN,zh;q=0.9\n" +
+                        "cookie:" + document.cookie + "\n" +
+                        "Referer:" + window.location.href + "\n" +
+                        "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+                    ),
+                    method: 'GET',
+                    onload: function () {
+                        return function (response) {
+                            debugger
+                            if (response && response.status && response.status >= 200 && response.status < 300) {
+                                let html = response.responseText;
+                                let parser = new DOMParser();
+                                let doc = parser.parseFromString(html, "text/html");
+                                parseImgsFunc(doc);
+                                num++;
+                                if (num === aImgS.length) {
+                                    resolve();
                                 }
-                            };
-                        }()
-                    });
-                    // }, 100);
-                }
-            });
-        }).start(); //urlIsTrue
-    }
+                            }
+                        };
+                    }()
+                });
+                // }, 100);
+            }
+        });
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------nudecosplaygirls.com--------------------------------- */
-    if (site.nudecosplaygirls.iStatus) {
-        injectBtns().domain(site.nudecosplaygirls.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $("#popUpLinks a").css("color", "black");
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.g1-content-narrow').hide();
-        }, function () {
-            // $('.g1-content-narrow').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $('.entry-header').first().after(injectComponent);
-            }
 
-        }).collectPics(function (doc) {
-            let item = $(doc).find(".g1-content-narrow img");
-            debugger
-            return item;
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
+    injectBtns().domain(site.nudecosplaygirls.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $("#popUpLinks a").css("color", "black");
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.g1-content-narrow').hide();
+    }, function () {
+        // $('.g1-content-narrow').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $('.entry-header').first().after(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let item = $(doc).find(".g1-content-narrow img");
+        debugger
+        return item;
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------nudebird.biz----------------------------------------- */
-    if (site.nudebird.iStatus) {
-        injectBtns().domain(site.nudebird.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.entry-content').hide();
-        }, function () {
-            //$('.entry-content').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $('.tags').first().after(injectComponent);
-            }
 
-        }).collectPics(function (doc) {
-            let imgE = [];
-            let item = $(doc).find(".entry-content img");
-            debugger
-            $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
-                    let src = $(this).attr("src");
-                    imgE.push($("<img src=" + src + "></img>"));
-                }
-            });
-            debugger
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------idol.gravureprincess.date---------------------------- */
-    if (site.gravureprincess.iStatus) {
-        injectBtns().domain(site.gravureprincess.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".separator img").slice(1).hide();
-        }, function () {
-            // $('.g1-content-narrow').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $(".separator").first().after(injectComponent);
-            }
+    injectBtns().domain(site.nudebird.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.entry-content').hide();
+    }, function () {
+        //$('.entry-content').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $('.tags').first().after(injectComponent);
+        }
 
-        }).collectPics(function (doc) {
-            let item = $(doc).find(".separator img").slice(1);
-            return item;
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------asdasfd.net------------------------------------------ */
-    if (site.asdasfd.iStatus) {
-        injectBtns().domain(site.asdasfd.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $("figure").hide();
-            $(".kt-tabs-title-list").hide();
-        }, function () {
-            $('figure').show();
-            $(".kt-tabs-title-list").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $(".kt-tabs-title-list").parent().prepend(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find("div.kt-tabs-content-wrap img");
-            debugger
-            $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
-                    let src = $(this).attr("data-orig-file");
-                    imgE.push($("<img src=" + src + "></img>"));
-                }
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------yellowfever18.com------------------------------------ */
-    if (site.yellowfever18.iStatus) {
-        injectBtns().domain(site.yellowfever18.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $(".jnews-cookie-law-policy").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".default-view").hide();
-            $("div[id^=ngg-image]").hide();
-
-        }, function () {
-            $('.default-view').show();
-            $("div[id^=ngg-image]").show();
-
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $(".default-view").parent().prepend(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find(".ngg-gallery-thumbnail a");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"));
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------allasiangirls.net------------------------------------ */
-    if (site.allasiangirls.iStatus) {
-        injectBtns().domain(site.allasiangirls.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $(".heateor_sss_sharing_ul").remove();
-                $(".row.align-equal.align-center").hide();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".aligncenter").hide();
-            $("#comments").hide();
-        }, function () {
-            $('.aligncenter').show();
-            $("#comments").show();
-            $(".row.align-equal.align-center").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                if ($("div[style^='text-align: center;']").length > 0) {
-                    $("div[style^='text-align: center;']").first().after(injectComponent);
-                } else {
-                    $(".heateor_sss_sharing_title").first().after(injectComponent);
-                }
-
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-
-            let item = $(doc).find(".aligncenter");
-            debugger
-            $(item).each(function () {
-                if (/lazy/.test(this.className)) {} else {
-                    let src = $(this).attr("src");
-                    imgE.push($("<img src=" + src + "></img>"));
-                }
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------asdcosplay.com--------------------------------------- */
-    if (site.asdcosplay.iStatus) {
-        injectBtns().domain(site.asdcosplay.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".entry-content").hide();
-
-        }, function () {
-            $('.entry-content').show();
-
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $(".entry-header").after(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find("figure a");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"));
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------asianpink.net---------------------------------------- */
-    if (site.asianpink.iStatus) {
-        injectBtns().domain(site.asianpink.hostnames).removeAD(function () {
-            setInterval(function () {
-                $("[src*='.gif']").parent().remove();
-                $(".elementor-grid").remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $(".e-gallery-item").parent().hide();
-        }, function () {
-            $(".e-gallery-item").parent().show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $("div[data-elementor-type^=wp]>section").first().after(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find(".e-gallery-item");
-            $(item).each(function () {
-                let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"));
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
-    /* --------------------------------------------ryuryu.tw-------------------------------------------- */
-    if (site.ryuryu.iStatus) {
-        injectBtns().domain(site.ryuryu.hostnames).removeAD(function () {
-            setInterval(function () {
-                $(".viewport").prevAll().hide();
-                $("[src*='.gif']").parent().remove();
-            }, 100);
-        }).switchAggregationBtn(function () {
-            activateFancyBox();
-            $("article>section").hide();
-            $("#ghost-portal-root").hide();
-            $(".article-image").hide();
-        }, function () {
-            $("#ghost-portal-root").show();
-            $("article>section").show();
-            $(".article-image").show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*/m);
-            log("match: \n", match);
-            if (match[0] !== '') {
-                pageUrls.push(match);
-                $("article>header").append(injectComponent);
-            }
-
-        }).collectPics(function (doc) {
-            let imgE = []
-            let item = $(doc).find("figure img");
-            $(item).each(function () {
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".entry-content img");
+        debugger
+        $(item).each(function () {
+            if (/lazy/.test(this.className)) {} else {
                 let src = $(this).attr("src");
                 imgE.push($("<img src=" + src + "></img>"));
-            });
-            return $(imgE);
-        }, function (imgE) {
-            $(imgE).attr({
-                'data-fancybox': 'images',
-                'width': '100%'
-            });
-        }).start(); //urlIsTrue
-    }
+            }
+        });
+        debugger
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------idol.gravureprincess.date---------------------------- */
+
+    injectBtns().domain(site.gravureprincess.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".separator img").slice(1).hide();
+    }, function () {
+        // $('.g1-content-narrow').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $(".separator").first().after(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let item = $(doc).find(".separator img").slice(1);
+        return item;
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------asdasfd.net------------------------------------------ */
+
+    injectBtns().domain(site.asdasfd.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $("figure").hide();
+        $(".kt-tabs-title-list").hide();
+    }, function () {
+        $('figure').show();
+        $(".kt-tabs-title-list").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $(".kt-tabs-title-list").parent().prepend(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find("div.kt-tabs-content-wrap img");
+        debugger
+        $(item).each(function () {
+            if (/lazy/.test(this.className)) {} else {
+                let src = $(this).attr("data-orig-file");
+                imgE.push($("<img src=" + src + "></img>"));
+            }
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------yellowfever18.com------------------------------------ */
+
+    injectBtns().domain(site.yellowfever18.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $(".jnews-cookie-law-policy").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".default-view").hide();
+        $("div[id^=ngg-image]").hide();
+
+    }, function () {
+        $('.default-view').show();
+        $("div[id^=ngg-image]").show();
+
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $(".default-view").parent().prepend(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find(".ngg-gallery-thumbnail a");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------allasiangirls.net------------------------------------ */
+
+    injectBtns().domain(site.allasiangirls.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $(".heateor_sss_sharing_ul").remove();
+            $(".row.align-equal.align-center").hide();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".aligncenter").hide();
+        $("#comments").hide();
+    }, function () {
+        $('.aligncenter').show();
+        $("#comments").show();
+        $(".row.align-equal.align-center").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            if ($("div[style^='text-align: center;']").length > 0) {
+                $("div[style^='text-align: center;']").first().after(injectComponent);
+            } else {
+                $(".heateor_sss_sharing_title").first().after(injectComponent);
+            }
+
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+
+        let item = $(doc).find(".aligncenter");
+        debugger
+        $(item).each(function () {
+            if (/lazy/.test(this.className)) {} else {
+                let src = $(this).attr("src");
+                imgE.push($("<img src=" + src + "></img>"));
+            }
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------asdcosplay.com--------------------------------------- */
+
+    injectBtns().domain(site.asdcosplay.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".entry-content").hide();
+
+    }, function () {
+        $('.entry-content').show();
+
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $(".entry-header").after(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find("figure a");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------asianpink.net---------------------------------------- */
+
+    injectBtns().domain(site.asianpink.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("[src*='.gif']").parent().remove();
+            $(".elementor-grid").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $(".e-gallery-item").parent().hide();
+    }, function () {
+        $(".e-gallery-item").parent().show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $("div[data-elementor-type^=wp]>section").first().after(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find(".e-gallery-item");
+        $(item).each(function () {
+            let src = $(this).attr("href");
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
+    /* --------------------------------------------ryuryu.tw-------------------------------------------- */
+
+    injectBtns().domain(site.ryuryu.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".viewport").prevAll().hide();
+            $("[src*='.gif']").parent().remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $("article>section").hide();
+        $("#ghost-portal-root").hide();
+        $(".article-image").hide();
+    }, function () {
+        $("#ghost-portal-root").show();
+        $("article>section").show();
+        $(".article-image").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (match[0] !== '') {
+            pageUrls.push(match);
+            $("article>header").append(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find("figure img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($("<img src=" + src + "></img>"));
+        });
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------www.xinwenba.net------------------------------------- */
-    if (site.xinwenba.iStatus) {
-        injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
-            activateFancyBox(1);
-            $('.picture').hide();
-            $('div.web').hide();
-            $('div.paging').hide();
-            //android
-            $('.view_img p').hide();
-        }, function () {
-            $('.picture').show();
-            $('div.paging').show();
-            //android
-            $('.view_img p').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/).*(?=-)/m);
-            log("match: \n", match);
-            if (match) {
-                let totalPageCnt = 1;
-                let partPreUrl = match[0];
-                let pageId = '-';
-                let suffixUrl = '.html';
-                let limitPageMatch = $('.paging').prop("outerHTML");
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    // let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                    // totalPageCnt = Math.max.apply(null, totalPics);
-                    totalPageCnt = limitPageMatch.match(/(?<=共)\d+/g);
-                    log('totalPageCnt', totalPageCnt[0]);
-                }
-                for (let i = 1; i <= totalPageCnt; i++) {
 
-                    pageUrl = partPreUrl + pageId + i + suffixUrl;
-
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                if (os.isPc) {
-                    $('.info').after(injectComponent);
-                } else {
-                    $('.text').after(injectComponent);
-                }
+    injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
+        activateFancyBox(1);
+        $('.picture').hide();
+        $('div.web').hide();
+        $('div.paging').hide();
+        //android
+        $('.view_img p').hide();
+    }, function () {
+        $('.picture').show();
+        $('div.paging').show();
+        //android
+        $('.view_img p').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*(?=-)/m);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[0];
+            let pageId = '-';
+            let suffixUrl = '.html';
+            let limitPageMatch = $('.paging').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                // let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                // totalPageCnt = Math.max.apply(null, totalPics);
+                totalPageCnt = limitPageMatch.match(/(?<=共)\d+/g);
+                log('totalPageCnt', totalPageCnt[0]);
             }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find(".view_img img");
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
+            for (let i = 1; i <= totalPageCnt; i++) {
+
+                pageUrl = partPreUrl + pageId + i + suffixUrl;
+
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            if (os.isPc) {
+                $('.info').after(injectComponent);
+            } else {
+                $('.text').after(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find(".view_img img");
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
     /* --------------------------------------------www.meitu131.com------------------------------------- */
-    if (site.meitu131.iStatus) {
-        injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
-            activateFancyBox();
-            $('.work-content>p').hide();
-            $('div#pages').hide();
 
-            //android
-            $('.uk-article-bd').hide();
-            $('.uk-page').hide();
-        }, function () {
-            $('.work-content>p').show();
-            $('div#pages').show();
-            //android
-            $('.uk-article-bd').show();
-            $('.uk-page').show();
-        }).injectAggregationRef(function (injectComponent, pageUrls) {
-            let currentPathname = window.location.pathname;
-            log("currentPathname: \n", currentPathname);
-            let match = currentPathname.match(/(?<=\/)(.+?\/)(\d+).*/m);
-            log("match: \n", match);
-            if (match[1] === 'meinv/') {
-                let totalPageCnt = 1;
-                let partPreUrl = match[1];
-                let pageId = match[2];
-                let suffixUrl = '.html';
-                let limitPageMatch = null;
-                if (os.isPc) {
-                    limitPageMatch = $('div#pages').prop("outerHTML");
-                } else {
-                    limitPageMatch = $('.uk-page').prop("outerHTML");
-                }
-                log("limitPageMatch: " + limitPageMatch);
-                let pageUrl;
-                if (limitPageMatch != null) {
-                    let totalPics = limitPageMatch.match(/\d+(?=<\/a>|<\/span>)/g);
-                    totalPageCnt = Math.max.apply(null, totalPics);
-                    log('totalPageCnt', totalPageCnt);
-                }
-                for (let i = 0; i <= totalPageCnt; i++) {
-                    if (i === 0) {
-                        pageUrl = partPreUrl + pageId;
-                    } else {
-                        pageUrl = partPreUrl + pageId + '/index_' + i + suffixUrl;
-                    }
-                    log('push pageUrl:\n', pageUrl);
-                    pageUrls.push(pageUrl);
-                }
-                if (os.isPc) {
-                    $('.work-content').prepend(injectComponent);
-                } else {
-                    $('.uk-article').after(injectComponent);
-                }
+    injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.work-content>p').hide();
+        $('div#pages').hide();
 
+        //android
+        $('.uk-article-bd').hide();
+        $('.uk-page').hide();
+    }, function () {
+        $('.work-content>p').show();
+        $('div#pages').show();
+        //android
+        $('.uk-article-bd').show();
+        $('.uk-page').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/)(.+?\/)(\d+).*/m);
+        log("match: \n", match);
+        if (match[1] === 'meinv/') {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = null;
+            if (os.isPc) {
+                limitPageMatch = $('div#pages').prop("outerHTML");
+            } else {
+                limitPageMatch = $('.uk-page').prop("outerHTML");
             }
-        }).collectPics(function (doc) {
-            let imgE;
-            imgE = $(doc).find('p[align="center"] img');
-            return imgE;
-        }, function (imgE) {
-            imgE.style = "width: 100%;";
-            $(imgE).attr({
-                'data-fancybox': 'images'
-            });
-        }).start(); //urlIsTrue
-    }
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=<\/a>|<\/span>)/g);
+                totalPageCnt = Math.max.apply(null, totalPics);
+                log('totalPageCnt', totalPageCnt);
+            }
+            for (let i = 0; i <= totalPageCnt; i++) {
+                if (i === 0) {
+                    pageUrl = partPreUrl + pageId;
+                } else {
+                    pageUrl = partPreUrl + pageId + '/index_' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            if (os.isPc) {
+                $('.work-content').prepend(injectComponent);
+            } else {
+                $('.uk-article').after(injectComponent);
+            }
+
+        }
+    }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find('p[align="center"] img');
+        return imgE;
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start(); //urlIsTrue
+
 })();
 
 
