@@ -58,13 +58,13 @@
   >
   > **Ⅶ.** 🍁 该脚本应该基本就是这样了，以后有时间再来更新。
   >
-  > > 首先如果遇到<mark>**网站失效**</mark>,一般就是脚本的域名网址不起作用了。可以自行在<mark>**脚本头部**</mark>添加`@include`匹配项，比如像下面那样（这里以 Mrcong 为例）：🆕🆕🆕
+  > > 首先如果遇到<mark>**网站失效**</mark>,一般就是脚本的域名网址不起作用了。可以自行在<mark>**脚本头部**</mark>添加`@include`匹配项，比如像下面那样（这里以 <mark>**Mrcong**</mark> 为例）：🆕🆕🆕
   > >
   > > ```
   > > // @include      /https:\/\/mrcong.net/
   > > ```
   > >
-  > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>还有一个地方要添加</mark>，比如下面的**Mrcong**里面的<mark>**hostnames**</mark>也
+  > > `/网址/`里面添加网址。网址 https 后面的`//`要写成`\/\/`。然后就是，<mark>**还有一个地方要添加**</mark>，比如下面的<mark>**Mrcong**</mark>里面的<mark>**hostnames**</mark>也
   > >
   > > ```
   > >     Mrcong: {
@@ -78,7 +78,7 @@
   > >     },
   > > ```
   > >
-  > > 要添加<mark>域名</mark>，注意是添加`mrcong.net`(前面记得加<mark> , </mark>),不是`https:\/\/mrcong.net`,只要`https:\/\/`后面的域名。
+  > > 要添加<mark>**域名**</mark>，注意是添加`mrcong.net`(前面记得加<mark> **,** </mark>),不是`https:\/\/mrcong.net`,只要`https:\/\/`后面的域名。
   >
   > 基本上就是这样了。祝你使用愉快！
   >
