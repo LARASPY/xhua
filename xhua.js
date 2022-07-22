@@ -1106,9 +1106,6 @@ function popUpMenu() {
         let collectPics = null;
         let session = document.cookie;
 
-        if (!isEmpty(session)) {
-            log('sessionCookie: ', session);
-        }
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
                 $('#injectaggregatBtn').val('聚合隐藏');
@@ -1437,6 +1434,7 @@ function popUpMenu() {
 
                 let matchDomain = meet();
                 if (matchDomain) {
+                    log('sessionCookie: ', session);
                     if (removeAD) {
                         removeAD();
                     }
@@ -2945,6 +2943,12 @@ function popUpMenu() {
         setInterval(function () {
             $("div[class^='ad']").remove();
             $("#content img[src$='gif']").remove();
+            let imgList = $("img");
+            imgList.each(function () {
+                let src = $(this).attr("original");
+                // log($(this).prop("outerHTML")+src);
+                $(this).attr('src',src);
+            });
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
