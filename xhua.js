@@ -94,7 +94,7 @@ GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
 //(start\(\);)(?! \/\/urlIsFalse) //打印开关
 
-let isDebugMain = true;
+let isDebugMain = false;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
