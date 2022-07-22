@@ -894,7 +894,7 @@ async function startMain_(arrs = null) {
 
     if (!isEmpty(arrs)) {
         await initialArrFunction(arrs);
-    }else{
+    } else {
         await initialArrFunction(mainArr);
         await initialArrFunction(fancyboxyArr);
     }
@@ -1152,8 +1152,8 @@ function popUpMenu() {
                 }
             }, 100);
         };
-        let match = function () { };
-        let mismatch = function () { };
+        let match = function () {};
+        let mismatch = function () {};
         let meet = function (options) {
             // debugger
             options = options || {};
@@ -1236,8 +1236,8 @@ function popUpMenu() {
                 if (length == 0) {
                     clearInterval(id);
                     zip.generateAsync({
-                        type: "blob"
-                    })
+                            type: "blob"
+                        })
                         .then(function (content) {
                             saveAs(content, packagName + ".zip");
                         });
@@ -2290,7 +2290,7 @@ function popUpMenu() {
             let item = $(doc).find(".entry-content figure a");
             $(item).each(function () {
                 let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"))
+                imgE.push($("<img src=" + src + "></img>"));
             });
             return $(imgE);
         }, function (imgE) {
@@ -2360,11 +2360,11 @@ function popUpMenu() {
         }).switchAggregationBtn(function () {
             //FancyBox
             activateFancyBox(1);
-            $("div[class^=article]").slice(1,).hide();
+            $("div[class^=article]").slice(1, ).hide();
             // $("div.article-content > p").next().nextAll().hide();
             $(".single-comment").hide();
         }, function () {
-            $("div[class^=article]").slice(1,).show();
+            $("div[class^=article]").slice(1, ).show();
             // $("div.article-content > p").next().nextAll().show();
             $(".single-comment").show();
         }).injectAggregationRef(function (injectComponent, pageUrls) {
@@ -2484,7 +2484,7 @@ function popUpMenu() {
                 $(".yalayi_box").remove();
                 $(".yituyu_box").remove();
                 $(".collect-unit").first().remove();
-                $(".pic_index_headc").css("position", "sticky")
+                $(".pic_index_headc").css("position", "sticky");
             }, 100);
         }).switchAggregationBtn(function () {
             //FancyBox
@@ -2673,7 +2673,7 @@ function popUpMenu() {
                 $(".entry-content p").nextAll().hide();
             }
             $(".entry-footer").hide();
-        }, function () { }).injectAggregationRef(function (injectComponent, pageUrls) {
+        }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
             let currentPathname = window.location.pathname; //
             let match = currentPathname.match(/\w+.*/im);
             log("currentPathname: \n", currentPathname);
@@ -3001,7 +3001,7 @@ function popUpMenu() {
             let currentPathname = window.location.pathname;
             log("currentPathname: \n", currentPathname);
             let limitPageStr = $('span.all').prop("outerHTML");
-            log("limitPageStr: " + limitPageStr)
+            log("limitPageStr: " + limitPageStr);
             if (limitPageStr !== undefined) {
                 let pageUrl = currentPathname;
                 log('push pageUrl:\n', pageUrl);
@@ -3011,19 +3011,19 @@ function popUpMenu() {
         }).collectPics(function (doc) {
             debugger
             let imgE = []
-            let currentImgSrc = $(".content img").attr("src").replace("//", "/")
+            let currentImgSrc = $(".content img").attr("src").replace("//", "/");
             log("currentImgSrc: " + currentImgSrc);
-            let hostName = currentImgSrc.match(/(?<=\/).*?(?=\/)/m)
+            let hostName = currentImgSrc.match(/(?<=\/).*?(?=\/)/m);
 
             let partPreUrl = currentImgSrc.match(/(?<=\w\/).*(?=\/)/m);
-            log("partPreUrl: " + partPreUrl)
+            log("partPreUrl: " + partPreUrl);
 
             let limitPageStr = $('span.all').prop("outerHTML");
-            log("limitPageStr: " + limitPageStr)
+            log("limitPageStr: " + limitPageStr);
             if (limitPageStr != null) {
 
                 let limitPageMatch = limitPageStr.match(/(?<=\/)\d+/m);
-                log("limitPageMatch: " + limitPageMatch)
+                log("limitPageMatch: " + limitPageMatch);
                 let totalPageCnt = limitPageMatch[0];
 
                 let pageId = '';
@@ -3089,7 +3089,7 @@ function popUpMenu() {
                 let aTags = $('.entry-content p a');
                 aTags.each(function () {
                     let text = $(this).text();
-                    log(text)
+                    log(text);
                     if (!isEmpty(text)) {
                         button_ = $(this).clone();
                     }
@@ -3103,7 +3103,7 @@ function popUpMenu() {
 
                 let text = $(".entry-content p").last().text();
                 text = text.match(/\d*:\d*/g);
-                log("-----video--------\n", text)
+                log("-----video--------\n", text);
                 if (isEmpty(text)) {
                     let pageUrl = currentPathname;
                     log('push pageUrl:\n', pageUrl);
@@ -3121,7 +3121,7 @@ function popUpMenu() {
         }).collectPics(function (doc) {
             let imgE;
             imgE = $(doc).find(".entry-content img");
-            // log("ImgE: " +imgE)
+            // log("ImgE: " +imgE);
             return imgE;
         }, function (imgE) {
             imgE.style = "width: 100%;";
@@ -3133,13 +3133,13 @@ function popUpMenu() {
     /* --------------------------------------------mmm131.com------------------------------------------- */
     if (site.mmm131.iStatus) {
         injectBtns().domain(site.mmm131.hostnames).removeAD(function () {
-            console.time('global')
+            console.time('global');
             new Promise(function (resolve, reject) {
                 setTimeout(() => {
                     resolve();
                 }, 100);
             }).then(() => {
-                console.timeEnd('global')
+                console.timeEnd('global');
                 $('#page').nextAll().hide();
             });
             setInterval(function () {
@@ -3180,9 +3180,9 @@ function popUpMenu() {
                 let suffixUrl = '_';
                 let partPreUrl = null;
                 if (os.isPc) {
-                    limitPageStr = $('.content-page')
+                    limitPageStr = $('.content-page');
                 } else {
-                    limitPageStr = $('.paging')
+                    limitPageStr = $('.paging');
                 }
                 limitPageStr = limitPageStr.prop("outerHTML");
                 limitPageTotal = limitPageStr.match(/\d+(?=页)/g);
@@ -3444,7 +3444,7 @@ function popUpMenu() {
             let imgA = $(doc).find("div[class^=p] a");
             $(imgA).each(function () {
                 let href = $(this).attr("href");
-                // log("href: \n"+href)
+                // log("href: \n"+href);
                 if (/\.jpg/g.exec(href)) {
                     log("href: \n" + href);
                     imgE.push($(`<img src=${href}></img>`));
@@ -3927,13 +3927,13 @@ function popUpMenu() {
         }).collectPics(function (doc) {
             debugger
             doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
-            log("doc \n", doc)
+            log("doc \n", doc);
             let imgE = [];
             let item = [];
             for (let i = 0; i < doc.length; i++) {
                 item.push(doc[i].href);
             }
-            log("AAAA---: \n", item)
+            log("AAAA---: \n", item);
             item.forEach(function (item_) {
                 imgE.push($(`<img src=${item_}>`));
             });
@@ -4010,8 +4010,7 @@ function popUpMenu() {
             debugger
             if (!(match[0] === '')) {
                 pageUrls.push(currentPathname);
-                if ($('.entry-header').length > 1) {
-                } else {
+                if ($('.entry-header').length > 1) {} else {
                     $('.entry-header').after(injectComponent);
                 }
             }
@@ -4217,7 +4216,7 @@ function popUpMenu() {
             let item = $(doc).find(".entry-content img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) { } else {
+                if (/lazy/.test(this.className)) {} else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4290,7 +4289,7 @@ function popUpMenu() {
             let item = $(doc).find("div.kt-tabs-content-wrap img");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) { } else {
+                if (/lazy/.test(this.className)) {} else {
                     let src = $(this).attr("data-orig-file");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4334,7 +4333,7 @@ function popUpMenu() {
             let item = $(doc).find(".ngg-gallery-thumbnail a");
             $(item).each(function () {
                 let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"))
+                imgE.push($("<img src=" + src + "></img>"));
             });
             return $(imgE);
         }, function (imgE) {
@@ -4381,7 +4380,7 @@ function popUpMenu() {
             let item = $(doc).find(".aligncenter");
             debugger
             $(item).each(function () {
-                if (/lazy/.test(this.className)) { } else {
+                if (/lazy/.test(this.className)) {} else {
                     let src = $(this).attr("src");
                     imgE.push($("<img src=" + src + "></img>"));
                 }
@@ -4422,7 +4421,7 @@ function popUpMenu() {
             let item = $(doc).find("figure a");
             $(item).each(function () {
                 let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"))
+                imgE.push($("<img src=" + src + "></img>"));
             });
             return $(imgE);
         }, function (imgE) {
@@ -4459,7 +4458,7 @@ function popUpMenu() {
             let item = $(doc).find(".e-gallery-item");
             $(item).each(function () {
                 let src = $(this).attr("href");
-                imgE.push($("<img src=" + src + "></img>"))
+                imgE.push($("<img src=" + src + "></img>"));
             });
             return $(imgE);
         }, function (imgE) {
@@ -4500,7 +4499,7 @@ function popUpMenu() {
             let item = $(doc).find("figure img");
             $(item).each(function () {
                 let src = $(this).attr("src");
-                imgE.push($("<img src=" + src + "></img>"))
+                imgE.push($("<img src=" + src + "></img>"));
             });
             return $(imgE);
         }, function (imgE) {
