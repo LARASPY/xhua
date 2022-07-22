@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      3.96
+// @version      3.98
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -20,7 +20,7 @@
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
-// @include      /https?\:\/\/\w+.[a-z]+xgyw\.[a-z]+/
+// @include      /https?\:\/\/www\.[a-z]*xg[a-z]{2}\.(top|vip|net)/
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
 // @include      /https?\:\/\/\w+\.95mm\.\w+/
 // @include      /https?\:\/\/\w+\.3gbizhi\.\w+\/\w/
@@ -35,9 +35,9 @@
 // @include      /https?\:\/\/mrcong\.com/
 // @include      /https?\:\/\/\w+\.(?:xiure)\w+\.\w+/
 // @include      /https?\:\/\/\w+\.xrmn[0-9]{0,}.[a-zA-Z]{0,}./
-// @include      /https?\:\/\/[A-Za-z]{3}\.[0-9]*(w|faw)\.cc/
+// @include      /https?\:\/\/(www\.)?[0-9]*(w|faw)\.cc/
 // @include      /https?\:\/\/(\w+\.)?tuiimg\.com/
-// @include      /https?\:\/\/(old\.)?nsfwp(\w+)?.\w+/
+// @include      /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/
 // @include      /https?\:\/\/\w+\.(mmm131|mm1\d+)\.\w+/
 // @include      /https?\:\/\/(\w+\.)?asiantolick\.\w+/
 // @include      /https?\:\/\/(\w+\.)?imn5.\w+/
@@ -230,7 +230,7 @@ let site = {
         hostnames: [
             'www.jpxgyw.net'
         ],
-        pattern: /https?\:\/\/\w+.[a-z]+xgyw\.[a-z]+/,
+        pattern: /https?\:\/\/www\.[a-z]*xg[a-z]{2}\.(top|vip|net)/,
         iStatus: false,
         _break: false
     },
@@ -382,7 +382,7 @@ let site = {
             'www.112w.cc',
             'www.112w.cc\/c49.aspx'
         ],
-        pattern: /(https?\:\/\/)[A-Za-z]{3}\.[0-9]*(w|faw)\.cc/,
+        pattern: /https?\:\/\/(www\.)?[0-9]*(w|faw)\.cc/,
         iStatus: false,
         _break: false
     },
@@ -400,9 +400,13 @@ let site = {
         id: 25,
         name: 'Nsfwp',
         hostnames: [
-            'nsfwp.buzz'
+            'nsfwp.buzz',
+            'picxx.icu',
+            'picxx.xyz',
+            'nsfwx.pics',
+            'nsfwpicx.com'
         ],
-        pattern: /https?:\/\/(old\.)?nsfwp(\w+)?.\w+/,
+        pattern: /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/,
         iStatus: false,
         _break: false
     },
@@ -1989,7 +1993,7 @@ function popUpMenu() {
     if (site.Jpxgyw.iStatus || site.Jpmn8.iStatus) {
         injectBtns().domain(site.Jpxgyw.hostnames.concat(site.Jpmn8.hostnames)).removeAD(function () {
             $("script").remove();
-            $(".header").prevAll().remove();
+            //$(".header").prevAll().remove();
             $(".footer").nextAll().remove();
             setInterval(function () {
                 $("style[id]").remove();
