@@ -710,6 +710,12 @@ let fancyboxyArr = [
     'https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js'
 ];
 
+let gridzoneCss = [
+    'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js',
+    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js',
+    "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/gridzonecss.js"
+]
+
 let Alpha_Script = {
     obtainHtml: function (options) {
         options = options || {};
@@ -781,9 +787,9 @@ function currentUrlActivation() {
         return matchDomain;
     };
     for (let key in site) {
-        debugger
+        // debugger
         let isPattern = isEmpty(site[key].pattern);
-        debugger
+        // debugger
         if (!isPattern) {
             hostnameArry = site[key].pattern.exec(origin);
             if (hostnameArry != null) {
@@ -957,11 +963,23 @@ function activateFancyBox(isBoxAutoControl = null) {
 }
 
 function aImgTagPackaging(images) {
-    $(images).css({
-        "width": "100%",
-        "height": "100%"
+    let id = setInterval(function () {
+        if ($('.sl-c-pic').length > 0) {
+            $('.sl-c-pic').css({
+                'margin-top': '6px'
+            });
+            $('a[data-fancybox="images"]').css({
+                'color': '#000',
+                'box-shadow': '0 1px 0 #999'
+            });
+            clearInterval(id);
+        }
+    }, 100);
+    let imgObj = [];
+    $(images).each(function () {
+        let src = $(this).attr("src");
+        imgObj.push($("<img src=" + src + "></img>"));
     });
-    let imgObj = $(images);
     let a_imgTag = [];
     if (isDebug) {
         console.groupCollapsed("imageSGroupIn");
@@ -975,6 +993,10 @@ function aImgTagPackaging(images) {
         // log("attr src: \n", src);
         src = $(this)[0].src;
         log("array src: \n", src);
+        $(this).css({
+            "width": "100%",
+            "height": "100%"
+        });
         let imageItem = $(this).prop("outerHTML").toString();
         log("New this String: \n", imageItem);
         let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
@@ -1946,41 +1968,6 @@ function popUpMenu() {
     /* --------------------------------------------everia.club------------------------------------------ */
 
     injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
-        // $("body").removeClass();
-        // $('div[id^=custom_html]').remove();
-        // // $('html script').remove();
-        // // $(".wrapper").siblings().remove();
-        // // $(".wrapper").siblings().css({
-        // //     "position": "unset"
-        // // });
-        // // setInterval(function () {
-        // // $("#jquery-migrate-js").remove();
-        // // $('.padPreload').remove();
-        // // $('#popmagicldr').remove();
-        // $("meta").remove();
-        // $("noscript").remove();
-        // $("link").each(function () {
-        //     // log("link: \n", $(this).prop("outerHTML"));
-        //     let href = $(this).attr('href');
-        //     // log("href: \n",href);
-        //     let isHrefMatch = /everia/g.exec(href);
-        //     // log("isHrefMatch: \n", isHrefMatch);
-        //     if (isHrefMatch === null) {
-        //         // log("isHrefMatch: \n",isHrefMatch);
-        //         $(this).remove();
-        //     }
-        // });
-        // $("script").each(function () {
-        //     let href = $(this).attr('src');
-        //     let isHrefMatch = /everia/g.exec(href);
-        //     if (isHrefMatch === null) {
-        //         $(this).remove();
-        //     }
-        // });
-        // $("script[type^='application/javascript']").remove();
-        // $("script[id^='neve-script']").remove();
-        // $("script[id^='fifu-image']").remove();
-        // }, 100);
         debugger
         $("head").empty();
         // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js");
@@ -1991,6 +1978,9 @@ function popUpMenu() {
         ]
         await startMain_(arrs);
         addStyle(everiacss);
+        //add gridzone themes
+        await startMain_(gridzoneCss);
+        addStyle(gridzone);
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
@@ -2023,7 +2013,7 @@ function popUpMenu() {
 
     /* --------------------------------------------www.jpxgyw.net & www.jpmn8.com----------------------- */
 
-    injectBtns().domain(site.Jpxgyw.hostnames.concat(site.Jpmn8.hostnames)).removeAD(function () {
+    injectBtns().domain(site.Jpxgyw.hostnames.concat(site.Jpmn8.hostnames)).removeAD(async function () {
         $("script").remove();
         //$(".header").prevAll().remove();
         $(".footer").nextAll().remove();
@@ -2031,11 +2021,18 @@ function popUpMenu() {
             $("style[id]").remove();
             $(".content > a").remove();
             $("center > a").remove();
+            $(".header").css({
+                'position': 'unset',
+                'z-index': 'unset'
+            });
             // $("body>a").remove();
             // $(".fancybox__container").nextAll().remove();
             // $(".footer").nextUntil(".fancybox__container").remove();
             // $(".container").nextUntil(".footer").remove();
         }, 100);
+        //add gridzone themes
+        await startMain_(gridzoneCss);
+        addStyle(gridzone);
     }).switchAggregationBtn(function () {
 
         //FancyBox
@@ -2101,21 +2098,24 @@ function popUpMenu() {
 
     /* --------------------------------------------www.95mm.org----------------------------------------- */
 
-    injectBtns().domain(site._95mm.hostnames).removeAD(function () {
+    injectBtns().domain(site._95mm.hostnames).removeAD(async function () {
         setInterval(function () {
             $("#post-action").remove();
         }, 100);
+        //add gridzone themes
+        await startMain_(gridzoneCss);
+        addStyle(gridzone);
     }).switchAggregationBtn(function () {
         // FancyBox
         activateFancyBox();
 
         $('.text-xs b').hide();
         $(".post-data").hide();
-        $(".post").hide();
+        $(".nc-light-gallery").hide();
     }, function () {
         $('.text-xs b').show();
         $(".post-data").show();
-        $(".post").show();
+        $(".nc-light-gallery").show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
         let match = currentPathname.match(/(\d+)/im);
@@ -2142,7 +2142,7 @@ function popUpMenu() {
                 pageUrls.push(pageUrl);
             }
 
-            $('.post-meta').after(injectComponent);
+            $('.post').prepend(injectComponent);
         }
     }).collectPics(function (doc) {
         let images = $(doc).find('.nc-light-gallery img').clone();
