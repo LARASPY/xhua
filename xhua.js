@@ -3086,7 +3086,7 @@ function popUpMenu() {
 
     /* --------------------------------------------nsfwp.buzz------------------------------------------- */
 
-    injectBtns().domain(site.nsfwp.hostnames).removeAD(function () {
+    injectBtns().domain(site.nsfwp.hostnames).removeAD(async function () {
         let inputElement = $("input.acpwd-pass");
         let outerHTML = inputElement.prop("outerHTML");
         log("inputElement: " + outerHTML);
@@ -3100,6 +3100,9 @@ function popUpMenu() {
             "--primary-color": "unset",
             "--accent-color": "unset"
         });
+        //add gridzone themes
+        await startMain_(gridzoneCss);
+        addStyle(gridzone);
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $('.wp-block-image').hide();
@@ -3153,15 +3156,13 @@ function popUpMenu() {
             }
         }
     }).collectPics(function (doc) {
-        let imgE;
-        imgE = $(doc).find(".entry-content img");
-        // log("ImgE: " +imgE);
-        return imgE;
+        let images;
+        images = $(doc).find(".entry-content img");
+        let a_imgTag = aImgTagPackaging(images);
+        log("New a_imgTag Object: \n", $(a_imgTag));
+        return $(a_imgTag);
     }, function (imgE) {
-        imgE.style = "width: 100%;";
-        $(imgE).attr({
-            'data-fancybox': 'images'
-        });
+        imgE.style = "width: 100%;height: 100%";
     }).start();
 
     /* --------------------------------------------mmm131.com------------------------------------------- */
