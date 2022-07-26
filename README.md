@@ -34,20 +34,22 @@
   >
   > Ⅳ. 使用`免费私房图`，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。
   >
-  > 代码如下：🆕
+  > 代码如下：
   >
   > ```
   > ! 2022-07-03 https://www.mfsft.com
   > /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com.*/
   > ```
   >
-  > 其他去广告代码：🆕
+  > 其他去广告代码：
   >
   > ```
   > ! 2022-07-11 https://www.xrmn5.cc
   > ||tj.plmn5.com^$domain=www.xrmn5.cc
   > ||*.shop:25688/ty/*
   > ||www.xrmn5.cc/img/art*$script,domain=www.xrmn5.cc
+  > ! 2022-07-26 https://www.xgmn.vip 🆕
+  > ||console.jquery-cdn.cc
   > ```
   >
   > Ⅴ. <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
@@ -117,7 +119,7 @@
   > |      ✔ | <a href='https://www.ikanins.com/' target='_blank'><code>爱看 INS</code></a>                                                                                                                                                                   |      ✔ | <a href='https://madoupan.com/' target='_blank'><code>麻豆盘</code></a>                                                                                                                                                          |
   > |      ✔ | <mark><a href='https://mrcong.com/' target='_blank'><code>Mrcong</code></a></mark><br>&emsp;&emsp;<a href='https://sleazyfork.org/zh-CN/scripts/440114-mrcong%E5%85%A8%E9%87%8F%E5%8A%A0%E8%BC%89' target='_blank'><code>移动端脚本</code></a> |      ✔ | <mark><a href='https://www.112w.cc/c49.aspx' target='_blank'><code>24Fa</code></a></mark><br>&emsp;&emsp;<a href='https://sleazyfork.org/zh-CN/scripts/441994-24fa全量图片加載' target='_blank'><code>移动端脚本</code></a>      |
   > |      ✔ | <mark><a href='https://www.xiurenb.com/' target='_blank'><code>秀人集</code></a></mark><br>&emsp;&emsp;<a href='https://sleazyfork.org/zh-CN/scripts/440115-xiurenji秀人集全量加載' target='_blank'><code>移动端脚本</code></a>                |      ✔ | <mark><a href='https://www.xrmn5.cc/' target='_blank'><code>秀人美女网</code></a></mark><br>&emsp;&emsp;<a href='https://sleazyfork.org/zh-CN/scripts/440115-xiurenji秀人集全量加載' target='_blank'><code>移动端脚本</code></a> |
-  > |      ✔ | <mark><a href='https://www.tujidao02.com/u/?action=gengxin' target='_blank'><code>图集岛</code></a></mark><br>&emsp;&emsp;<a href='https://scriptcat.org/script-show-page/443' target='_blank'><code>全安装脚本</code></a>                     |     🍁 | <mark>[**`WebsiteMark.md`**](https://cdn.staticaly.com/gh/LARASPY/xhua@master/WebsiteMark.md)</mark> 🆕<br/>&emsp;&emsp;`只含有网址`                                                                                             |
+  > |      ✔ | <mark><a href='https://www.tujidao02.com/u/?action=gengxin' target='_blank'><code>图集岛</code></a></mark><br>&emsp;&emsp;<a href='https://scriptcat.org/script-show-page/443' target='_blank'><code>全安装脚本</code></a>                     |     🍁 | <mark>[**`WebsiteMark.md`**](https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/WebsiteMark.md)</mark> 🆕<br/>&emsp;&emsp;`只含有网址`                         |
   > |      ✔ | <a href='https://nsfwx.pics' target='_blank'><code>Nsfwpicx</code></a>                                                                                                                                                                         |      ✔ | <a href='https://www.mmm131.com' target='_blank'><code>MM131 美女图片</code></a>                                                                                                                                                 |
   > |      ✔ | <a href='https://asiantolick.com' target='_blank'><code>Asian to lick</code></a>                                                                                                                                                               |      ✔ | <a href='https://www.xsnvshen.co' target='_blank'><code>秀色女神</code></a>                                                                                                                                                      |
   > |      ✔ | <a href='https://xchina.co' target='_blank'><code>小黄书</code></a>                                                                                                                                                                            |      ✔ | <a href='https://jjgirls.com/' target='_blank'><code>Heyzo</code></a>                                                                                                                                                            |
