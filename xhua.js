@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.00
+// @version      4.01
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -918,7 +918,7 @@ async function startMain_(arrs = null) {
                 data = await timeoutPromise(arr[index], Get_(arr[index]));
                 log(data);
             } catch (error) {
-                debugger
+                // debugger
                 console.log(error);
                 timeoutPromise(arr[index], addScript_(null, arr[index]));
             }
@@ -987,7 +987,7 @@ function aImgTagPackaging(images) {
     $(imgObj).each(function (index) {
         log("start this Object: \n", $(this));
         let src;
-        debugger
+        // debugger
         $(this).attr('label', 'sl');
         // src = $(this).attr('src');
         // log("attr src: \n", src);
@@ -1050,7 +1050,16 @@ function popUpMenu() {
         }
     });
 }
-
+function adoptAutoPage() {
+    let id = setInterval(function () {
+        if ($('#Autopage_number').length > 0) {
+            $('#Autopage_number').click();
+            let cssText = $('#Autopage_number').attr('style');
+            $('#Autopage_number').css("cssText", "z-index: 1000 !important;" + cssText);
+            clearInterval(id);
+        }
+    }, 100);
+}
 (async function () {
     'use strict';
     //清屏
@@ -1075,7 +1084,6 @@ function popUpMenu() {
         }, 100);
     });
 
-    // debugger
     if (isDebug) console.groupCollapsed('urlActivationGroup');
     currentUrlActivation();
     if (isDebug) console.groupEnd('urlActivationGroup');
@@ -1146,7 +1154,7 @@ function popUpMenu() {
                         //创建div去装各自
                         $('#c_container').append('<div id="c_' + i + '"></div>');
                         if (!breakPageLoop) {
-                            debugger
+                            // debugger
                             let pageUrl = startUrl + pageUrls[i];
                             Alpha_Script.obtainHtml({
                                 url: pageUrl,
@@ -1163,7 +1171,7 @@ function popUpMenu() {
                                     let _pageUrl = pageUrl;
                                     // debugger
                                     return function (response) {
-                                        debugger
+                                        // debugger
                                         if (isDebug) {
                                             console.groupCollapsed('imagesGroup_' + _i);
                                         }
@@ -1203,8 +1211,8 @@ function popUpMenu() {
                 }
             }, 100);
         };
-        let match = function () {};
-        let mismatch = function () {};
+        let match = function () { };
+        let mismatch = function () { };
         let meet = function (options) {
             // debugger
             options = options || {};
@@ -1287,8 +1295,8 @@ function popUpMenu() {
                 if (length == 0) {
                     clearInterval(id);
                     zip.generateAsync({
-                            type: "blob"
-                        })
+                        type: "blob"
+                    })
                         .then(function (content) {
                             saveAs(content, packagName + ".zip");
                         });
@@ -1441,22 +1449,25 @@ function popUpMenu() {
                     if (injectAggregationRef) {
                         // debugger
                         injectAggregationRef.apply(this, [injectComponent, pageUrls]);
-                        $('#injectComponentIn').after('<div id="c_container"></div>');
-                        if (switchAggregationBtn) {
-                            switchAggregationBtn();
-                            if (collectPics) {
-                                collectPics();
-                                hotkeys();
-                                // debugger
-                                startFancyBoxScript();
-                            }
-                        }
-                        bindBtn(function () {
+                        if ($('#injectComponentIn').length > 0) {
+                            $('#injectComponentIn').after('<div id="c_container"></div>');
                             if (switchAggregationBtn) {
                                 switchAggregationBtn();
-                            }
-                        });
+                                if (collectPics) {
+                                    collectPics();
+                                    hotkeys();
 
+                                    // debugger
+                                    adoptAutoPage();
+                                    startFancyBoxScript();
+                                }
+                            }
+                            bindBtn(function () {
+                                if (switchAggregationBtn) {
+                                    switchAggregationBtn();
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -1595,12 +1606,6 @@ function popUpMenu() {
                 }
             }
 
-            let id = setInterval(function () {
-                if ($('#Autopage_number').length > 0) {
-                    $('#Autopage_number').click();
-                    clearInterval(id);
-                }
-            }, 100);
             if (os.isAndroid) {
                 $('ul#detail_list').prev().after(injectComponent);
             } else {
@@ -2390,11 +2395,11 @@ function popUpMenu() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
-        $("div[class^=article]").slice(1, ).hide();
+        $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
         $(".single-comment").hide();
     }, function () {
-        $("div[class^=article]").slice(1, ).show();
+        $("div[class^=article]").slice(1,).show();
         // $("div.article-content > p").next().nextAll().show();
         $(".single-comment").show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
@@ -2704,7 +2709,7 @@ function popUpMenu() {
             $(".entry-content p").nextAll().hide();
         }
         $(".entry-footer").hide();
-    }, function () {}).injectAggregationRef(function (injectComponent, pageUrls) {
+    }, function () { }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname; //
         let match = currentPathname.match(/\w+.*/im);
         log("currentPathname: \n", currentPathname);
@@ -2948,7 +2953,7 @@ function popUpMenu() {
             imgList.each(function () {
                 let src = $(this).attr("original");
                 // log($(this).prop("outerHTML")+src);
-                $(this).attr('src',src);
+                $(this).attr('src', src);
             });
         }, 100);
     }).switchAggregationBtn(function () {
@@ -4046,7 +4051,7 @@ function popUpMenu() {
         debugger
         if (!(match[0] === '')) {
             pageUrls.push(currentPathname);
-            if ($('.entry-header').length > 1) {} else {
+            if ($('.entry-header').length > 1) { } else {
                 $('.entry-header').after(injectComponent);
             }
         }
@@ -4252,7 +4257,7 @@ function popUpMenu() {
         let item = $(doc).find(".entry-content img");
         debugger
         $(item).each(function () {
-            if (/lazy/.test(this.className)) {} else {
+            if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("src");
                 imgE.push($("<img src=" + src + "></img>"));
             }
@@ -4325,7 +4330,7 @@ function popUpMenu() {
         let item = $(doc).find("div.kt-tabs-content-wrap img");
         debugger
         $(item).each(function () {
-            if (/lazy/.test(this.className)) {} else {
+            if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("data-orig-file");
                 imgE.push($("<img src=" + src + "></img>"));
             }
@@ -4416,7 +4421,7 @@ function popUpMenu() {
         let item = $(doc).find(".aligncenter");
         debugger
         $(item).each(function () {
-            if (/lazy/.test(this.className)) {} else {
+            if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("src");
                 imgE.push($("<img src=" + src + "></img>"));
             }
