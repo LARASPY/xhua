@@ -4079,8 +4079,12 @@ function adoptAutoPage() {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        pageUrls.push(currentPathname);
-        $('.entry-content p').last().after(injectComponent);
+        let match = currentPathname.match(/(?<=\/)(.*?)(?=\/)/g)
+        log("match: ", match);
+        if (!isEmpty(match) && !/page|category/g.exec(match[0])) {
+            pageUrls.push(currentPathname);
+            $('.entry-content p').last().after(injectComponent);
+        }
     }).collectPics(function (doc) {
         let item = $(doc).find(".msacwl-slider-wrap img");
         return item;
