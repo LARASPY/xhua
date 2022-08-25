@@ -67,7 +67,7 @@
 // @include      /https?\:\/\/ryuryu.tw/
 // @include      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
-// @include      /https?\:\/\/dongtidemi.com/
+// @include      /https?\:\/\/dongtidemi\w*.(com|net)/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -704,7 +704,7 @@ let site = {
         hostnames: [
             'dongtidemi.com'
         ],
-        pattern: /https:\/\/dongtidemi.com/,
+        pattern: /https?\:\/\/dongtidemi\w*.(com|net)/,
         iStatus: false,
         _break: false
     }
