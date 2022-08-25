@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.01
+// @version      4.02
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -20,7 +20,7 @@
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
-// @include      /https?\:\/\/www\.[a-z]*xg[a-z]{2}\.(top|vip|net)/
+// @include      /https?\:\/\/www\.[a-z]*xg\w{4}\.(top|vip|net|com)/
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
 // @include      /https?\:\/\/\w+\.95mm\.\w+/
 // @include      /https?\:\/\/\w+\.3gbizhi\.\w+\/\w/
@@ -67,6 +67,7 @@
 // @include      /https?\:\/\/ryuryu.tw/
 // @include      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
+// @include      /https?\:\/\/dongtidemi.com/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -224,9 +225,10 @@ let site = {
         id: 10,
         name: 'Jpxgyw 美女网',
         hostnames: [
-            'www.jpxgyw.net'
+            'www.jpxgyw.net',
+            'www.xgmn09.com'
         ],
-        pattern: /https?\:\/\/www\.[a-z]*xg[a-z]{2}\.(top|vip|net)/,
+        pattern: /https?\:\/\/www\.[a-z]*xg\w{4}\.(top|vip|net|com)/,
         iStatus: false,
         _break: false
     },
@@ -693,6 +695,16 @@ let site = {
             'www.meitu131.com'
         ],
         pattern: /https?\:\/\/(www|m).meitu131.com/,
+        iStatus: false,
+        _break: false
+    },
+    dongtidemi: {
+        id: 55,
+        name: "胴体的秘密",
+        hostnames: [
+            'dongtidemi.com'
+        ],
+        pattern: /https:\/\/dongtidemi.com/,
         iStatus: false,
         _break: false
     }
@@ -3894,8 +3906,8 @@ function adoptAutoPage() {
         $('.pagination').hide();
         //android
     }, function () {
-        // $('.article-fulltext').show();
-        // $('.pagination').show();
+        $('.article-fulltext').show();
+        $('.pagination').show();
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
@@ -3913,7 +3925,7 @@ function adoptAutoPage() {
             if (limitPageMatch != null) {
                 let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
                 totalPageCnt = Math.max.apply(null, totalPics);
-                log('totalPageCnt', totalPageCnt);
+                log('totalPageCnt: ', totalPageCnt);
             }
             for (let i = 1; i <= totalPageCnt; i++) {
                 if (i == 1) {
@@ -3924,13 +3936,13 @@ function adoptAutoPage() {
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-            $('.article-tags').after(injectComponent);
+            $('.article-tags').first().after(injectComponent);
         }
     }).collectPics(function (doc) {
         let imgE = [];
-        let item = $(doc).find(".article-fulltext img");
+        let item = $(doc).find(".article-fulltext img").clone();
         $(item).each(function () {
-            let src = $(this).attr("data-src");
+            let src = $(this).attr("src");
             imgE.push($(`<img src=${src}>`));
         });
         log("imgE: \n" + imgE);
@@ -4677,6 +4689,52 @@ function adoptAutoPage() {
         });
     }).start();
 
+    /* --------------------------------------------dongtidemi.com--------------------------------------- */
+
+    injectBtns().domain(site.dongtidemi.hostnames).removeAD(function () {
+        setInterval(function () {
+            $("div[class^=wpcom_myimg]").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.entry-content').hide();
+        //android
+    }, function () {
+        $('.entry-content').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        if (currentPathname) {
+            let pageUrl;
+            let PageMatch = null;
+            let pageMatch = $('.entry-head').prop("outerHTML");
+            log("pageMatch: " + pageMatch);
+            let skip = /福利汇/g.exec(pageMatch);
+            log("skip: \n", skip);
+            if (isEmpty(skip)) {
+                pageUrl = currentPathname;
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+                $('.entry-head').after(injectComponent);
+            }
+        }
+    }).collectPics(function (doc) {
+        let imgE = []
+        let item = $(doc).find(".entry-content img");
+        $(item).each(function () {
+            let src = $(this).attr("data-original");
+            if (!isEmpty(src)) {
+                imgE.push($("<img src=" + src + "></img>"));
+            }
+        });
+        return $(imgE);
+    }, function (imgE) {
+        imgE.style = "width: 100%;";
+        $(imgE).attr({
+            'data-fancybox': 'images'
+        });
+    }).start();
 })();
 
 
