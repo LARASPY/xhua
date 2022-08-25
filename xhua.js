@@ -4696,7 +4696,7 @@ function adoptAutoPage() {
             $("div[class^=wpcom_myimg]").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+        activateFancyBox(1);
         $('.entry-content').hide();
         //android
     }, function () {
