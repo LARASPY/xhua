@@ -1454,6 +1454,7 @@ function adoptAutoPage() {
 
                 let matchDomain = meet();
                 if (matchDomain) {
+                    startFancyBoxScript();
                     log('sessionCookie: ', session);
                     if (removeAD) {
                         removeAD();
@@ -1471,7 +1472,6 @@ function adoptAutoPage() {
 
                                     // debugger
                                     adoptAutoPage();
-                                    startFancyBoxScript();
                                 }
                             }
                             bindBtn(function () {
