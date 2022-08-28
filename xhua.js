@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.05
+// @version      4.06
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -45,7 +45,7 @@
 // @include      /https?\:\/\/jjgirls\.\w+/
 // @include      /https?\:\/\/(\w+\.)?photos18\.\w+/
 // @include      /https?\:\/\/(\w+\.)?pornpics\.\w+/
-// @include      /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/
+// @include      /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst)\.com/
 // @include      /https?\:\/\/xartmodel.net/
 // @include      /https?\:\/\/hotgirl.asia/
 // @include      /https?\:\/\/hotgirlchina.com/
@@ -484,7 +484,7 @@ let site = {
         hostnames: [
             'www.mfsft.com'
         ],
-        pattern: /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/,
+        pattern: /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst)\.com/,
         iStatus: false,
         _break: false
     },
@@ -3671,10 +3671,10 @@ function adoptAutoPage() {
             let pageId = match[2];
             let suffixUrl = '.html';
             let limitPageMatch = $('.pagelist b').prop("outerHTML");
-            log("limitPageMatch: " + limitPageMatch);
+            log("limitPageMatch: \n" + limitPageMatch);
             let pageUrl;
             if (limitPageMatch != null) {
-                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
+                let totalPics = limitPageMatch.match(/\d+(?=<\/)/g);
                 totalPageCnt = Math.max.apply(null, totalPics);
                 log('totalPageCnt', totalPageCnt);
             }
