@@ -45,7 +45,7 @@
 // @include      /https?\:\/\/jjgirls\.\w+/
 // @include      /https?\:\/\/(\w+\.)?photos18\.\w+/
 // @include      /https?\:\/\/(\w+\.)?pornpics\.\w+/
-// @include      /https?\:\/\/www\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/
+// @include      /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/
 // @include      /https?\:\/\/xartmodel.net/
 // @include      /https?\:\/\/hotgirl.asia/
 // @include      /https?\:\/\/hotgirlchina.com/
@@ -484,7 +484,7 @@ let site = {
         hostnames: [
             'www.mfsft.com'
         ],
-        pattern: /https?\:\/\/www\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/,
+        pattern: /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com/,
         iStatus: false,
         _break: false
     },
