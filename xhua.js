@@ -94,7 +94,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -1249,13 +1249,14 @@ function adoptAutoPage() {
             let zip = new JSZip();
             let imgList = $('img[label="sl"]');
             let length = imgList.length;
+            let errorNum = 0;
             $.each(imgList, function (index, value) {
                 //zip.file
-                // debugger
                 let myDate = new Date(); //获取系统当前时间
                 let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
                 let img = zip.folder(times);
                 let imgSrc = $(value).attr('src'); {
+                    // debugger
                     if (blobCache[imgSrc]) {
                         img.file(index + ".jpg", blobCache[imgSrc], {
                             base64: false
@@ -1263,28 +1264,44 @@ function adoptAutoPage() {
                         length--;
                     } else {
                         if (!imgSrc.startsWith('blob:\n')) {
+                            if (!imgSrc.startsWith('http')) {
+                                imgSrc = startUrl + imgSrc;
+                            }
                             Alpha_Script.obtainHtml({
                                 url: imgSrc,
                                 method: 'GET',
-                                headers: {
-                                    "Accept": "application/*",
-                                    "Referer": window.location.origin,
-                                },
+                                headers: Alpha_Script.parseHeaders(
+                                    "Accept:" + "application/*\n",
+                                    "Host:" + window.location.hostname + "\n",
+                                ),
                                 responseType: 'blob',
                                 onload: function (response) {
-                                    let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
-                                    let contentType = responseHeaders['Content-Type'];
-                                    if (!contentType) {
-                                        contentType = "image/png";
+                                    debugger
+                                    log("downlodeUrl: ", response.finalUrl);
+                                    if (response && response.status && response.status >= 200 && response.status < 300) {
+                                        let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                        let contentType = responseHeaders['Content-Type'];
+                                        if (!contentType) {
+                                            contentType = "image/png";
+                                        }
+                                        let blob = new Blob([response.response], {
+                                            type: contentType
+                                        });
+                                        blobCache[imgSrc] = blob;
+                                        img.file(index + ".jpg", blobCache[imgSrc], {
+                                            base64: false
+                                        });
+                                        length--;
+                                    } else {
+                                        errorNum++;
+                                        if (errorNum === imgList.length) {
+                                            err('图片下载失败,请使用插件下载。');
+                                            alert("图片下载失败,请使用插件下载。");
+                                        }
                                     }
-                                    let blob = new Blob([response.response], {
-                                        type: contentType
-                                    });
-                                    blobCache[imgSrc] = blob;
-                                    img.file(index + ".jpg", blobCache[imgSrc], {
-                                        base64: false
-                                    });
-                                    length--;
+                                },
+                                onerror: function (error) {
+                                    console.log(error);
                                 }
                             });
                         } else {
@@ -1301,14 +1318,15 @@ function adoptAutoPage() {
                 packagName = "PackageSL";
             }
             let id = setInterval(function () {
-                if (length == 0) {
+                if (length === 0) {
                     clearInterval(id);
                     zip.generateAsync({
                         type: "blob"
-                    })
-                        .then(function (content) {
-                            saveAs(content, packagName + ".zip");
-                        });
+                    }).then(function (content) {
+                        saveAs(content, packagName + ".zip");
+                        log("图片下载完成。");
+                        alert("图片下载完成。");
+                    });
                 }
             }, 100);
         }
@@ -1318,30 +1336,43 @@ function adoptAutoPage() {
             $('#captureBtn').bind('click', function (e) {
                 let imgList = $('img[label="sl"]');
                 let length = imgList.length;
+                let errorNum = 0;
                 $.each(imgList, function (index, value) {
                     let imgSrc = $(value).attr('src'); {
                         if (blobCache[imgSrc]) {
                             length--;
                         } else {
                             if (!imgSrc.startsWith('blob:\n')) {
+                                if (!imgSrc.startsWith('http')) {
+                                    imgSrc = startUrl + imgSrc;
+                                }
                                 Alpha_Script.obtainHtml({
                                     url: imgSrc,
                                     method: 'GET',
-                                    headers: {
-                                        "Accept": "application/*"
-                                    },
+                                    headers: Alpha_Script.parseHeaders(
+                                        "Accept:" + "application/*\n",
+                                        "Host:" + window.location.hostname + "\n",
+                                    ),
                                     responseType: 'blob',
                                     onload: function (response) {
-                                        let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
-                                        let contentType = responseHeaders['Content-Type'];
-                                        if (!contentType) {
-                                            contentType = "image/png";
+                                        if (response && response.status && response.status >= 200 && response.status < 300) {
+                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                            let contentType = responseHeaders['Content-Type'];
+                                            if (!contentType) {
+                                                contentType = "image/png";
+                                            }
+                                            let blob = new Blob([response.response], {
+                                                type: contentType
+                                            });
+                                            blobCache[imgSrc] = blob;
+                                            length--;
+                                        }else{
+                                            errorNum++;
+                                            if (errorNum === imgList.length) {
+                                                err('截图保存失败。');
+                                                alert("截图保存失败。");
+                                            }
                                         }
-                                        let blob = new Blob([response.response], {
-                                            type: contentType
-                                        });
-                                        blobCache[imgSrc] = blob;
-                                        length--;
                                     }
                                 });
                             }
@@ -1355,6 +1386,10 @@ function adoptAutoPage() {
                         $.each(imgList, function (index, value) {
                             let imgSrc = $(value).attr('src'); {
                                 if (!imgSrc.startsWith('blob:\n')) {
+                                    if (!imgSrc.startsWith('http')) {
+                                        imgSrc = startUrl + imgSrc;
+                                    }
+                                    // debugger
                                     if (blobCache[imgSrc]) {
                                         let objectURL = URL.createObjectURL(blobCache[imgSrc]);
                                         blobUrlCache[objectURL] = imgSrc;
@@ -1367,25 +1402,26 @@ function adoptAutoPage() {
                             }
                         });
                         let id2 = setInterval(function () {
-                            if (length2 == 0) {
+                            if (length2 === 0) {
                                 clearInterval(id2);
                                 let cContainner = $('#c_container').get(0);
-                                domtoimage.toBlob(cContainner)
-                                    .then(function (blob) {
-                                        if (blob) {
-                                            saveAs(blob, "captureSL.png");
-                                        } else {
-                                            err('截图太大不能保存!');
-                                            alert("截图太大不能保存!");
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        err('截图太大不能保存!');
-                                        alert("截图太大不能保存!");
-                                    });
+                                debugger
+                                domtoimage.toBlob(cContainner).then(function (blob) {
+                                    // debugger
+                                    if (blob) {
+                                        saveAs(blob, "captureSL.png");
+                                        log("截图保存完成。");
+                                        alert("截图保存完成。");
+                                    } else {
+                                        err("文件不存在，截图保存失败!");
+                                        alert("文件不存在，截图保存失败!");
+                                    }
+                                }).catch(function (error) {
+                                    err('截图太大不能保存!');
+                                    alert("截图太大不能保存!");
+                                });
                             }
                         }, 100);
-
                     }
                 }, 100);
             });
@@ -3018,7 +3054,7 @@ function adoptAutoPage() {
         let imgE = [];
         let images;
         images = $(doc).find('#content img');
-        debugger
+        // debugger
         // log("images: \n", images);
         $(images).each(function () {
             let src = $(this).attr("src");
