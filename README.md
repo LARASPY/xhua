@@ -37,8 +37,8 @@
   > 代码如下：
   >
   > ```
-  > ! 2022-07-03 https://www.mfsft.com
-  > /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com.*/
+  > ! 2022-08-28 https://www.mfsft.com 🆕
+  > /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/r\d*.js)/
   > ```
   >
   > 其他去广告代码：
@@ -48,7 +48,7 @@
   > ||tj.plmn5.com^$domain=www.xrmn5.cc
   > ||*.shop:25688/ty/*
   > ||www.xrmn5.cc/img/art*$script,domain=www.xrmn5.cc
-  > ! 2022-07-26 https://www.xgmn.vip 🆕
+  > ! 2022-07-26 https://www.xgmn.vip
   > ||console.jquery-cdn.cc
   > ```
   >
@@ -60,7 +60,7 @@
   >
   > ***
   >
-  > **Ⅶ.** 🍁 该脚本应该基本就是这样了，以后有时间再来更新。🆕🆕🆕
+  > **Ⅶ.** 🍁 该脚本应该基本就是这样了，以后有时间再来更新。🔰🔰🔰
   >
   > > 首先如果遇到`网站失效`,一般就是脚本的域名网址不起作用了。可以自行在`脚本头部`添加`@include`匹配项，比如像下面那样（这里以 `Mrcong` 为例）：
   > >
@@ -126,7 +126,7 @@
   > |      ✔ | <a href='https://asiantolick.com' target='_blank'><code>Asian to lick˙¹⁸⁺</code></a>                                                                                                                                                           |      ✔ | <a href='https://www.xsnvshen.co' target='_blank'><code>秀色女神</code></a>                                                                                                                                                                              |
   > |      - | <a href='https://xchina.co' target='_blank'><code>小黄书 ˙¹⁸⁺</code></a>                                                                                                                                                                       |      ✔ | <a href='https://jjgirls.com/' target='_blank'><code>Heyzo˙¹⁸⁺</code></a>                                                                                                                                                                                |
   > |      - | <a href='https://www.photos18.com/' target='_blank'><code>色情圖片網 ˙¹⁸⁺</code></a>                                                                                                                                                           |      ✔ | <a href='https://www.pornpics.com/' target='_blank'><code>Porn Pics˙¹⁸⁺</code></a>                                                                                                                                                                       |
-  > |      ✔ | <a href='http://www.mfsft.com/' target='_blank'><code>免费私房图</code></a>                                                                                                                                                                    |      ✔ | <a href='https://www.tuiimg.com/' target='_blank'><code>推图网</code></a>                                                                                                                                                                                |
+  > |      ✔ | <a href='http://www.mfsft.com/' target='_blank'><code>免费私房图 🆕</code></a>                                                                                                                                                                    |      ✔ | <a href='https://www.tuiimg.com/' target='_blank'><code>推图网</code></a>                                                                                                                                                                                |
   > |      ✔ | <a href='https://idol.gravureprincess.date/' target='_blank'><code>Idol˙¹⁸⁺</code></a>                                                                                                                                                         |      - | <del><a href='https://allasiangirls.net/' target='_blank'><code>Asian Girls</code></a></del>                                                                                                                                                             |
   > |      - | <a href='https://asianpink.net/' target='_blank'><code>Asian Pink</code></a>                                                                                                                                                                   |      - | <a href='https://asdcosplay.com/' target='_blank'><code>Make Girls(请自行注册使用)</code></a>                                                                                                                                                            |
   > |      - | <a href='https://yellowfever18.com/' target='_blank'><code>Yellow Fever</code></a>                                                                                                                                                             |      - | <a href='https://asdasfd.net/' target='_blank'><code>ASD ASFD</code></a>                                                                                                                                                                                 |

@@ -3619,14 +3619,18 @@ function adoptAutoPage() {
             }
             log("interestline\n", interestline.prop("outerHTML"));
             log("seacher\n", seacher.prop("outerHTML"));
-            $(".h").prev().after(interestline);
-            $(".h").prev().after(seacher);
+            $(".h").prev().after(interestline.clone());
+            $(".h").prev().after($("#dtag").clone());
+            $(".h").prev().after($("#bdssy").clone());
+            $(".h").prev().after(seacher.clone());
+            $(".h").prev().after($(".pic"));
             // $(".h").prevUntil(".page").remove();
             items.remove();
         };
         $("head").empty();
         setInterval(function () {
             $("#pic").remove();
+            $(".bg-text").remove();
         }, 100);
         // debugger
         async function asyncFunc() {
