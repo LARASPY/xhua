@@ -51,12 +51,13 @@
   > ! 2022-07-26 https://www.xgmn.vip
   > ||console.jquery-cdn.cc
   > ```
+  > `注:uBlock Origin 静态规则更新前，记得删除之前旧规则。`  🆕
   >
   > Ⅴ. <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
   >
   > Ⅵ. 关于手机版的网址链接跳转，如果使用本油猴脚本**可用网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个[`Markdown网站`](http://jbt.github.io/markdown-editor/)，Markdown 代码在<a href='https://github.com/LARASPY/xhua' target='_blank' target='_blank'><code>LARASPY</code></a>git 仓库里面，将仓库里面的[**`WebsiteMark.md`**](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/WebsiteMark.md)代码，复制到[`Markdown网站`](http://jbt.github.io/markdown-editor/)里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
   >
-  > `注:WebsiteMark.md 直链¹更新不及时，原生²更新及时,但是原生² 一般只有翻墙才能访问`
+  > `注:WebsiteMark.md 直链¹更新不及时，原生²更新及时,但是原生² 一般只有翻墙才能访问。`  🆕
   >
   > ***
   >
