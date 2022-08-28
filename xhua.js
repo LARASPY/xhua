@@ -35,7 +35,7 @@
 // @include      /https?\:\/\/mrcong\.com/
 // @include      /https?\:\/\/\w+\.(?:xiure)\w+\.\w+/
 // @include      /https?\:\/\/\w+\.xrmn[0-9]{0,}.[a-zA-Z]{0,}./
-// @include      /https?\:\/\/(www\.)?[0-9]*(w|faw)\.cc/
+// @include      /https?\:\/\/(www\.)?[0-9]*(m|w|faw)\.cc/
 // @include      /https?\:\/\/(\w+\.)?tuiimg\.com/
 // @include      /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/
 // @include      /https?\:\/\/\w+\.(mmm131|mm1\d+)\.\w+/
@@ -380,7 +380,7 @@ let site = {
             'www.112w.cc',
             'www.112w.cc\/c49.aspx'
         ],
-        pattern: /https?\:\/\/(www\.)?[0-9]*(w|faw)\.cc/,
+        pattern: /https?\:\/\/(www\.)?[0-9]*(m|w|faw)\.cc/,
         iStatus: false,
         _break: false
     },
