@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.06
+// @version      4.07
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -20,7 +20,7 @@
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
-// @include      /https?\:\/\/www\.[a-z]*xg\w{4}\.(top|vip|net|com)/
+// @include      /https?\:\/\/www\.[a-z]*xg\w{0,4}\.(top|vip|net|com|cc)/
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
 // @include      /https?\:\/\/\w+\.95mm\.\w+/
 // @include      /https?\:\/\/\w+\.3gbizhi\.\w+\/\w/
@@ -226,9 +226,10 @@ let site = {
         name: 'Jpxgyw 美女网',
         hostnames: [
             'www.jpxgyw.net',
-            'www.xgmn09.com'
+            'www.xgmn09.com',
+            'www.jpxgyw.cc'
         ],
-        pattern: /https?\:\/\/www\.[a-z]*xg\w{4}\.(top|vip|net|com)/,
+        pattern: /https?\:\/\/www\.[a-z]*xg\w{0,4}\.(top|vip|net|com|cc)/,
         iStatus: false,
         _break: false
     },
@@ -3399,12 +3400,7 @@ function adoptAutoPage() {
 
     injectBtns().domain(site.xchina.hostnames).removeAD(function () {
         setInterval(function () {
-            $("div.ad").remove();
-            $("div.push-bottom").remove();
-            $("div[class*=ad]").remove();
-            $("div.push-top").remove();
-            $("div.center").remove();
-            $(".blocker ").remove();
+            $(".push-bottom").remove();
             $("body").css("overflow", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
