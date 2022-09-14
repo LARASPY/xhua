@@ -67,7 +67,7 @@
 // @include      /https?\:\/\/ryuryu.tw/
 // @include      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
-// @include      /https?\:\/\/dongtidemi\w*.(com|net)/
+// @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -703,9 +703,10 @@ let site = {
         id: 55,
         name: "胴体的秘密",
         hostnames: [
-            'dongtidemi.com'
+            'dongtidemi.com',
+            'dongtidemimi.org'
         ],
-        pattern: /https?\:\/\/dongtidemi\w*.(com|net)/,
+        pattern: /https?\:\/\/dongtidemi\w*.(com|net|org)/,
         iStatus: false,
         _break: false
     }
