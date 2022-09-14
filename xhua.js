@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.07
+// @version      4.08
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -801,9 +801,7 @@ function currentUrlActivation() {
         return matchDomain;
     };
     for (let key in site) {
-        // debugger
         let isPattern = isEmpty(site[key].pattern);
-        // debugger
         if (!isPattern) {
             hostnameArry = site[key].pattern.exec(origin);
             if (hostnameArry != null) {
@@ -932,7 +930,6 @@ async function startMain_(arrs = null) {
                 data = await timeoutPromise(arr[index], Get_(arr[index]));
                 log(data);
             } catch (error) {
-                // debugger
                 console.log(error);
                 timeoutPromise(arr[index], addScript_(null, arr[index]));
             }
@@ -1169,7 +1166,8 @@ function adoptAutoPage() {
                             let pageUrl = startUrl + pageUrls[i];
                             Alpha_Script.obtainHtml({
                                 url: pageUrl,
-                                headers: Alpha_Script.parseHeaders("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
+                                headers: Alpha_Script.parseHeaders(
+                                    "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
                                     "Accept-Encoding:gzip, deflate, br\n" +
                                     "Accept-Language:zh-CN,zh;q=0.9\n" +
                                     "cookie:" + session + "\n" +
@@ -1180,9 +1178,7 @@ function adoptAutoPage() {
                                 onload: function () {
                                     let _i = i;
                                     let _pageUrl = pageUrl;
-                                    // debugger
                                     return function (response) {
-                                        // debugger
                                         if (isDebug) {
                                             console.groupCollapsed('imagesGroup_' + _i);
                                         }
@@ -1247,28 +1243,42 @@ function adoptAutoPage() {
         };
         let removeAD = null;
 
+        let isPackageAndDownload = false;
+        let isBindBtnDownload = false;
+        function isImgHttpStart(imgSrc) {
+            if (!imgSrc.startsWith('http')) {
+                let re = /^\/.*/g;
+                let isNoSlash = re.test(imgSrc);
+                if (isNoSlash) {
+                    imgSrc = protocol + '//' + hostName + imgSrc;
+                } else {
+                    imgSrc = startUrl + imgSrc;
+                }
+            }
+            return imgSrc;
+        }
+
         function packageAndDownload() {
-            let zip = new JSZip();
-            let imgList = $('img[label="sl"]');
-            let length = imgList.length;
-            let errorNum = 0;
-            $.each(imgList, function (index, value) {
-                //zip.file
-                let myDate = new Date(); //获取系统当前时间
-                let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
-                let img = zip.folder(times);
-                let imgSrc = $(value).attr('src'); {
-                    // debugger
+            if (isPackageAndDownload) {
+                alert('下载中, 请耐心等待...\n点击确认继续下载');
+            } else {
+                isPackageAndDownload = true;
+                let zip = new JSZip();
+                let imgList = $('img[label="sl"]');
+                let length = imgList.length;
+                let errorNum = 0;
+                $.each(imgList, function (index, value) {
+                    //zip.file
+                    let myDate = new Date(); //获取系统当前时间
+                    let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
+                    let img = zip.folder(times);
+                    let imgSrc = $(value).attr('src');
                     if (blobCache[imgSrc]) {
-                        img.file(index + ".jpg", blobCache[imgSrc], {
-                            base64: false
-                        });
+                        img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
                         length--;
                     } else {
-                        if (!imgSrc.startsWith('blob:\n')) {
-                            if (!imgSrc.startsWith('http')) {
-                                imgSrc = startUrl + imgSrc;
-                            }
+                        if (!imgSrc.startsWith('blob:')) {
+                            imgSrc = isImgHttpStart(imgSrc);
                             Alpha_Script.obtainHtml({
                                 url: imgSrc,
                                 method: 'GET',
@@ -1276,10 +1286,10 @@ function adoptAutoPage() {
                                     "Accept:" + "application/*\n",
                                     "Host:" + window.location.hostname + "\n",
                                 ),
+                                timeout: 30000,
                                 responseType: 'blob',
                                 onload: function (response) {
-                                    debugger
-                                    log("downlodeUrl: ", response.finalUrl);
+                                    log("DownlodeUrl " + index + ": ", response.finalUrl);
                                     if (response && response.status && response.status >= 200 && response.status < 300) {
                                         let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
                                         let contentType = responseHeaders['Content-Type'];
@@ -1290,64 +1300,78 @@ function adoptAutoPage() {
                                             type: contentType
                                         });
                                         blobCache[imgSrc] = blob;
-                                        img.file(index + ".jpg", blobCache[imgSrc], {
-                                            base64: false
-                                        });
-                                        length--;
+                                        img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
+                                        // if (length == 1) debugger
                                     } else {
                                         errorNum++;
                                         if (errorNum === imgList.length) {
-                                            err('图片下载失败,请使用插件下载。');
-                                            alert("图片下载失败,请使用插件下载。");
+                                            isPackageAndDownload = false;
+                                            err('图片全部下载失败,请使用插件下载。');
+                                            alert("图片全部下载失败,请使用插件下载。");
                                         }
                                     }
+                                    length--;
                                 },
                                 onerror: function (error) {
-                                    console.log(error);
+                                    err(error);
+                                    length--;
+                                },
+                                ontimeout: function () {
+                                    errorNum++;
+                                    if (errorNum === imgList.length) {
+                                        isPackageAndDownload = false;
+                                        err('图片全部下载失败,请使用插件下载。');
+                                        alert("图片全部下载失败,请使用插件下载。");
+                                    }
+                                    err("DownlodeUrl " + index + ": 超时");
+                                    length--;
                                 }
                             });
                         } else {
-                            img.file(index + ".jpg", blobCache[blobUrlCache[imgSrc]], {
-                                base64: false
-                            });
+                            img.file(1 + index + ".jpg", blobCache[blobUrlCache[imgSrc]], { base64: false });
                             length--;
                         }
                     }
+                });
+                let packagName = document.title;
+                if (!packagName) {
+                    packagName = "PackageSL";
                 }
-            });
-            let packagName = document.title;
-            if (!packagName) {
-                packagName = "PackageSL";
+                let id = setInterval(function () {
+                    if (length === 0) {
+                        clearInterval(id);
+                        zip.generateAsync({
+                            type: "blob"
+                        }).then(function (content) {
+                            if (errorNum !== imgList.length) {
+                                saveAs(content, packagName + ".zip");
+                                isPackageAndDownload = false;
+                                log("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
+                                alert("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
+                            }
+                        });
+                    }
+                }, 100);
             }
-            let id = setInterval(function () {
-                if (length === 0) {
-                    clearInterval(id);
-                    zip.generateAsync({
-                        type: "blob"
-                    }).then(function (content) {
-                        saveAs(content, packagName + ".zip");
-                        log("图片下载完成。");
-                        alert("图片下载完成。");
-                    });
-                }
-            }, 100);
         }
 
         function bindBtn(callback) {
             $('#injectaggregatBtn').bind('click', callback);
             $('#captureBtn').bind('click', function (e) {
-                let imgList = $('img[label="sl"]');
-                let length = imgList.length;
-                let errorNum = 0;
-                $.each(imgList, function (index, value) {
-                    let imgSrc = $(value).attr('src'); {
+                if (isBindBtnDownload) {
+                    alert('截图中, 请耐心等待...\n点击确认继续截图');
+                } else {
+                    isBindBtnDownload = true;
+                    let imgList = $('img[label="sl"]');
+                    let length = imgList.length;
+                    let errorNum = 0;
+                    $.each(imgList, function (index, value) {
+                        let imgSrc = $(value).attr('src');
                         if (blobCache[imgSrc]) {
                             length--;
                         } else {
-                            if (!imgSrc.startsWith('blob:\n')) {
-                                if (!imgSrc.startsWith('http')) {
-                                    imgSrc = startUrl + imgSrc;
-                                }
+                            if (!imgSrc.startsWith('blob:')) {
+                                imgSrc = isImgHttpStart(imgSrc);
                                 Alpha_Script.obtainHtml({
                                     url: imgSrc,
                                     method: 'GET',
@@ -1355,6 +1379,7 @@ function adoptAutoPage() {
                                         "Accept:" + "application/*\n",
                                         "Host:" + window.location.hostname + "\n",
                                     ),
+                                    timeout: 30000,
                                     responseType: 'blob',
                                     onload: function (response) {
                                         if (response && response.status && response.status >= 200 && response.status < 300) {
@@ -1367,65 +1392,78 @@ function adoptAutoPage() {
                                                 type: contentType
                                             });
                                             blobCache[imgSrc] = blob;
-                                            length--;
-                                        }else{
+                                        } else {
                                             errorNum++;
                                             if (errorNum === imgList.length) {
+                                                isBindBtnDownload = false;
                                                 err('截图保存失败。');
                                                 alert("截图保存失败。");
                                             }
                                         }
+                                        length--;
+                                    },
+                                    ontimeout: function () {
+                                        errorNum++;
+                                        if (errorNum === imgList.length) {
+                                            isBindBtnDownload = false;
+                                            err('截图保存失败。');
+                                            alert("截图保存失败。");
+                                        }
+                                        err("DownlodeUrl " + index + ": 超时");
+                                        length--;
                                     }
                                 });
                             }
                         }
-                    }
-                });
-                let id = setInterval(function () {
-                    if (length == 0) {
-                        clearInterval(id);
-                        let length2 = imgList.length;
-                        $.each(imgList, function (index, value) {
-                            let imgSrc = $(value).attr('src'); {
-                                if (!imgSrc.startsWith('blob:\n')) {
-                                    if (!imgSrc.startsWith('http')) {
-                                        imgSrc = startUrl + imgSrc;
+                    });
+                    let id = setInterval(function () {
+                        if (length === 0) {
+                            clearInterval(id);
+                            let length2 = imgList.length;
+                            $.each(imgList, function (index, value) {
+                                let imgSrc = $(value).attr('src'); {
+                                    if (!imgSrc.startsWith('blob:')) {
+                                        imgSrc = isImgHttpStart(imgSrc);
+                                        if (blobCache[imgSrc]) {
+                                            let objectURL = URL.createObjectURL(blobCache[imgSrc]);
+                                            //objectURL = blob:https://mrcong.com/28c4ef23-b1ce-471a-84a1-c750d642b52c
+                                            //imgSrc(原链接)
+                                            blobUrlCache[objectURL] = imgSrc;
+                                            //将内存blob:new url替换src
+                                            $(value).attr('src', objectURL);
+                                            log(imgSrc + "\n---> " + objectURL);
+                                        }
                                     }
-                                    // debugger
-                                    if (blobCache[imgSrc]) {
-                                        let objectURL = URL.createObjectURL(blobCache[imgSrc]);
-                                        blobUrlCache[objectURL] = imgSrc;
-                                        $(value).attr('src', objectURL);
-                                        length2--;
-                                    }
-                                } else {
                                     length2--;
                                 }
-                            }
-                        });
-                        let id2 = setInterval(function () {
-                            if (length2 === 0) {
-                                clearInterval(id2);
-                                let cContainner = $('#c_container').get(0);
-                                debugger
-                                domtoimage.toBlob(cContainner).then(function (blob) {
-                                    // debugger
-                                    if (blob) {
-                                        saveAs(blob, "captureSL.png");
-                                        log("截图保存完成。");
-                                        alert("截图保存完成。");
-                                    } else {
-                                        err("文件不存在，截图保存失败!");
-                                        alert("文件不存在，截图保存失败!");
-                                    }
-                                }).catch(function (error) {
-                                    err('截图太大不能保存!');
-                                    alert("截图太大不能保存!");
-                                });
-                            }
-                        }, 100);
-                    }
-                }, 100);
+                            });
+                            let id2 = setInterval(function () {
+                                if (length2 === 0) {
+                                    clearInterval(id2);
+                                    let cContainner = $('#c_container').get(0);
+                                    domtoimage.toBlob(cContainner).then(function (blob) {
+                                        
+                                        if (blob) {
+                                            saveAs(blob, "captureSL.png");
+                                            log("截图保存完成。");
+                                            alert("截图保存完成。");
+                                        } else {
+                                            err("文件不存在，截图保存失败!");
+                                            alert("文件不存在，截图保存失败!");
+                                        }
+                                        isBindBtnDownload = false;
+                                    }).catch(function (error) {
+                                        if (errorNum !== imgList.length) {
+                                            isBindBtnDownload = false;
+                                            err('截图太大不能保存!');
+                                            alert("截图太大不能保存!");
+                                        }
+                                    });
+                                }
+                            }, 100);
+                        }
+                    }, 100);
+                }
             });
             $('#packageBtn').bind('click', function (e) {
                 packageAndDownload();
@@ -1497,7 +1535,6 @@ function adoptAutoPage() {
                         removeAD();
                     }
                     if (injectAggregationRef) {
-                        // debugger
                         injectAggregationRef.apply(this, [injectComponent, pageUrls]);
                         if ($('#injectComponentIn').length > 0) {
                             $('#injectComponentIn').after('<div id="c_container"></div>');
@@ -1506,7 +1543,6 @@ function adoptAutoPage() {
                                 if (collectPics) {
                                     collectPics();
                                     hotkeys();
-
                                     // debugger
                                     adoptAutoPage();
                                     startFancyBoxScript();
@@ -1540,10 +1576,8 @@ function adoptAutoPage() {
         $('div.article-wechats').show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
-        // debugger
         log("currentPathname: " + currentPathname);
         let match = currentPathname.match(/\/(.+\/)(\d+)(?:_\d+)?\.html/m); //http://www.aitaotu.com/weimei/36129.html
-
         if (match !== null) {
             {
                 let totalPageCnt = 1;
@@ -1551,14 +1585,11 @@ function adoptAutoPage() {
                 let pageId = match[2] + '_';
                 let suffixUrl = '.html';
                 let limitPageStr = $('.page_imges a').html();
-                // debugger
                 // log('partPreUrl: ', partPreUrl);
                 // log('pageId: ', pageId);
                 // log('limitPageStr: ', limitPageStr);
-
                 let limitPageMatch = limitPageStr.match(/(?<=\<\/span\>)\d/im);
                 // log('limitPageMatch: ', limitPageMatch);
-
                 if (limitPageMatch != null) {
                     let totalPics = parseInt(limitPageMatch[0]);
                     totalPageCnt = totalPics + 1;
@@ -1881,7 +1912,6 @@ function adoptAutoPage() {
                 log("limitPageMatch: " + limitPageMatch);
                 if (limitPageMatch != null) {
                     totalPageCnt = parseInt(limitPageMatch[1]);
-                    // debugger
                     log('totalPageCnt: ', totalPageCnt);
                 }
                 for (let i = 1; i <= totalPageCnt; i++) {
@@ -2486,7 +2516,6 @@ function adoptAutoPage() {
                 src = $(this).attr('src').replace(/-\d+x\d+/g, '');
             }
             $(this).attr('label', 'sl');
-            debugger
             $(this).attr('src', src);
             let imageItem = $(this).prop("outerHTML").toString();
             // log("New this: \n", imageItem);
@@ -2564,7 +2593,6 @@ function adoptAutoPage() {
     /* --------------------------------------------www.fnvshen.com && xsnvshen.co----------------------- */
 
     injectBtns().domain(site.Fnvshen.hostnames).removeAD(function () {
-        // debugger
         setInterval(function () {
             $(".yalayi_box").remove();
             $(".yituyu_box").remove();
@@ -2872,7 +2900,6 @@ function adoptAutoPage() {
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
         let misMatch = ["tag/", "category/", "sets/", "top/", "tim-kiem/"];
-        debugger
         misMatch.forEach(function (value) {
             if (match) {
                 let frontEndMatching = match[0];
@@ -2888,7 +2915,6 @@ function adoptAutoPage() {
             let suffixUrl = '';
             let partPreUrl = null;
             let pageId = null;
-            debugger
             limitPageStr = $('.page-link').prop("outerHTML");
             limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
             log("limitPageStr: \n", limitPageStr);
@@ -2948,7 +2974,6 @@ function adoptAutoPage() {
         } else {
             match = currentPathname.match(/([A-Za-z]+).([0-9]+).([0-9]+(_[0-9]*)?)/im);
         }
-
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
         let limitPageTotal;
@@ -2958,7 +2983,6 @@ function adoptAutoPage() {
             let suffixUrl = '_';
             let partPreUrl = null;
             let pageId = null;
-            // debugger
             limitPageStr = $('.page').prop("outerHTML");
             limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
             log("limitPageStr: \n", limitPageStr);
@@ -2984,9 +3008,7 @@ function adoptAutoPage() {
     }).collectPics(function (doc) {
         let images;
         images = $(doc).find('.content img');
-        // debugger
         log("images: \n", images);
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -3029,7 +3051,6 @@ function adoptAutoPage() {
             let suffixUrl = 'p';
             let partPreUrl = null;
             let pageId = null;
-            // debugger
             limitPageStr = $('table[align]').prop("outerHTML");
             limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
             log("limitPageStr: \n", limitPageStr);
@@ -3056,7 +3077,6 @@ function adoptAutoPage() {
         let imgE = [];
         let images;
         images = $(doc).find('#content img');
-        // debugger
         // log("images: \n", images);
         $(images).each(function () {
             let src = $(this).attr("src");
@@ -3665,7 +3685,6 @@ function adoptAutoPage() {
             $("#pic").remove();
             $(".bg-text").remove();
         }, 100);
-        // debugger
         async function asyncFunc() {
             try {
                 var a1 = +new Date();
@@ -3686,7 +3705,6 @@ function adoptAutoPage() {
         }
         asyncFunc();
     }).switchAggregationBtn(function () {
-        // debugger
         activateFancyBox();
         $('#picg').prev().nextAll().hide();
         //android
