@@ -4152,9 +4152,9 @@ function adoptAutoPage() {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
-        $(".img-div").parent().hide();
+        $(".thumbnail").parent().hide();
     }, function () {
-        $(".img-div").parent().show();
+        $(".thumbnail").parent().show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
@@ -4186,7 +4186,7 @@ function adoptAutoPage() {
             $('.title').first().parent().after(injectComponent);
         }
     }).collectPics(async function (doc) {
-        let item = $(doc).find(".img-div").parent();
+        let item = $(doc).find(".thumbnail");
         let aImgS = [];
         $(item).each(function () {
             let src = $(this).attr("href");
