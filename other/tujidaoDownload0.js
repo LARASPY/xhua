@@ -1,7 +1,7 @@
 let srcList = [
-    "https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js",
-    "https://cdn.staticfile.org/jszip/3.1.5/jszip.min.js",
-  ];
+  "https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js",
+  "https://cdn.staticfile.org/jszip/3.1.5/jszip.min.js",
+];
 
 let Alpha_Script = {
   obtainHtml: function (options) {
@@ -95,16 +95,43 @@ function packageAndDownload() {
 }
 
 function addStateMent(head, type, src, textContent, setAttribute) {
-    let statement = document.createElement(type);
-    if (src) statement.src = src;
-    if (textContent) statement.textContent = textContent;
-    if (setAttribute) {
-      console.log(setAttribute);
-      for (const [key, value] of Object.entries(setAttribute)) {
-        statement.setAttribute(key, value);
-      }
+  let statement = document.createElement(type);
+  if (src) statement.src = src;
+  if (textContent) statement.textContent = textContent;
+  if (setAttribute) {
+    console.log(setAttribute);
+    for (const [key, value] of Object.entries(setAttribute)) {
+      statement.setAttribute(key, value);
     }
-    head.appendChild(statement);
   }
+  head.appendChild(statement);
+}
 
-
+function startDownloadTuJiDao() {
+  let itemTpye = { name: "type", value: "text/css" };
+  new Promise(function (resolve, reject) {
+    let id = setInterval(function () {
+      if (srcList) {
+        srcList.push("https://cdn.jsdelivr.net/gh/CYqiang-sc/hello@master/fancybox.js");
+        for (var src of srcList) {
+          addStateMent(head, "script", src);
+        }
+        console.log("waiting...");
+        if (fancyBoxCss && $) {
+          console.log("FancyBoxCss && $ OK !!!");
+          clearInterval(id);
+          resolve();
+        }
+      }
+    }, 100);
+  }).then(function () {
+    $("#packageBtn").bind("click", function (e) {
+      packageAndDownload();
+    });
+    addStateMent(head, "script", null, fancyboxDefaultJs);
+    addStateMent(head, "style", null, fancyBoxCss, itemTpye);
+    if (os.isPc) {
+      addStateMent(head, "style", null, fancyBoxCssAdditon, itemTpye);
+    }
+  });
+}
