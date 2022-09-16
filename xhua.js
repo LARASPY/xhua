@@ -952,9 +952,9 @@ async function startMain_(arrs = null) {
 
 function startFancyBoxScript() {
     addScriptCss();
-    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
-    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
-    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
 
     if (imagePluginSwitch[0].isFancyBox) {
         if (imagePluginSwitch[0].isFancyBoxFullScreen) {
@@ -1215,7 +1215,7 @@ function adoptAutoPage() {
                                             });
                                             if(locateTotal === len){
                                                 let slcPicNums = $(".sl-c-pic");
-                                                console.log("-----------------------------> ",slcPicNums.length);
+                                                log("locateTotal: ",slcPicNums.length);
                                                 for(let i = 0;i<slcPicNums.length;i++){
                                                     $(slcPicNums[i]).attr({"tabindex":"-1","id":"imgLocation"+i});
                                                 }
