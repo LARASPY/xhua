@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.08
+// @version      4.09
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -952,13 +952,17 @@ async function startMain_(arrs = null) {
 
 function startFancyBoxScript() {
     addScriptCss();
+    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;console.log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{console.log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).focus()}}});`;
+
     if (imagePluginSwitch[0].isFancyBox) {
         if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-            addScript_(fancyboxFullJs);
+            addScript_(fancyboxFullJsLocate);
         } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
-            addScript_(fancyboxDefaultAutoStartFalseJs);
+            addScript_(fancyboxDefaultAutoStartFalseJsLocate);
         } else {
-            addScript_(fancyboxDefaultJs);
+            addScript_(fancyboxDefaultJsLocate);
         }
     }
 }
@@ -1123,6 +1127,8 @@ function adoptAutoPage() {
         let switchAggregationBtn = null;
         let collectPics = null;
         let session = document.cookie;
+        let locateIndex = 0;
+        let locateTotal = 0;
 
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
@@ -1187,6 +1193,7 @@ function adoptAutoPage() {
                                         log('response pageUrl:\n', _pageUrl);
                                         // response.status=403服务器拒绝爬虫可能通过改cookie的方法来做
                                         if (response && response.status && response.status >= 200 && response.status < 300) {
+                                            locateTotal++;
                                             let html = response.responseText;
                                             // log('html==>', html);
                                             let parser = new DOMParser();
@@ -1206,6 +1213,13 @@ function adoptAutoPage() {
                                                 $(this).attr('label', 'sl');
                                                 $(imgContainerCssSelector).append('<div class="sl-c-pic">' + $(this).prop('outerHTML') + '</div>');
                                             });
+                                            if(locateTotal === len){
+                                                let slcPicNums = $(".sl-c-pic");
+                                                console.log("-----------------------------> ",slcPicNums.length);
+                                                for(let i = 0;i<slcPicNums.length;i++){
+                                                    $(slcPicNums[i]).attr({"tabindex":"-1","id":"imgLocation"+i});
+                                                }
+                                            }
                                         }
                                         if (isDebug) {
                                             console.groupEnd('imagesGroup_' + _i);
