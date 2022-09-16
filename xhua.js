@@ -928,7 +928,9 @@ async function startMain_(arrs = null) {
             let data;
             try {
                 data = await timeoutPromise(arr[index], Get_(arr[index]));
-                log(data);
+                if (data) {
+                    console.log("Data: " + arr[index] + "is finished!\n");
+                }
             } catch (error) {
                 console.log(error);
                 timeoutPromise(arr[index], addScript_(null, arr[index]));
@@ -1442,7 +1444,7 @@ function adoptAutoPage() {
                                     clearInterval(id2);
                                     let cContainner = $('#c_container').get(0);
                                     domtoimage.toBlob(cContainner).then(function (blob) {
-                                        
+
                                         if (blob) {
                                             saveAs(blob, "captureSL.png");
                                             log("截图保存完成。");
