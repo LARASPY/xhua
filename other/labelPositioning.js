@@ -1,4 +1,5 @@
 let slideIndex = 0;
+
 new Promise(function (resolve) {
     let id = setInterval(() => {
         if (Fancybox4) {
