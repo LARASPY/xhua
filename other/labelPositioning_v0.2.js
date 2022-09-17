@@ -19,7 +19,7 @@ new Promise(function (resolve) {
         console.log("#" + slideIndex + "slide is closed!");
         document.getElementById("imgLocation" + slideIndex).scrollIntoView({
           block: "center",
-          behavior: "smooth",
+          behavior: "auto",
           inline: "center"
         });
       }
