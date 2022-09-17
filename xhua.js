@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.12
+// @version      4.13
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -953,9 +953,9 @@ async function startMain_(arrs = null) {
 
 function startFancyBoxScript() {
     addScriptCss();
-    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}});`;
-    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}});`;
-    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");document.getElementById("imgLocation"+slideIndex).scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}});`;
+    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
+    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
+    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
 
     if (imagePluginSwitch[0].isFancyBox) {
         if (imagePluginSwitch[0].isFancyBoxFullScreen) {
@@ -1128,7 +1128,6 @@ function adoptAutoPage() {
         let switchAggregationBtn = null;
         let collectPics = null;
         let session = document.cookie;
-        let locateIndex = 0;
         let locateTotal = 0;
 
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
@@ -1211,14 +1210,14 @@ function adoptAutoPage() {
                                                 } else {
                                                     $(this)[0].style = "width: 100%;height: 100%";
                                                 }
-                                                $(this).attr('label', 'sl');
+                                                $(this).attr({ 'label': 'sl' });
                                                 $(imgContainerCssSelector).append('<div class="sl-c-pic">' + $(this).prop('outerHTML') + '</div>');
                                             });
-                                            if(locateTotal === len){
-                                                let slcPicNums = $(".sl-c-pic");
-                                                log("locateTotal: ",slcPicNums.length);
-                                                for(let i = 0;i<slcPicNums.length;i++){
-                                                    $(slcPicNums[i]).find("img").attr({"tabindex":"-1","id":"imgLocation"+i});
+                                            if (locateTotal === len) {
+                                                let slcPicNums = $("img[label='sl']");
+                                                log("locateTotal: ", slcPicNums.length);
+                                                for (let i = 0; i < slcPicNums.length; i++) {
+                                                    $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
                                                 }
                                             }
                                         }
@@ -4223,6 +4222,7 @@ function adoptAutoPage() {
     }).collectPics(async function (doc) {
         let item = $(doc).find(".thumbnail");
         let aImgS = [];
+        let locateIndex = 0;
         $(item).each(function () {
             let src = $(this).attr("href");
             src = window.location.origin + src;
@@ -4233,13 +4233,15 @@ function adoptAutoPage() {
             let item = $(doc).find(".img-res");
             let imgContainerCssSelector = '#c_' + 0;
             $(".sl-c-pic").remove();
-            item.attr("id", "image");
             if (imgStyleFunc) {
                 imgStyleFunc(item);
             } else {
                 item.style = "width: 100%;height: 100%";
             }
-            item.attr('label', 'sl');
+            for (let i = 0; i < item.length; i++) {
+                item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
+                locateIndex++;
+            }
             $(imgContainerCssSelector).append(item.prop('outerHTML'));
             log("item:\n", item.prop("outerHTML"));
         }

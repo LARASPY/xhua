@@ -17,11 +17,14 @@ new Promise(function (resolve) {
       },
       destroy: (fancybox, slide) => {
         console.log("#" + slideIndex + "slide is closed!");
-        document.getElementById("imgLocation" + slideIndex).scrollIntoView({
-          block: "center",
-          behavior: "auto",
-          inline: "center"
-        });
+        let elementById = document.getElementById("imgLocation" + slideIndex);
+        if (!elementById) {
+          elementById.scrollIntoView({
+            block: "center",
+            behavior: "auto",
+            inline: "center"
+          });
+        }
       }
     }
   });
