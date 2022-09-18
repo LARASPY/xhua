@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.14
+// @version      4.15
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -106,7 +106,8 @@ let imagePluginSwitch = [{
     isViewerOpen: false,
     isFancyBox: true,
     isFancyBoxFullScreen: false,
-    isFancyBoxAutoStartFalse: false
+    isFancyBoxAutoStartFalse: false,
+    isOpenAutoSlidingPosition: false
 }]
 
 let site = {
@@ -985,7 +986,7 @@ function startFancyBoxScript() {
                     "fancybox__slide has-image can-zoom_in is-selected"
                 ) {
                     // if (isDebugMain) console.groupCollapsed("MutationObserver");
-                    log("MutationRecord: - #",item);
+                    log("MutationRecord: - #", item);
                     addEvent(item);
                     // if (isDebugMain) console.groupEnd("MutationObserver");
                 }
@@ -1008,9 +1009,11 @@ function startFancyBoxScript() {
         log("close - # " + slideIndex + " slide is closed!");
         let elementById = document.getElementById("imgLocation" + slideIndex);
         if (elementById) {
+            let behavior_ = "smooth";
+            if (imagePluginSwitch[0].isOpenAutoSlidingPosition) behavior_ = "auto";
             elementById.scrollIntoView({
                 block: "center",
-                behavior: "smooth",
+                behavior: behavior_,
                 inline: "center",
             });
         }
@@ -4734,6 +4737,7 @@ function adoptAutoPage() {
 
     injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
         activateFancyBox(1);
+        imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
         $('.picture').hide();
         $('div.web').hide();
         $('div.paging').hide();
