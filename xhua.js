@@ -1220,8 +1220,11 @@ function adoptAutoPage() {
         let injectAggregationRef = null;
         let switchAggregationBtn = null;
         let collectPics = null;
+        let removeAD = null;
         let session = document.cookie;
-        let locateTotal = 0;
+        let isPackageAndDownload = false;
+        let isBindBtnDownload = false;
+        let newTimeStamp = new Date().getTime();
 
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
@@ -1254,10 +1257,28 @@ function adoptAutoPage() {
                 "margin-bottom": "unset",
             });
         };
+        let activateSlidingFunc = function () {
+            let id = setInterval(function () {
+                let dynamicTimeStamp = new Date().getTime();
+                let misTiming = dynamicTimeStamp - newTimeStamp;
+                log("misTiming: ", misTiming);
+                if (misTiming > 2000) {
+                    clearInterval(id);
+                    let slcPicNums = $("img[label='sl']");
+                    if (slcPicNums) {
+                        log("locateTotal: ", slcPicNums.length);
+                        for (let i = 0; i < slcPicNums.length; i++) {
+                            $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
+                        }
+                    }
+                }
+            }, 100);
+        };
         let collectPicsTemplateFunc = function (parseImgsFunc, imgStyleFunc) {
             let id = setInterval(function () {
                 if ($) {
                     clearInterval(id);
+                    activateSlidingFunc();
                     let breakPageLoop = false;
                     for (let i = 0, len = pageUrls.length; i < len; i++) {
                         //创建div去装各自
@@ -1286,7 +1307,6 @@ function adoptAutoPage() {
                                         log('response pageUrl:\n', _pageUrl);
                                         // response.status=403服务器拒绝爬虫可能通过改cookie的方法来做
                                         if (response && response.status && response.status >= 200 && response.status < 300) {
-                                            locateTotal++;
                                             let html = response.responseText;
                                             // log('html==>', html);
                                             let parser = new DOMParser();
@@ -1306,13 +1326,21 @@ function adoptAutoPage() {
                                                 $(this).attr({ 'label': 'sl' });
                                                 $(imgContainerCssSelector).append('<div class="sl-c-pic">' + $(this).prop('outerHTML') + '</div>');
                                             });
-                                            if (locateTotal === len) {
-                                                let slcPicNums = $("img[label='sl']");
-                                                log("locateTotal: ", slcPicNums.length);
-                                                for (let i = 0; i < slcPicNums.length; i++) {
-                                                    $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
-                                                }
-                                            }
+                                            let ContentContainer = document.querySelector("#c_container");
+                                            let configObserver = {
+                                                childList: true,
+                                                subtree: true,
+                                            };
+                                            // 当观察到突变时执行的回调函数
+                                            let Callbacks = function (mutationsList) {
+                                                mutationsList.forEach(function (item, index) {
+                                                    // log("MutationRecord: - #", item);
+                                                    newTimeStamp = new Date().getTime();
+                                                });
+                                            };
+                                            // 创建一个链接到回调函数的观察者实例
+                                            const Observer = new MutationObserver(Callbacks);
+                                            ContentContainer && Observer.observe(ContentContainer, configObserver);
                                         }
                                         if (isDebugMain) {
                                             console.groupEnd('imagesGroup_' + _i);
@@ -1350,10 +1378,7 @@ function adoptAutoPage() {
             }
             return matchDomain;
         };
-        let removeAD = null;
 
-        let isPackageAndDownload = false;
-        let isBindBtnDownload = false;
         function isImgHttpStart(imgSrc) {
             if (!imgSrc.startsWith('http')) {
                 let re = /^\/.*/g;
@@ -1366,7 +1391,6 @@ function adoptAutoPage() {
             }
             return imgSrc;
         }
-
         function packageAndDownload() {
             if (isPackageAndDownload) {
                 alert('下载中, 请耐心等待...\n点击确认继续下载');
@@ -1463,7 +1487,6 @@ function adoptAutoPage() {
                 }, 100);
             }
         }
-
         function bindBtn(callback) {
             $('#injectaggregatBtn').bind('click', callback);
             $('#captureBtn').bind('click', function (e) {
@@ -1578,7 +1601,6 @@ function adoptAutoPage() {
                 packageAndDownload();
             });
         };
-
         // 热键
         function hotkeys() {
             GM_registerMenuCommand("图片打包下载", packageAndDownload, "d");
@@ -1590,7 +1612,6 @@ function adoptAutoPage() {
                 }
             });
         }
-
         return {
             injectComponent: function (i) {
                 if (i) injectComponent = i;
@@ -1758,10 +1779,8 @@ function adoptAutoPage() {
         } else {
             limitPageStr = $('#main_contents').prop('outerHTML');
         }
-
         log("limitPageStr: ", limitPageStr);
         debugger
-
         if (!isEmpty(limitPageStr)) {
             limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
         }
@@ -1821,7 +1840,6 @@ function adoptAutoPage() {
     injectBtns().domain(site.Lesmao.hostnames).removeAD(function () {
         $('#thread-down').remove(); //移除广告等无必要元素
         $("div .wp").remove();
-
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $('.adw').hide();
@@ -1842,7 +1860,6 @@ function adoptAutoPage() {
                 let totalPageCnt = 5;
                 let partPreUrl = match[1];
                 let suffixUrl = match[3];
-
                 for (let i = 1; i <= totalPageCnt; i++) {
                     let pageUrl = partPreUrl + i + suffixUrl;
                     log('push pageUrl:\n', pageUrl);
@@ -1868,7 +1885,6 @@ function adoptAutoPage() {
 
     injectBtns().domain(site.Umei.hostnames).removeAD(function () {
         $('union').remove(); //移除广告等无必要元素
-
     }).switchAggregationBtn(function () {
         activateFancyBox();
         // $('.ImageBody').hide();
@@ -1900,13 +1916,10 @@ function adoptAutoPage() {
                 let pageId = match[2];
                 let suffixUrl = '.htm';
                 let limitPageStr = null;
-
                 limitPageStr = $('.gongneng').prop("outerHTML").toString().match(/\d+(?=\<\/span\>)/g);
                 totalPageCnt = parseInt(limitPageStr);
-
                 log("limitPageStr: \n", limitPageStr);
                 log('totalPageCnt: \n', totalPageCnt);
-
                 for (let i = 1; i <= totalPageCnt; i++) {
                     let pageUrl = '';
                     if (i == 1) {
@@ -1996,7 +2009,6 @@ function adoptAutoPage() {
         $('.piclist').hide();
         $('.btnline').hide();
         $(".zt_bigpic p").hide();
-
     }, function () {
         $('#p').show();
         $("#back-to-top").show();
@@ -2004,7 +2016,6 @@ function adoptAutoPage() {
         $('.piclist').show();
         $('.btnline').show();
         $(".zt_bigpic p").show();
-
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: " + currentPathname);
@@ -2133,7 +2144,6 @@ function adoptAutoPage() {
         let ismainPage = /\/(\d+)\//g.exec(currentPathname);
         log("ismainPage: \n", ismainPage);
         if (ismainPage === null) {
-
         } else if (currentPathname !== null) {
             {
                 pageUrls.push(currentPathname);
@@ -2152,7 +2162,6 @@ function adoptAutoPage() {
         log("src: \n", src);
         $(imgE).find('img').attr('src', src);
         $(imgE).find('img').attr('label', 'sl');
-
         // log("imgE: \n", imgE);
         imgE.style = "width: 100%;height: 100%";
     }).start();
@@ -2226,10 +2235,8 @@ function adoptAutoPage() {
         await startMain_(gridzoneCss);
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
-
         //FancyBox
         activateFancyBox();
-
         $('.pagination').hide();
         $('.article-content').hide();
         //android
@@ -2248,7 +2255,6 @@ function adoptAutoPage() {
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
         if (match !== null) {
-
             let totalPageCnt = 1;
             let partPreUrl = match[0];
             let suffixUrl = '_';
@@ -2300,7 +2306,6 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         // FancyBox
         activateFancyBox();
-
         $('.text-xs b').hide();
         $(".post-data").hide();
         $(".nc-light-gallery").hide();
@@ -2314,13 +2319,11 @@ function adoptAutoPage() {
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
         if (currentPathname !== null) {
-
             let totalPageCnt = 1;
             let pageId = match[0];
             let suffixUrl = '/';
             debugger
             let limitPageStr = $('.row h1').text().match(/（\d+\/(\d+)）/im);
-
             log("limitPageStr: \n", limitPageStr);
             totalPageCnt = limitPageStr[1];
             for (let i = 1; i <= totalPageCnt; i++) {
@@ -2354,10 +2357,8 @@ function adoptAutoPage() {
             $(".cl script").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-
         // FancyBox
         activateFancyBox();
-
         $(".showcontw").hide();
     }, function () {
         $(".showcontw").show();
@@ -2367,7 +2368,6 @@ function adoptAutoPage() {
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
         if (currentPathname !== null) {
-
             let totalPageCnt = 1;
             let suffixUrl = '_';
             let partPreUrl;
@@ -2376,13 +2376,11 @@ function adoptAutoPage() {
             let limitPageStr = $('.showtitle h2').text().match(/(\d+\/(\d+))/im);
             log("limitPageStr: \n", limitPageStr);
             if (os.isAndroid) {
-
             } else {
                 partPreUrl = match[0];
                 totalPageCnt = limitPageStr[2];
                 pageId = match[2];
             }
-
             for (let i = 1; i <= totalPageCnt; i++) {
                 let pageUrl;
                 if (i === 1) {
@@ -2393,12 +2391,10 @@ function adoptAutoPage() {
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-
             $('.showtitle').after(injectComponent);
         }
     }).collectPics(function (doc) {
         let images = $(doc).find('#showimg>a[title] img').clone();
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -2420,7 +2416,6 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         // FancyBox
         activateFancyBox();
-
         $("#pages").hide();
         $(".td-gallery-content").hide();
     }, function () {
@@ -2461,7 +2456,6 @@ function adoptAutoPage() {
                 $(this).attr('src', src);
             }
         });
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -2533,7 +2527,6 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox();
-
         $(".rootContant[style]").first().hide();
         $(".rootContant[style]").first().next().next().hide();
         $(".rootContant[style]").first().next().next().next().hide();
@@ -2652,10 +2645,8 @@ function adoptAutoPage() {
             "height": "100%"
         });
     }).switchAggregationBtn(function () {
-
         //FancyBox
         activateFancyBox();
-
         $(".main-body").hide();
         $(".link_pages").hide();
     }, function () {
@@ -2691,7 +2682,6 @@ function adoptAutoPage() {
     }).collectPics(function (doc) {
         let images;
         images = $(doc).find('.main-body img');
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -2730,7 +2720,6 @@ function adoptAutoPage() {
         $("#arcbox>p").slice(1).show();
         $(".bigpages").show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
-
         let currentHref = window.location.href;
         let currentPathname = window.location.pathname;
         log("currentHref: \n", currentHref);
@@ -2765,7 +2754,6 @@ function adoptAutoPage() {
                         limitPageStr = $('#pages').prop("outerHTML");
                         limitPageTotal = limitPageStr.match(/\d+(?=\<\/a\>)/g);
                     }
-
                     log("limitPageStr: \n", limitPageStr);
                     let maxpage = Math.max.apply(null, limitPageTotal);
                     // let maxpage = limitPageTotal.length;
@@ -2787,7 +2775,6 @@ function adoptAutoPage() {
                     } else {
                         $('#hgallery').prepend(injectComponent);
                     }
-
                 }
             }
         } else {
@@ -2848,10 +2835,8 @@ function adoptAutoPage() {
             log("currentImgSrc: " + currentImgSrc);
             log("limitPageStr: " + limitPageStr);
             log("limitPageMatch: " + limitPageMatch);
-
             let partPreUrls = currentImgSrc.match(/(?<=\/).*\//g);
             log("partPreUrl: " + partPreUrls);
-
             if (!isEmpty(partPreUrls)) {
                 let protocol = window.location.protocol;
                 let totalPageCnt = Math.max.apply(null, limitPageMatch);
@@ -2879,12 +2864,10 @@ function adoptAutoPage() {
         debugger
         setInterval(function () {
             $(".widget_custom_html").remove();
-
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox();
-
         let len = $("div[id^=attachment]").length;
         if (len > 0) {
             $("div[id^=attachment]").css({
@@ -2917,7 +2900,6 @@ function adoptAutoPage() {
     }).collectPics(function (doc) {
         let images;
         images = $(doc).find('.entry-content p img');
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -2934,13 +2916,10 @@ function adoptAutoPage() {
             $(".header").css("position", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
-
         //FancyBox
         activateFancyBox();
-
         $("div[class^=article]").nextAll().hide();
     }, function () {
-
         $("div[class^=article]").nextAll().show();
         $('div.article-content').hide();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
@@ -3052,7 +3031,6 @@ function adoptAutoPage() {
     }).collectPics(function (doc) {
         let images;
         images = $(doc).find('.entry img');
-
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
@@ -3233,26 +3211,20 @@ function adoptAutoPage() {
         let currentImgSrc = $(".content img").attr("src").replace("//", "/");
         log("currentImgSrc: " + currentImgSrc);
         let hostName = currentImgSrc.match(/(?<=\/).*?(?=\/)/m);
-
         let partPreUrl = currentImgSrc.match(/(?<=\w\/).*(?=\/)/m);
         log("partPreUrl: " + partPreUrl);
-
         let limitPageStr = $('span.all').prop("outerHTML");
         log("limitPageStr: " + limitPageStr);
         if (limitPageStr != null) {
-
             let limitPageMatch = limitPageStr.match(/(?<=\/)\d+/m);
             log("limitPageMatch: " + limitPageMatch);
             let totalPageCnt = limitPageMatch[0];
-
             let pageId = '';
             let suffixUrl = '.jpg';
-
             let protocol = window.location.protocol;
             for (let i = 1; i <= totalPageCnt; i++) {
                 let pageUrl = '';
                 pageUrl = partPreUrl + pageId + '/' + i + suffixUrl;
-
                 let startUrl = protocol + '//' + hostName + '/' + pageUrl;
                 let img = `<img src=${startUrl}>`
                 log('push pageUrl: ', startUrl);
@@ -3263,7 +3235,6 @@ function adoptAutoPage() {
         return $(imgE);
     }, function (imgE) {
         imgE.style = "width: 100%;";
-
         $(imgE).attr({
             'data-fancybox': 'images'
         });
@@ -3305,9 +3276,7 @@ function adoptAutoPage() {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let button_ = null;
-
         if (currentPathname !== undefined && currentPathname !== "\/collection" && currentPathname !== "\/") {
-
             let aTags = $('.entry-content p a');
             aTags.each(function () {
                 let text = $(this).text();
@@ -3316,13 +3285,11 @@ function adoptAutoPage() {
                     button_ = $(this).clone();
                 }
             });
-
             button_.css({
                 "color": "black",
                 "background": "pink",
                 "text-decoration": "none"
             }).text("原内容下载");
-
             let text = $(".entry-content p").last().text();
             text = text.match(/\d*:\d*/g);
             log("-----video--------\n", text);
@@ -3461,7 +3428,6 @@ function adoptAutoPage() {
             let pageUrl = currentPathname;
             log('push pageUrl:\n', pageUrl);
             pageUrls.push(pageUrl);
-
             $('#metadata_qrcode').after(injectComponent);
         }
     }).collectPics(function (doc) {
@@ -3630,7 +3596,6 @@ function adoptAutoPage() {
         log("currentPathname: \n", currentPathname);
         let matchSplitArr = currentPathname.split("\/");
         log("matchSplit: \n", matchSplitArr);
-
         let match = matchSplitArr.filter(function (s) {
             return s && s.trim();
         });
@@ -3641,10 +3606,7 @@ function adoptAutoPage() {
         match = match.join("/");
         log("match: \n", match);
         if (currentPathname !== "\/" && currentPathname.match(/uncensored|japanese/g)) {
-
-
             let pageUrl = currentPathname;
-
             log('push pageUrl:\n', pageUrl);
             pageUrls.push(pageUrl);
             if (os.isPc) {
@@ -3665,7 +3627,6 @@ function adoptAutoPage() {
                 imgE.push($(`<img src=${href}></img>`));
             }
         });
-
         return $(imgE);
     }, function (imgE) {
         imgE.style = "width: 100%;";
@@ -3733,11 +3694,9 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $('#main').hide();
-
         //android
     }, function () {
         // $('#main').show();
-
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname.match(/(?<=\/).*/g)[0];
@@ -4036,11 +3995,8 @@ function adoptAutoPage() {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-
         pageUrls.push(currentPathname);
-
         $('.article-tldr').after(injectComponent);
-
     }).collectPics(function (doc) {
         let imgE = [];
         let item = $(doc).find(".article-img a");
@@ -4125,7 +4081,6 @@ function adoptAutoPage() {
             $("#popUpLinks a").css("color", "black");
             $("#top-menu").css("position", "unset");
         }, 100);
-
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $('#gallery').hide();
@@ -4136,11 +4091,8 @@ function adoptAutoPage() {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-
         pageUrls.push(currentPathname.match(/(?<=\/).*/g)[0]);
-
         $('#gallery').prev().after(injectComponent);
-
     }).collectPics(function (doc) {
         debugger
         doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
@@ -4181,11 +4133,8 @@ function adoptAutoPage() {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-
         pageUrls.push(currentPathname);
-
         $('.elementor-widget-container img').parent().prev().after(injectComponent);
-
     }).collectPics(function (doc) {
         let imgE = [];
         let item = $(doc).find(".aligncenter");
@@ -4194,7 +4143,6 @@ function adoptAutoPage() {
             let src = $(this).attr("src");
             // log("src :",src);
             if (/data:image/.test(src)) {
-
             } else {
                 imgE.push($(`<img src=${src}>`));
             }
@@ -4315,13 +4263,12 @@ function adoptAutoPage() {
     }).collectPics(async function (doc) {
         let item = $(doc).find(".thumbnail");
         let aImgS = [];
-        let locateIndex = 0;
+        // let locateIndex = 0;
         $(item).each(function () {
             let src = $(this).attr("href");
             src = window.location.origin + src;
             aImgS.push(src);
         });
-
         function parseImgsFunc(doc) {
             let item = $(doc).find(".img-res");
             let imgContainerCssSelector = '#c_' + 0;
@@ -4331,14 +4278,13 @@ function adoptAutoPage() {
             } else {
                 item.style = "width: 100%;height: 100%";
             }
-            for (let i = 0; i < item.length; i++) {
-                item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
-                locateIndex++;
-            }
+            // for (let i = 0; i < item.length; i++) {
+            //     item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
+            //     locateIndex++;
+            // }
             $(imgContainerCssSelector).append(item.prop('outerHTML'));
             log("item:\n", item.prop("outerHTML"));
         }
-
         function imgStyleFunc(imgE) {
             $(imgE).attr({
                 'data-fancybox': 'images',
@@ -4402,7 +4348,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $('.entry-header').first().after(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let item = $(doc).find(".g1-content-narrow img");
         debugger
@@ -4434,7 +4379,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $('.tags').first().after(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = [];
         let item = $(doc).find(".entry-content img");
@@ -4474,7 +4418,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $(".separator").first().after(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let item = $(doc).find(".separator img").slice(1);
         return item;
@@ -4507,7 +4450,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $(".kt-tabs-title-list").parent().prepend(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find("div.kt-tabs-content-wrap img");
@@ -4537,11 +4479,9 @@ function adoptAutoPage() {
         activateFancyBox();
         $(".default-view").hide();
         $("div[id^=ngg-image]").hide();
-
     }, function () {
         $('.default-view').show();
         $("div[id^=ngg-image]").show();
-
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
@@ -4551,7 +4491,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $(".default-view").parent().prepend(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find(".ngg-gallery-thumbnail a");
@@ -4595,12 +4534,9 @@ function adoptAutoPage() {
             } else {
                 $(".heateor_sss_sharing_title").first().after(injectComponent);
             }
-
         }
-
     }).collectPics(function (doc) {
         let imgE = []
-
         let item = $(doc).find(".aligncenter");
         debugger
         $(item).each(function () {
@@ -4626,10 +4562,8 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $(".entry-content").hide();
-
     }, function () {
         $('.entry-content').show();
-
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
@@ -4639,7 +4573,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $(".entry-header").after(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find("figure a");
@@ -4676,7 +4609,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $("div[data-elementor-type^=wp]>section").first().after(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find(".e-gallery-item");
@@ -4717,7 +4649,6 @@ function adoptAutoPage() {
             pageUrls.push(match);
             $("article>header").append(injectComponent);
         }
-
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find("figure img");
@@ -4768,9 +4699,7 @@ function adoptAutoPage() {
                 log('totalPageCnt', totalPageCnt[0]);
             }
             for (let i = 1; i <= totalPageCnt; i++) {
-
                 pageUrl = partPreUrl + pageId + i + suffixUrl;
-
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
@@ -4797,7 +4726,6 @@ function adoptAutoPage() {
         activateFancyBox();
         $('.work-content>p').hide();
         $('div#pages').hide();
-
         //android
         $('.uk-article-bd').hide();
         $('.uk-page').hide();
@@ -4844,7 +4772,6 @@ function adoptAutoPage() {
             } else {
                 $('.uk-article').after(injectComponent);
             }
-
         }
     }).collectPics(function (doc) {
         let imgE;
