@@ -94,7 +94,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 function log() {
     if (isDebugMain) {
@@ -1225,6 +1225,7 @@ function adoptAutoPage() {
         let isPackageAndDownload = false;
         let isBindBtnDownload = false;
         let newTimeStamp = new Date().getTime();
+        let isActivateSlidingFuncNum = 0;
 
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
@@ -1261,15 +1262,19 @@ function adoptAutoPage() {
             let id = setInterval(function () {
                 let dynamicTimeStamp = new Date().getTime();
                 let misTiming = dynamicTimeStamp - newTimeStamp;
-                log("misTiming: ", misTiming);
+                log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
                 if (misTiming > 2000) {
-                    clearInterval(id);
+                    isActivateSlidingFuncNum++;
+                    newTimeStamp = dynamicTimeStamp;
                     let slcPicNums = $("img[label='sl']");
                     if (slcPicNums) {
-                        log("locateTotal: ", slcPicNums.length);
+                        log("TotalNumberImages: ", slcPicNums.length);
                         for (let i = 0; i < slcPicNums.length; i++) {
                             $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
                         }
+                    }
+                    if (isActivateSlidingFuncNum === 30) {
+                        clearInterval(id);
                     }
                 }
             }, 100);
@@ -2306,6 +2311,7 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         // FancyBox
         activateFancyBox();
+        imagePluginSwitch[0].isOpenAutoSlidingPosition=true;
         $('.text-xs b').hide();
         $(".post-data").hide();
         $(".nc-light-gallery").hide();
@@ -4032,11 +4038,11 @@ function adoptAutoPage() {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/\/.*/m);
+        let match = currentPathname.match(/\/(.*)/m);
         log("match: \n", match);
         if (match) {
             let totalPageCnt = 1;
-            let partPreUrl = match[0];
+            let partPreUrl = match[1];
             let pageId = '';
             let suffixUrl = '';
             let limitPageMatch = $('.pagination').prop("outerHTML");
