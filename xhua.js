@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.13
+// @version      4.14
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -94,7 +94,13 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
+
+function log() {
+    if (isDebugMain) {
+        console.log.apply(this, arguments);
+    }
+};
 
 let imagePluginSwitch = [{
     isViewerOpen: false,
@@ -858,12 +864,6 @@ function addScript_(statement = null, src = null, isModule = false) {
 
 async function startMain_(arrs = null) {
 
-    function log() {
-        if (isDebugMain) {
-            console.log.apply(this, arguments);
-        }
-    };
-
     function isEmpty(param) {
         if (param) {
             var param_type = typeof (param);
@@ -953,20 +953,111 @@ async function startMain_(arrs = null) {
 
 function startFancyBoxScript() {
     addScriptCss();
-    let fancyboxFullJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Toolbar:false,animated:false,dragToClose:false,showClass:false,hideClass:false,closeButton:"top",Image:{click:"close",wheel:"slide",zoom:false,fit:"cover"},Thumbs:{minScreenHeight:0},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
-    let fancyboxDefaultJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
-    let fancyboxDefaultAutoStartFalseJsLocate = `let slideIndex=0;Fancybox4.bind("[data-fancybox='images']",{Thumbs:{autoStart:false,Carousel:{fill:false,center:true}},on:{done:(fancybox,slide)=>{slideIndex=fancybox.getSlide().index;log("#"+fancybox.getSlide().index+"slide is loaded!")},destroy:(fancybox,slide)=>{log("#"+slideIndex+"slide is closed!");let elementById=document.getElementById("imgLocation"+slideIndex);if(elementById){elementById.scrollIntoView({block:"center",behavior:"smooth",inline:"center"})}}}});`;
 
+    // 观察者 MutationObserver事件
+    function type(param) {
+        // es6中null的类型为object
+        if (param === null) {
+            return param + "";
+        }
+        if (typeof param === "object") {
+            let val = Object.prototype.toString.call(param).split(" ")[1];
+            let type = val.substr(0, val.length - 1).toLowerCase();
+            return type;
+        } else {
+            return typeof param;
+        }
+    }
+    let slideIndex = null;
+    const ContentContainer = document.querySelector("body");
+    const configObserver = {
+        childList: true,
+        subtree: true,
+        attributeFilter: ["class"],
+    };
+    // 当观察到突变时执行的回调函数
+    const Callbacks = function (mutationsList) {
+        mutationsList.forEach(function (item, index) {
+            // log(type(item.type) + " " + item.type);
+            if ("attributes" == item.type) {
+                if (
+                    item.target.className ==
+                    "fancybox__slide has-image can-zoom_in is-selected"
+                ) {
+                    // if (isDebugMain) console.groupCollapsed("MutationObserver");
+                    log("MutationRecord: - #",item);
+                    addEvent(item);
+                    // if (isDebugMain) console.groupEnd("MutationObserver");
+                }
+            }
+        });
+    };
+    // 创建一个链接到回调函数的观察者实例
+    const Observer = new MutationObserver(Callbacks);
+    ContentContainer && Observer.observe(ContentContainer, configObserver);
+    function addEvent(item) {
+        slideIndex =
+            item.target.parentElement.parentElement.parentElement.parentElement
+                .children[1].firstElementChild.firstElementChild.firstChild.innerText -
+            1;
+        if (slideIndex) {
+            log("open - # " + slideIndex + " slide is open!");
+        }
+    }
+    function destroyFun(fancybox, slide) {
+        log("close - # " + slideIndex + " slide is closed!");
+        let elementById = document.getElementById("imgLocation" + slideIndex);
+        if (elementById) {
+            elementById.scrollIntoView({
+                block: "center",
+                behavior: "smooth",
+                inline: "center",
+            });
+        }
+    }
     if (imagePluginSwitch[0].isFancyBox) {
         if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-            addScript_(fancyboxFullJsLocate);
+            Fancybox4.bind("[data-fancybox='images']", {
+                Toolbar: false,
+                animated: false,
+                dragToClose: false,
+                showClass: false,
+                hideClass: false,
+                closeButton: "top",
+                Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
+                Thumbs: { minScreenHeight: 0 },
+                on: {
+                    destroy: (fancybox, slide) => {
+                        destroyFun(fancybox, slide);
+                    },
+                },
+            });
         } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
-            addScript_(fancyboxDefaultAutoStartFalseJsLocate);
+            Fancybox4.bind("[data-fancybox='images']", {
+                Thumbs: { autoStart: false, Carousel: { fill: false, center: true } },
+                on: {
+                    done: (fancybox, slide) => {
+                        slideIndex = fancybox.getSlide().index;
+                        log("#" + fancybox.getSlide().index + "slide is loaded!");
+                    },
+                    destroy: (fancybox, slide) => {
+                        destroyFun(fancybox, slide);
+                    },
+                },
+            });
         } else {
-            addScript_(fancyboxDefaultJsLocate);
+            Fancybox4.bind("[data-fancybox='images']", {
+                Thumbs: { Carousel: { fill: false, center: true } },
+                on: {
+                    destroy: (fancybox, slide) => {
+                        destroyFun(fancybox, slide);
+                    },
+                },
+            });
         }
     }
 }
+
 
 function activateFancyBox(isBoxAutoControl = null) {
     //激活fancybox
@@ -996,7 +1087,7 @@ function aImgTagPackaging(images) {
         imgObj.push($("<img src=" + src + "></img>"));
     });
     let a_imgTag = [];
-    if (isDebug) {
+    if (isDebugMain) {
         console.groupCollapsed("imageSGroupIn");
     }
     $(imgObj).each(function (index) {
@@ -1019,7 +1110,7 @@ function aImgTagPackaging(images) {
         log("New construct_Tag Html: \n", construct_aTag.prop("outerHTML"));
         a_imgTag.push(construct_aTag);
     });
-    if (isDebug) {
+    if (isDebugMain) {
         console.groupEnd("imageSGroupIn");
     }
     return $(a_imgTag);
@@ -1087,8 +1178,7 @@ function adoptAutoPage() {
         let id = setInterval(function () {
             try {
                 //打印开关
-                isDebug = isDebugMain;
-                if (Fancybox4) {
+                if (isDebug && Fancybox4) {
                     log("fancybox4js finished!\n");
                     clearInterval(id);
                     resolve();
@@ -1099,9 +1189,9 @@ function adoptAutoPage() {
         }, 100);
     });
 
-    if (isDebug) console.groupCollapsed('urlActivationGroup');
+    if (isDebugMain) console.groupCollapsed('urlActivationGroup');
     currentUrlActivation();
-    if (isDebug) console.groupEnd('urlActivationGroup');
+    if (isDebugMain) console.groupEnd('urlActivationGroup');
 
     priorityLog('未实现：');
 
@@ -1187,7 +1277,7 @@ function adoptAutoPage() {
                                     let _i = i;
                                     let _pageUrl = pageUrl;
                                     return function (response) {
-                                        if (isDebug) {
+                                        if (isDebugMain) {
                                             console.groupCollapsed('imagesGroup_' + _i);
                                         }
                                         log('response pageUrl:\n', _pageUrl);
@@ -1221,7 +1311,7 @@ function adoptAutoPage() {
                                                 }
                                             }
                                         }
-                                        if (isDebug) {
+                                        if (isDebugMain) {
                                             console.groupEnd('imagesGroup_' + _i);
                                         }
                                     };
