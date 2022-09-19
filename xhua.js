@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.15
+// @version      4.16
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -109,6 +109,7 @@ let imagePluginSwitch = [{
     isFancyBoxAutoStartFalse: false,
     isOpenAutoSlidingPosition: false
 }]
+let curSite = {};
 
 let site = {
     HentaiImage: {
@@ -1298,11 +1299,12 @@ function adoptAutoPage() {
                                 url: pageUrl,
                                 headers: Alpha_Script.parseHeaders(
                                     "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
-                                    "Accept-Encoding:gzip, deflate, br\n" +
-                                    "Accept-Language:zh-CN,zh;q=0.9\n" +
-                                    "cookie:" + session + "\n" +
-                                    "Referer:" + window.location.href + "\n" +
-                                    "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+                                        "Accept-Encoding:gzip, deflate, br\n" +
+                                        "Accept-Language:zh-CN,zh;q=0.9\n" +
+                                        "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36\n" +
+                                        'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
+                                            'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                                "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
                                 ),
                                 method: 'GET',
                                 onload: function () {
@@ -1424,8 +1426,11 @@ function adoptAutoPage() {
                                 url: imgSrc,
                                 method: 'GET',
                                 headers: Alpha_Script.parseHeaders(
-                                    "Accept:" + "application/*\n",
-                                    "Host:" + window.location.hostname + "\n",
+                                    "Accept:" + "application/*\n" +
+                                        'User-Agent:' + navigator.userAgent + "\n" +
+                                        'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
+                                            'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                                "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
                                 ),
                                 timeout: 30000,
                                 responseType: 'blob',
@@ -1516,8 +1521,11 @@ function adoptAutoPage() {
                                     url: imgSrc,
                                     method: 'GET',
                                     headers: Alpha_Script.parseHeaders(
-                                        "Accept:" + "application/*\n",
-                                        "Host:" + window.location.hostname + "\n",
+                                        "Accept:" + "application/*\n" +
+                                            'User-Agent:' + navigator.userAgent + "\n" +
+                                            'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
+                                                'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                                    "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
                                     ),
                                     timeout: 30000,
                                     responseType: 'blob',
@@ -2586,6 +2594,7 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
+        curSite.isHost = true;
         $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
         $(".single-comment").hide();
