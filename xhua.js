@@ -94,7 +94,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = true;
+let isDebugMain = false;
 
 function log() {
     if (isDebugMain) {
@@ -1259,10 +1259,13 @@ function adoptAutoPage() {
             });
         };
         let activateSlidingFunc = function () {
+
             let id = setInterval(function () {
                 let dynamicTimeStamp = new Date().getTime();
                 let misTiming = dynamicTimeStamp - newTimeStamp;
-                log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
+                if (misTiming > 1800) {
+                    log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
+                }
                 if (misTiming > 2000) {
                     isActivateSlidingFuncNum++;
                     newTimeStamp = dynamicTimeStamp;
@@ -1273,7 +1276,7 @@ function adoptAutoPage() {
                             $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
                         }
                     }
-                    if (isActivateSlidingFuncNum === 30) {
+                    if (isActivateSlidingFuncNum === -1) {
                         clearInterval(id);
                     }
                 }
@@ -2311,7 +2314,7 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         // FancyBox
         activateFancyBox();
-        imagePluginSwitch[0].isOpenAutoSlidingPosition=true;
+        imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
         $('.text-xs b').hide();
         $(".post-data").hide();
         $(".nc-light-gallery").hide();
@@ -4269,7 +4272,7 @@ function adoptAutoPage() {
     }).collectPics(async function (doc) {
         let item = $(doc).find(".thumbnail");
         let aImgS = [];
-        // let locateIndex = 0;
+        let locateIndex = 0;
         $(item).each(function () {
             let src = $(this).attr("href");
             src = window.location.origin + src;
@@ -4284,10 +4287,10 @@ function adoptAutoPage() {
             } else {
                 item.style = "width: 100%;height: 100%";
             }
-            // for (let i = 0; i < item.length; i++) {
-            //     item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
-            //     locateIndex++;
-            // }
+            for (let i = 0; i < item.length; i++) {
+                item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
+                locateIndex++;
+            }
             $(imgContainerCssSelector).append(item.prop('outerHTML'));
             log("item:\n", item.prop("outerHTML"));
         }
