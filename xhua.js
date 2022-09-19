@@ -1304,7 +1304,7 @@ function adoptAutoPage() {
                                         "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36\n" +
                                         'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
                                             'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
-                                                "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
+                                            "cookie:" + session + "\n"
                                 ),
                                 method: 'GET',
                                 onload: function () {
@@ -1430,7 +1430,7 @@ function adoptAutoPage() {
                                         'User-Agent:' + navigator.userAgent + "\n" +
                                         'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
                                             'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
-                                                "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
+                                            "cookie:" + session + "\n"
                                 ),
                                 timeout: 30000,
                                 responseType: 'blob',
@@ -1525,7 +1525,7 @@ function adoptAutoPage() {
                                             'User-Agent:' + navigator.userAgent + "\n" +
                                             'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
                                                 'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
-                                                    "cookie:" + (curSite.noCookie === true) ? '' : session + "\n"
+                                                "cookie:" + session + "\n"
                                     ),
                                     timeout: 30000,
                                     responseType: 'blob',
@@ -1590,7 +1590,6 @@ function adoptAutoPage() {
                                     clearInterval(id2);
                                     let cContainner = $('#c_container').get(0);
                                     domtoimage.toBlob(cContainner).then(function (blob) {
-
                                         if (blob) {
                                             saveAs(blob, "captureSL.png");
                                             log("截图保存完成。");
