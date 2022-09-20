@@ -109,7 +109,7 @@ let imagePluginSwitch = [{
     isFancyBoxAutoStartFalse: false,
     isOpenAutoSlidingPosition: false
 }]
-let curSite = { isReferer: '', isHost: '' };
+let curSite = { isReferer: '', isHost: '',isJavaScriptObject:false };
 
 let site = {
     HentaiImage: {
@@ -747,7 +747,7 @@ let Alpha_Script = {
         }
         GM_xmlhttpRequest(options);
     },
-    parseHeaders: function (headStr) {
+    parseHeaders: function (headStr, isDebug = true) {
         let o = {};
         let myregexp = /^([^:]+):(.*)$/img;
         let match = /^([^:]+):(.*)$/img.exec(headStr);
@@ -755,6 +755,7 @@ let Alpha_Script = {
             o[match[1].trim()] = match[2].trim();
             match = myregexp.exec(headStr);
         }
+        if (isDebug) log("Header # ", o);
         return o;
     },
     //获取参数
@@ -1170,6 +1171,19 @@ function adoptAutoPage() {
         }
     }, 100);
 }
+function type(param) {
+    // es6中null的类型为object
+    if (param === null) {
+        return param + "";
+    }
+    if (typeof param === "object") {
+        let val = Object.prototype.toString.call(param).split(" ")[1];
+        let type = val.substr(0, val.length - 1).toLowerCase();
+        return type;
+    } else {
+        return typeof param;
+    }
+}
 (async function () {
     'use strict';
     //清屏
@@ -1297,13 +1311,12 @@ function adoptAutoPage() {
                                 url: pageUrl,
                                 headers: Alpha_Script.parseHeaders(
                                     "Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
-                                        "Accept-Encoding:gzip, deflate, br\n" +
-                                        "Accept-Language:zh-CN,zh;q=0.9\n" +
-                                        "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36\n" +
-                                        'Host:' + (curSite.isHost === true) ? window.location.host : '' + "\n" +
-                                            'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
-                                            "cookie:" + session + "\n"
-                                ),
+                                    "Accept-Encoding:gzip, deflate, br\n" +
+                                    "Accept-Language:zh-CN,zh;q=0.9\n" +
+                                    "cookie:" + session + "\n" +
+                                    "Referer:" + window.location.href + "\n" +
+                                    "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+                                    , false),
                                 method: 'GET',
                                 onload: function () {
                                     let _i = i;
@@ -1387,7 +1400,7 @@ function adoptAutoPage() {
             return matchDomain;
         };
 
-        function isImgHttpStart(imgSrc) {
+        function isImgHttpStart(imgSrc, isJavaScriptObject = false) {
             if (!imgSrc.startsWith('http')) {
                 let re = /^\/.*/g;
                 let isNoSlash = re.test(imgSrc);
@@ -1396,6 +1409,11 @@ function adoptAutoPage() {
                 } else {
                     imgSrc = startUrl + imgSrc;
                 }
+            }
+            if (isJavaScriptObject) {
+                let re = /(?<=:\/\/).*?(?=\/)/g;
+                let urlHost = imgSrc.match(re);
+                return { "imgSrc": imgSrc, "host": urlHost }
             }
             return imgSrc;
         }
@@ -1419,24 +1437,30 @@ function adoptAutoPage() {
                         length--;
                     } else {
                         if (!imgSrc.startsWith('blob:')) {
-                            imgSrc = isImgHttpStart(imgSrc);
+                            let host = window.location.host;
+                            imgSrc = isImgHttpStart(imgSrc, curSite.isJavaScriptObject);
+                            log("imgSrc # ", imgSrc);
+                            if (type(imgSrc) === 'object') {
+                                host = imgSrc.host[0];
+                                imgSrc = imgSrc.imgSrc;
+                            }
                             Alpha_Script.obtainHtml({
                                 url: imgSrc,
                                 method: 'GET',
                                 headers: Alpha_Script.parseHeaders(
-                                    "Accept:" + "application/*\n" +
-                                        'User-Agent:' + navigator.userAgent + "\n" +
-                                        'Host:' + (curSite.isHost === true) ? location.host : '' + "\n" +
-                                            'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
-                                            "cookie:" + session + "\n"
-                                ),
-                                timeout: 10000,
-                                responseType: 'blob',
+                                    "Accept:" + "*/*\n" +
+                                    "User-Agent:" + navigator.userAgent + "\n" +
+                                    "Host:" + ((curSite.isHost === true) ? host : '') + "\n" +
+                                    "Referer:" + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
+                                    "cookie:" + session + "\n"
+                                    , false),
+                                timeout: 30000,
                                 onload: function (response) {
                                     try {
-                                        // log('URL：' + imgSrc, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
+                                        //下载
+                                        // log('URL：' + imgSrc, '\n最终 URL：' + response.finalUrl, '\n返回内容：' + response.responseText)
                                         if (response && response.status && response.status >= 200 && response.status < 300) {
-                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
                                             let contentType = responseHeaders['Content-Type'];
                                             if (!contentType) {
                                                 contentType = "image/png";
@@ -1484,7 +1508,11 @@ function adoptAutoPage() {
                 });
                 let packagName = document.title;
                 if (!packagName) {
-                    packagName = "PackageSL";
+                    packagName = $(".title").first().text();
+                    if (!packagName) {
+                        packagName = $("#title").first().text();
+                        if (!packagName) packagName = "PackageSL";
+                    }
                 }
                 let id = setInterval(function () {
                     if (length === 0) {
@@ -1519,23 +1547,29 @@ function adoptAutoPage() {
                             length--;
                         } else {
                             if (!imgSrc.startsWith('blob:')) {
-                                imgSrc = isImgHttpStart(imgSrc);
+                                let host = window.location.host;
+                                imgSrc = isImgHttpStart(imgSrc, curSite.isJavaScriptObject);
+                                log("imgSrc # ", imgSrc);
+                                if (type(imgSrc) === 'object') {
+                                    host = imgSrc.host[0];
+                                    imgSrc = imgSrc.imgSrc;
+                                }
                                 Alpha_Script.obtainHtml({
                                     url: imgSrc,
                                     method: 'GET',
                                     headers: Alpha_Script.parseHeaders(
-                                        "Accept:" + "application/*\n" +
-                                            'User-Agent:' + navigator.userAgent + "\n" +
-                                            'Host:' + (curSite.isHost === true) ? location.host : '' + "\n" +
-                                                'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
-                                                "cookie:" + session + "\n"
-                                    ),
-                                    timeout: 10000,
+                                        "Accept:" + "*/*\n" +
+                                        'User-Agent:' + navigator.userAgent + "\n" +
+                                        'Host:' + ((curSite.isHost === true) ? host : '') + "\n" +
+                                        'Referer:' + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
+                                        "cookie:" + session + "\n"
+                                        , false),
+                                    timeout: 30000,
                                     responseType: 'blob',
                                     onload: function (response) {
                                         try {
+                                            //截图
                                             // console.log('URL：' + url, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
-                                            log("DownlodeUrl " + index + ": ", response.finalUrl);
                                             if (response && response.status && response.status >= 200 && response.status < 300) {
                                                 let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
                                                 let contentType = responseHeaders['Content-Type'];
@@ -2734,8 +2768,8 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox();
-        curSite.isHost=true;
-        curSite.isReferer=true;
+        curSite.isReferer = true;
+        curSite.isHost = true;
         $("#hgallery img[mark!='true']").hide();
         $("#pages").hide();
         $(".workContentWrapper>div").slice(1).hide();
