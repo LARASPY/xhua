@@ -109,7 +109,7 @@ let imagePluginSwitch = [{
     isFancyBoxAutoStartFalse: false,
     isOpenAutoSlidingPosition: false
 }]
-let curSite = {};
+let curSite = { isReferer: '', isHost: '' };
 
 let site = {
     HentaiImage: {
@@ -1264,15 +1264,13 @@ function adoptAutoPage() {
             let id = setInterval(function () {
                 let dynamicTimeStamp = new Date().getTime();
                 let misTiming = dynamicTimeStamp - newTimeStamp;
-                if (misTiming > 1800) {
-                    log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
-                }
+                // log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
                 if (misTiming > 2000) {
                     isActivateSlidingFuncNum++;
                     newTimeStamp = dynamicTimeStamp;
                     let slcPicNums = $("img[label='sl']");
                     if (slcPicNums) {
-                        log("TotalNumberImages: ", slcPicNums.length);
+                        // log("TotalNumberImages: ", slcPicNums.length);
                         for (let i = 0; i < slcPicNums.length; i++) {
                             $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
                         }
@@ -1302,8 +1300,8 @@ function adoptAutoPage() {
                                         "Accept-Encoding:gzip, deflate, br\n" +
                                         "Accept-Language:zh-CN,zh;q=0.9\n" +
                                         "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36\n" +
-                                        'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
-                                            'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                        'Host:' + (curSite.isHost === true) ? window.location.host : '' + "\n" +
+                                            'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
                                             "cookie:" + session + "\n"
                                 ),
                                 method: 'GET',
@@ -1428,41 +1426,45 @@ function adoptAutoPage() {
                                 headers: Alpha_Script.parseHeaders(
                                     "Accept:" + "application/*\n" +
                                         'User-Agent:' + navigator.userAgent + "\n" +
-                                        'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
-                                            'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                        'Host:' + (curSite.isHost === true) ? location.host : '' + "\n" +
+                                            'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
                                             "cookie:" + session + "\n"
                                 ),
-                                timeout: 30000,
+                                timeout: 10000,
                                 responseType: 'blob',
                                 onload: function (response) {
-                                    log("DownlodeUrl " + index + ": ", response.finalUrl);
-                                    if (response && response.status && response.status >= 200 && response.status < 300) {
-                                        let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
-                                        let contentType = responseHeaders['Content-Type'];
-                                        if (!contentType) {
-                                            contentType = "image/png";
+                                    try {
+                                        // log('URL：' + imgSrc, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
+                                        if (response && response.status && response.status >= 200 && response.status < 300) {
+                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                            let contentType = responseHeaders['Content-Type'];
+                                            if (!contentType) {
+                                                contentType = "image/png";
+                                            }
+                                            let blob = new Blob([response.response], {
+                                                type: contentType
+                                            });
+                                            blobCache[imgSrc] = blob;
+                                            img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
+                                            // if (length == 1) debugger
+                                        } else {
+                                            errorNum++;
+                                            if (errorNum === imgList.length) {
+                                                isPackageAndDownload = false;
+                                                err('图片全部下载失败,请使用插件下载。');
+                                                alert("图片全部下载失败,请使用插件下载。");
+                                            }
                                         }
-                                        let blob = new Blob([response.response], {
-                                            type: contentType
-                                        });
-                                        blobCache[imgSrc] = blob;
-                                        img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
-                                        // if (length == 1) debugger
-                                    } else {
-                                        errorNum++;
-                                        if (errorNum === imgList.length) {
-                                            isPackageAndDownload = false;
-                                            err('图片全部下载失败,请使用插件下载。');
-                                            alert("图片全部下载失败,请使用插件下载。");
-                                        }
+                                        length--;
+                                    } catch (e) {
+                                        err('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
                                     }
+                                },
+                                onerror: function (response) {
+                                    log('URL：' + imgSrc, response)
                                     length--;
                                 },
-                                onerror: function (error) {
-                                    err(error);
-                                    length--;
-                                },
-                                ontimeout: function () {
+                                ontimeout: function (response) {
                                     errorNum++;
                                     if (errorNum === imgList.length) {
                                         isPackageAndDownload = false;
@@ -1470,6 +1472,7 @@ function adoptAutoPage() {
                                         alert("图片全部下载失败,请使用插件下载。");
                                     }
                                     err("DownlodeUrl " + index + ": 超时");
+                                    log('URL：' + imgSrc, response)
                                     length--;
                                 }
                             });
@@ -1523,34 +1526,44 @@ function adoptAutoPage() {
                                     headers: Alpha_Script.parseHeaders(
                                         "Accept:" + "application/*\n" +
                                             'User-Agent:' + navigator.userAgent + "\n" +
-                                            'Host:' + (curSite.noHost === true) ? '' : window.location.host + "\n" +
-                                                'Referer:' + (curSite.noReferer === true) ? '' : location.href + "\n" +
+                                            'Host:' + (curSite.isHost === true) ? location.host : '' + "\n" +
+                                                'Referer:' + (curSite.isReferer === true) ? location.href : '' + "\n" +
                                                 "cookie:" + session + "\n"
                                     ),
-                                    timeout: 30000,
+                                    timeout: 10000,
                                     responseType: 'blob',
                                     onload: function (response) {
-                                        if (response && response.status && response.status >= 200 && response.status < 300) {
-                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
-                                            let contentType = responseHeaders['Content-Type'];
-                                            if (!contentType) {
-                                                contentType = "image/png";
+                                        try {
+                                            // console.log('URL：' + url, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
+                                            log("DownlodeUrl " + index + ": ", response.finalUrl);
+                                            if (response && response.status && response.status >= 200 && response.status < 300) {
+                                                let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                                let contentType = responseHeaders['Content-Type'];
+                                                if (!contentType) {
+                                                    contentType = "image/png";
+                                                }
+                                                let blob = new Blob([response.response], {
+                                                    type: contentType
+                                                });
+                                                blobCache[imgSrc] = blob;
+                                            } else {
+                                                errorNum++;
+                                                if (errorNum === imgList.length) {
+                                                    isBindBtnDownload = false;
+                                                    err('截图保存失败。');
+                                                    alert("截图保存失败。");
+                                                }
                                             }
-                                            let blob = new Blob([response.response], {
-                                                type: contentType
-                                            });
-                                            blobCache[imgSrc] = blob;
-                                        } else {
-                                            errorNum++;
-                                            if (errorNum === imgList.length) {
-                                                isBindBtnDownload = false;
-                                                err('截图保存失败。');
-                                                alert("截图保存失败。");
-                                            }
+                                            length--;
+                                        } catch (e) {
+                                            err('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
                                         }
+                                    },
+                                    onerror: function (response) {
+                                        log('URL：' + imgSrc, response)
                                         length--;
                                     },
-                                    ontimeout: function () {
+                                    ontimeout: function (response) {
                                         errorNum++;
                                         if (errorNum === imgList.length) {
                                             isBindBtnDownload = false;
@@ -1558,6 +1571,7 @@ function adoptAutoPage() {
                                             alert("截图保存失败。");
                                         }
                                         err("DownlodeUrl " + index + ": 超时");
+                                        log('URL：' + imgSrc, response)
                                         length--;
                                     }
                                 });
@@ -1729,15 +1743,15 @@ function adoptAutoPage() {
                 let partPreUrl = match[1];
                 let pageId = match[2] + '_';
                 let suffixUrl = '.html';
-                let limitPageStr = $('.page_imges a').html();
+                let limitPageStr = $('.page_imges').html();
                 // log('partPreUrl: ', partPreUrl);
                 // log('pageId: ', pageId);
-                // log('limitPageStr: ', limitPageStr);
-                let limitPageMatch = limitPageStr.match(/(?<=\<\/span\>)\d/im);
-                // log('limitPageMatch: ', limitPageMatch);
+                log('limitPageStr: ', limitPageStr);
+                let limitPageMatch = limitPageStr.match(/(?<=\>)\d+/img);
+                log('limitPageMatch: ', limitPageMatch);
                 if (limitPageMatch != null) {
-                    let totalPics = parseInt(limitPageMatch[0]);
-                    totalPageCnt = totalPics + 1;
+                    let maxpage = Math.max.apply(null, limitPageMatch);
+                    totalPageCnt = maxpage;
                     log('totalPageCnt: ', totalPageCnt);
                 }
                 let pageUrl = partPreUrl + match[2] + suffixUrl;
@@ -2593,7 +2607,8 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
-        curSite.isHost = true;
+        curSite.isHost=true;
+        curSite.isReferer=true;
         $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
         $(".single-comment").hide();
@@ -2719,6 +2734,8 @@ function adoptAutoPage() {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox();
+        curSite.isHost=true;
+        curSite.isReferer=true;
         $("#hgallery img[mark!='true']").hide();
         $("#pages").hide();
         $(".workContentWrapper>div").slice(1).hide();
@@ -4281,13 +4298,12 @@ function adoptAutoPage() {
         let item = $(doc).find(".thumbnail");
         let aImgS = [];
         let locateIndex = 0;
-        $(item).each(function () {
-            let src = $(this).attr("href");
+        $.each(item, function (index, value) {
+            let src = $(value).attr("href");
             src = window.location.origin + src;
-            aImgS.push(src);
+            aImgS.push({ "src": src, "value": value, "index": index });
         });
-        function parseImgsFunc(doc) {
-            let item = $(doc).find(".img-res");
+        function parseImgsFunc(item, imgTagDict) {
             let imgContainerCssSelector = '#c_' + 0;
             $(".sl-c-pic").remove();
             if (imgStyleFunc) {
@@ -4295,12 +4311,14 @@ function adoptAutoPage() {
             } else {
                 item.style = "width: 100%;height: 100%";
             }
-            for (let i = 0; i < item.length; i++) {
-                item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
-                locateIndex++;
-            }
+            item.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
+            locateIndex++;
             $(imgContainerCssSelector).append(item.prop('outerHTML'));
-            log("item:\n", item.prop("outerHTML"));
+            log("outerHTML:\n", item.prop("outerHTML"));
+            if (!item.prop("outerHTML")) {
+                $(imgContainerCssSelector).append(imgTagDict.value);
+                console.error("部分图片丢失！！！\n添加原生模糊图片 # ", imgTagDict.value);
+            }
         }
         function imgStyleFunc(imgE) {
             $(imgE).attr({
@@ -4311,35 +4329,36 @@ function adoptAutoPage() {
         await new Promise((resolve) => {
             let num = 0;
             for (let i = 0; i < aImgS.length; i++) {
-                let pageUrl = aImgS[i];
-                // setTimeout(() => {
+                let pageUrl = aImgS[i].src;
                 Alpha_Script.obtainHtml({
                     url: pageUrl,
-                    headers: Alpha_Script.parseHeaders("Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9\n" +
-                        "Accept-Encoding:gzip, deflate, br\n" +
-                        "Accept-Language:zh-CN,zh;q=0.9\n" +
+                    headers: Alpha_Script.parseHeaders(
+                        "Accept:application/.*\n" +
                         "cookie:" + document.cookie + "\n" +
-                        "Referer:" + window.location.href + "\n" +
-                        "User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.80 Safari/537.36"
+                        'User-Agent' + navigator.userAgent + "\n"
                     ),
                     method: 'GET',
-                    onload: function () {
-                        return function (response) {
-                            debugger
+                    onload: function (response) {
+                        try {
                             if (response && response.status && response.status >= 200 && response.status < 300) {
                                 let html = response.responseText;
                                 let parser = new DOMParser();
                                 let doc = parser.parseFromString(html, "text/html");
-                                parseImgsFunc(doc);
+                                let item = $(doc).find(".img-res");
+                                parseImgsFunc(item, aImgS[i]);
                                 num++;
                                 if (num === aImgS.length) {
                                     resolve();
                                 }
                             }
-                        };
-                    }()
+                        } catch (error) {
+                            err('处理获取到的图片网页时出现问题，请检查！', e, response.responseText);
+                        }
+                    },
+                    onerror: function (response) {
+                        log('URL：' + pageUrl, response)
+                    }
                 });
-                // }, 100);
             }
         });
     }).start();
