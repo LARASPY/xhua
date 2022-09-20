@@ -109,7 +109,7 @@ let imagePluginSwitch = [{
     isFancyBoxAutoStartFalse: false,
     isOpenAutoSlidingPosition: false
 }]
-let curSite = { isReferer: '', isHost: '',isJavaScriptObject:false };
+let curSite = { isReferer: '', isHost: true, isJavaScriptObject: false };
 
 let site = {
     HentaiImage: {
@@ -1453,7 +1453,7 @@ function type(param) {
                                     "Host:" + ((curSite.isHost === true) ? host : '') + "\n" +
                                     "Referer:" + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
                                     "cookie:" + session + "\n"
-                                    , false),
+                                ),
                                 timeout: 30000,
                                 onload: function (response) {
                                     try {
@@ -1563,7 +1563,7 @@ function type(param) {
                                         'Host:' + ((curSite.isHost === true) ? host : '') + "\n" +
                                         'Referer:' + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
                                         "cookie:" + session + "\n"
-                                        , false),
+                                        ),
                                     timeout: 30000,
                                     responseType: 'blob',
                                     onload: function (response) {
@@ -1571,7 +1571,7 @@ function type(param) {
                                             //截图
                                             // console.log('URL：' + url, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
                                             if (response && response.status && response.status >= 200 && response.status < 300) {
-                                                let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders);
+                                                let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
                                                 let contentType = responseHeaders['Content-Type'];
                                                 if (!contentType) {
                                                     contentType = "image/png";
@@ -1820,6 +1820,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
+        curSite.isJavaScriptObject=true;
         $('#display_image_detail').hide();
         $('#post').hide();
         //android
@@ -1842,7 +1843,7 @@ function type(param) {
         } else {
             limitPageStr = $('#main_contents').prop('outerHTML');
         }
-        log("limitPageStr: ", limitPageStr);
+        // log("limitPageStr: ", limitPageStr);
         debugger
         if (!isEmpty(limitPageStr)) {
             limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
@@ -1885,7 +1886,15 @@ function type(param) {
             }
         }
     }).collectPics(function (doc) {
-        return $(doc).find("div#display_image_detail div a img");
+        let imgList = $(doc).find("div#display_image_detail div a img");
+        $.each(imgList, function (index, value) {
+            let src = $(value).attr("src");
+            log("Old # ", src);
+            src = src.replace(/\/p=\d*([xX]\d*)?/g, '');
+            $(value).attr("src", src);
+            log("New # ", $(value).prop('outerHTML'));
+        });
+        return imgList;
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
         let src = $(imgE).attr('lazysrc');
@@ -2641,8 +2650,7 @@ function type(param) {
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
-        curSite.isHost=true;
-        curSite.isReferer=true;
+        curSite.isReferer = true;
         $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
         $(".single-comment").hide();
@@ -2769,7 +2777,6 @@ function type(param) {
         //FancyBox
         activateFancyBox();
         curSite.isReferer = true;
-        curSite.isHost = true;
         $("#hgallery img[mark!='true']").hide();
         $("#pages").hide();
         $(".workContentWrapper>div").slice(1).hide();
