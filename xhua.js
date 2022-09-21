@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.16
+// @version      4.18
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -1128,6 +1128,10 @@ function popUpMenu() {
     document.body.appendChild(popUpContent);
     popUpContent.outerHTML = popUpStr;
     popUpContent = document.querySelector("#popUpContent");
+    if (!popUpContent) {
+        err("弹窗加载失败！！！");
+        return;
+    }
     document.querySelector("#popUpQuit").onclick = function () {
         popUpContent.style.display = "none";
     };
@@ -1455,6 +1459,7 @@ function type(param) {
                                     "cookie:" + session + "\n"
                                 ),
                                 timeout: 30000,
+                                responseType: 'blob',
                                 onload: function (response) {
                                     try {
                                         //下载
@@ -1563,7 +1568,7 @@ function type(param) {
                                         'Host:' + ((curSite.isHost === true) ? host : '') + "\n" +
                                         'Referer:' + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
                                         "cookie:" + session + "\n"
-                                        ),
+                                    ),
                                     timeout: 30000,
                                     responseType: 'blob',
                                     onload: function (response) {
@@ -1820,7 +1825,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
-        curSite.isJavaScriptObject=true;
+        curSite.isJavaScriptObject = true;
         $('#display_image_detail').hide();
         $('#post').hide();
         //android
@@ -2118,7 +2123,6 @@ function type(param) {
                 }
             }
             if (os.isAndroid) {
-
                 $('div.infoline').after(injectComponent);
             } else {
                 $('div.pictopline').after(injectComponent);
@@ -2802,6 +2806,7 @@ function type(param) {
         log("skipGeekGoddess: \n", skipGeekGoddess);
         if (isEmpty(skipGeekGoddess)) {
             log("\n-----inject GeekGoddess-----\n");
+            curSite.isJavaScriptObject=true;
             let match = currentPathname.match(/(\w+)\/(\d+)/im);
             log("match: \n", match);
             let isGirl = /girl|article/g.exec(currentPathname);
