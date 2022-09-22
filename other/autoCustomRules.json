@@ -70,5 +70,69 @@
       "replaceE": "#pagediv",
       "scrollD": 2000
     }
+  },
+  "秀丝网_xiuaiss": {
+    "host": ["www.xiuaiss.com"],
+    "pager": {
+      "nextL": ".next",
+      "pageE": "#infinitescroll",
+      "replaceE": ".pagebar",
+      "scrollD": 2000
+    }
+  },
+  "心动美图_wai77": {
+    "host": ["www.wai77.com"],
+    "url": "return (fun.lp() != '/')",
+    "pager": {
+      "type": 3,
+      "nextL": ".current+a",
+      "pageE": "#lightgallery",
+      "replaceE": ".single-nav-links",
+      "scrollD": 500
+    }
+  },
+  "小黄书 - 搜索": {
+    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "url": "/^\\/search\\/.+\\/.*\\.html$/",
+    "pager": {
+      "nextL": "a.next",
+      "pageE": ".list",
+      "replaceE": ".pager",
+      "scrollD": 10000
+    }
+  },
+  "小黄书 - 清单": {
+    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "url": "/^\\/photo\\//",
+    "style": ".photos > div.item {display: none !important;}",
+    "pager": {
+      "nextL": "a.next",
+      "pageE": ".photos > a",
+      "replaceE": ".pager",
+      "scrollD": 10000
+    }
+  },
+  "小黄书 - 原图": {
+    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "url": "/^\\/photoShow\\.php/",
+    "style": ".container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": ".image>a:not([href^='j']):nth-child(4)",
+      "pageE": ".container>img",
+      "replaceE": ".index,.image>a:not([href^='j']):nth-child(4)",
+      "scrollE": ".ad",
+      "scrollD": 10000
+    }
+  },
+  "小黄书 - 分类": {
+    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "url": "/^\\/(photos|videos|models)(\\/|\\.html)/",
+    "pager": {
+      "nextL": "a.next",
+      "pageE": ".list>.item,.videos",
+      "replaceE": ".pager",
+      "scrollD": 10000
+    }
   }
 }
