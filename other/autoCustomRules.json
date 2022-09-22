@@ -12,7 +12,7 @@
     "host": ["m.gnvshen.com"],
     "url": "return (location.hostname.indexOf('m.')===0 && fun.indexOF(/article\\/\\d+(?!\\d*\\.html)/))",
     "pager": {
-      "nextL": "js;  let nextNum = fun.getOne('.page').innerText; nextNum = parseInt(nextNum.match(/\\d*(?=\\/)/)) + 1; let b='.html'; let ph = String(nextNum)+ b; let url = location.href.replace(/(?<=\\d\\/).*/,ph); console.log(ph,url);return url;",
+      "nextL": "js; let nextNum = fun.getOne('.page').innerText; nextNum = parseInt(nextNum.match(/\\d*(?=\\/)/)) + 1; let b='.html'; let ph = String(nextNum)+ b; let url = location.href.replace(/(?<=\\d\\/).*/,ph); console.log('宅男女神_m: ',ph,url);return url;",
       "pageE": ".ck-article-wrap .ck-article-info ",
       "replaceE": ".page",
       "scrollD": 2000
@@ -48,6 +48,26 @@
       "nextL": "//div[@class='pagesYY']//a[contains(text(),'下一页')]",
       "pageE": "//*[@id='post']/div[2]/div/div[3]/ul/ul",
       "replaceE": ".pagesYY",
+      "scrollD": 2000
+    }
+  },
+  "宅男女神_m_find": {
+    "host": ["m.gnvshen.com"],
+    "url": "return (location.hostname.indexOf('m.')===0 && fun.indexOF(/\\/find\\/|\\/tag\\/|\\/rank\\//))",
+    "pager": {
+      "nextL": ".next",
+      "pageE": "#dlist",
+      "replaceE": "#pagediv",
+      "scrollD": 2000
+    }
+  },
+  "宅男女神_m_gallery": {
+    "host": ["m.gnvshen.com"],
+    "url": "return (location.hostname.indexOf('m.')===0 && fun.indexOF(/\\/gallery\\//))",
+    "pager": {
+      "nextL": "js; let nextNum = fun.getOne('.page').innerText; nextNum = parseInt(nextNum.match(/\\d*(?=\\/)/)) + 1; let b='.html'; let ph = String(nextNum)+ b; let url = location.href.replace(/(?<=gallery\\/).*/,ph); console.log('宅男女神_m_gallery: ',ph,url);return url;",
+      "pageE": "#gallerydiv",
+      "replaceE": "#pagediv",
       "scrollD": 2000
     }
   }
