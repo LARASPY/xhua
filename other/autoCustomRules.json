@@ -1,43 +1,34 @@
 {
-	"图集岛_03": {
-		"host": [
-			"www.tujidao.com",
-			"www.tujidao03.com"
-		],
-		"pager": {
-			"nextL": "//*[@id='pages']//a[contains(text(),'下一页')]",
-			"pageE": ".hezi",
-			"replaceE": ".text-c",
-			"scrollD": 2000
-		}
-	},
-	"宅男女神_m": {
-		"host": [
-			"m.gnvshen.com",
-			"www.gnvshen.com"
-		],
-		"url": "return location.hostname.indexOf('m.')===0",
-		"pager": {
-			"nextL": "js;  let nextNum = fun.getOne('.page').innerText; nextNum = parseInt(nextNum.match(/\\d*(?=\\/)/)) + 1; let b='.html'; let ph = String(nextNum)+ b; let url = location.href.replace(/(?<=\\d\\/).*/,ph); console.log(ph,url);return url;",
-			"pageE": ".ck-article-wrap .ck-article-info ",
-			"replaceE": ".page",
-			"scrollD": 2000
-		},
-		"function": {
-			"bF": "pageE.forEach(function(one){let imgs= one.querySelectorAll('img');imgs.forEach(function(img){img.setAttribute('style','width:95%');  console.log(img)});}); return pageE"
-		}
-	},
-	"宅男女神_pc": {
-		"host": [
-			"m.gnvshen.com",
-			"www.gnvshen.com"
-		],
-		"url": "return location.hostname.indexOf('www.')===0",
-		"pager": {
-			"nextL": "js; let url = fun.getOne('.cur+a').href; return url",
-			"pageE": "#articleDiv",
-			"replaceE": "#articlePage",
-			"scrollD": 2000
-		}
-	}
+  "图集岛_03": {
+    "host": ["www.tujidao.com", "www.tujidao03.com"],
+    "pager": {
+      "nextL": "//*[@id='pages']//a[contains(text(),'下一页')]",
+      "pageE": ".hezi",
+      "replaceE": ".text-c",
+      "scrollD": 2000
+    }
+  },
+  "宅男女神_m": {
+    "host": ["m.gnvshen.com", "www.gnvshen.com"],
+    "url": "return location.hostname.indexOf('m.')===0",
+    "pager": {
+      "nextL": "js;  let nextNum = fun.getOne('.page').innerText; nextNum = parseInt(nextNum.match(/\\d*(?=\\/)/)) + 1; let b='.html'; let ph = String(nextNum)+ b; let url = location.href.replace(/(?<=\\d\\/).*/,ph); console.log(ph,url);return url;",
+      "pageE": ".ck-article-wrap .ck-article-info ",
+      "replaceE": ".page",
+      "scrollD": 2000
+    },
+    "function": {
+      "bF": "pageE.forEach(function(one){let imgs= one.querySelectorAll('img');imgs.forEach(function(img){img.setAttribute('style','width:95%');  console.log(img)});}); return pageE"
+    }
+  },
+  "宅男女神_pc": {
+    "host": ["m.gnvshen.com", "www.gnvshen.com"],
+    "url": "return location.hostname.indexOf('www.')===0",
+    "pager": {
+      "nextL": "js; let url = fun.getOne('.cur+a').href; return url",
+      "pageE": "#articleDiv",
+      "replaceE": "#articlePage",
+      "scrollD": 2000
+    }
+  }
 }
