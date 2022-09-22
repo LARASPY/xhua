@@ -2807,7 +2807,7 @@ function type(param) {
         log("skipGeekGoddess: \n", skipGeekGoddess);
         if (isEmpty(skipGeekGoddess)) {
             log("\n-----inject GeekGoddess-----\n");
-            curSite.isJavaScriptObject=true;
+            curSite.isJavaScriptObject = true;
             let match = currentPathname.match(/(\w+)\/(\d+)/im);
             log("match: \n", match);
             let isGirl = /girl|article/g.exec(currentPathname);
@@ -4853,6 +4853,7 @@ function type(param) {
             if (os.isPc) {
                 $('.work-content').prepend(injectComponent);
             } else {
+                GM_addStyle('div#c_container{padding:5px 10px}');
                 $('.uk-article').after(injectComponent);
             }
         }
@@ -4861,7 +4862,11 @@ function type(param) {
         imgE = $(doc).find('p[align="center"] img');
         return imgE;
     }, function (imgE) {
-        imgE.style = "max-width: 1100px;max-height: 1500px;vertical-align: middle;";
+        if (os.isPc) {
+            imgE.style = "max-width: 1100px;max-height: 1500px;vertical-align: middle; width: 100%;";
+        } else {
+            imgE.style = "padding: 5px; background-color: #fff;width: 100%;";
+        }
         $(imgE).attr({
             'data-fancybox': 'images'
         });
