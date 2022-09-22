@@ -3577,6 +3577,7 @@ function type(param) {
 
     injectBtns().domain(site.xchina.hostnames).removeAD(function () {
         setInterval(function () {
+            $('.aside .center').remove();
             $(".push-bottom").remove();
             $("body").css("overflow", "unset");
         }, 100);
@@ -3597,8 +3598,9 @@ function type(param) {
         log("match: \n", match);
         let skip0 = currentHref.match(/(?<=\/photos\/)model/g);
         let skip1 = currentHref.match(/photos?/g);
+        let skip2 = currentHref.match(/\/kind/g);
         log("skip: " + skip0);
-        if (match && isEmpty(skip0) && !isEmpty(skip1)) {
+        if (match && isEmpty(skip0) && !isEmpty(skip1) && isEmpty(skip2)) {
             let totalPageCnt = 1;
             let partPreUrl = match[1];
             let pageId = match[2];
