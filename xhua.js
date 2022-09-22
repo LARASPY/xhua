@@ -4863,7 +4863,7 @@ function type(param) {
         return imgE;
     }, function (imgE) {
         if (os.isPc) {
-            imgE.style = "max-width: 1100px;max-height: 1500px;vertical-align: middle; width: 100%;";
+            imgE.style = "max-width: 1100px;max-height: 1500px;vertical-align: middle;";
         } else {
             imgE.style = "padding: 5px; background-color: #fff;width: 100%;";
         }
