@@ -2776,6 +2776,7 @@ function type(param) {
             $(".collect-unit").first().remove();
             $(".pic_index_headc").css("position", "sticky");
             $("#page").nextAll().remove();
+            $('div[style="text-align:center;background:white"]').remove();
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
