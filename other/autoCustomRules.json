@@ -148,5 +148,106 @@
       "replaceE": ".pager",
       "scrollD": 10000
     }
-  }
+  },
+  "爱女神_99nvshen": {
+    "host": "www.99nvshen.com",
+    "url": "return(fun.indexOF(/^\\/(galleryList|modelList|articles)\\//) || fun.indexOF('/album/'))",
+    "pager": {
+      "type": 3,
+      "nextL": "a[aria-label='Next']",
+      "pageE": "//nav[@class='pagination-box']/preceding-sibling::div[1][@class='book-list']",
+      "replaceE": ".pagination"
+    }
+  },
+  "爱女神_99nvshen_article": {
+    "host": "www.99nvshen.com",
+    "url": "/^\\/article\\//",
+    "pager": {
+      "type": 3,
+      "nextL": ".active+* a",
+      "pageE": ".article-content",
+      "replaceE": ".pagination"
+    }
+  },
+  "爱女神_99nvshen_gallery": {
+    "host": "www.99nvshen.com",
+    "url": "/^\\/gallery\\//",
+    "pager": {
+      "type": 3,
+      "nextL": ".active+* a",
+      "pageE": ".gallery-detail-content",
+      "replaceE": ".pagination"
+    }
+  },
+  "king_爱模网": {
+    "host": "www.kingdom-en.com",
+    "url": "/(^\\/.)|(\\d+\\.html$)/",
+    "style": ".pic_center img {min-height: 300px;}",
+    "pager": {
+      "type": 3,
+      "nextL": "//a[contains(text(),'下一页')]",
+      "pageE": ".pic_center",
+      "replaceE": ".article_page,.pages2",
+      "scrollD": 10000
+    }
+  },
+  "24tupian": {
+    "host": "www.24tupian.org",
+    "url": "/\\d{4}\\.html$/",
+    "style": ".gtps img {max-width: 98%;}",
+    "pager": {
+      "nextL": "//div[@class='box']//a[contains(text(),'下一页')]",
+      "pageE": ".gtps li",
+      "replaceE": ".page"
+    }
+  },
+  "美图网_tuli": {
+    "host": ["www.tuli.cc", "m.tuli.cc", "www.nvsheng.cc"],
+    "url": "/\\/\\d+(_\\d+)?\\.html$/",
+    "style": ".img-next{visibility: hidden !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": "//a[contains(text(),'下一页')]",
+      "pageE": ".info-imtg-box>img",
+      "replaceE": ".pagebar",
+      "scrollD": 10000
+    }
+  },
+  "美图网_分类": {
+    "host": ["www.tuli.cc", "m.tuli.cc", "www.nvsheng.cc"],
+    "url": "/^\\/(meizi|weibo|mx|cos)\\//",
+    "pager": {
+      "nextL": ".now-page+a",
+      "pageE": ".row>li",
+      "replaceE": ".pagebar"
+    },
+    "function": {
+      "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
+    }
+  },
+  "Cool18.com_性感地带": {
+    "host": "www.cool18.com",
+    "url": "/\\/bbs10\\//",
+    "blank": 3,
+    "pager": {
+      "nextL": "//div[@class='for-col-po-ye']//a[text()='下一页']",
+      "pageE": ".for-col-list-li",
+      "replaceE": ".for-col-po-ye",
+      "type": 3,
+      "scrollD": 2000,
+      "interval": 500
+    }
+  },
+	"taotuxp.com_美女图片": {
+		"host": ["www.taotuxp.com","www.taotucc.com"],
+		"url": "/^\\/\\d+\\.html/",
+    "style":".pagelist{left:20%}.pagelist,div#post_content{float:left;position:relative}div#post_content{left:50%}#content p{list-style:none;margin:0;padding:0;position:relative;left:-50%}",
+		"pager": {
+			"nextL": ".pagelist>span+a",
+			"pageE": "#post_content>p",
+			"replaceE": ".pagelist"
+		}
+	}
 }
+
+
