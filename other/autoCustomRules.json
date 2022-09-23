@@ -238,16 +238,14 @@
       "interval": 500
     }
   },
-	"taotuxp.com_美女图片": {
-		"host": ["www.taotuxp.com","www.taotucc.com"],
-		"url": "/^\\/\\d+\\.html/",
-    "style":".pagelist{left:20%}.pagelist,div#post_content{float:left;position:relative}div#post_content{left:50%}#content p{list-style:none;margin:0;padding:0;position:relative;left:-50%}",
-		"pager": {
-			"nextL": ".pagelist>span+a",
-			"pageE": "#post_content>p",
-			"replaceE": ".pagelist"
-		}
-	}
+  "taotuxp.com_美女图片": {
+    "host": ["www.taotuxp.com", "www.taotucc.com"],
+    "url": "/^\\/\\d+\\.html/",
+    "style": ".pagelist{left:20%}.pagelist,div#post_content{float:left;position:relative}div#post_content{left:50%}#content p{list-style:none;margin:0;padding:0;position:relative;left:-50%}",
+    "pager": {
+      "nextL": ".pagelist>span+a",
+      "pageE": "#post_content>p",
+      "replaceE": ".pagelist"
+    }
+  }
 }
-
-
