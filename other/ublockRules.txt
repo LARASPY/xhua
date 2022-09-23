@@ -1,3 +1,6 @@
+! 2022-08-28 https://www.mfsft.com
+/https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/([rp]||top)\d*.js)/
+
 ! 2022/8/28 https://www.248m.cc
 ||j8.vjksa.com$image
 ||t01.gqvdcek.cn^$script
@@ -22,3 +25,12 @@
 ||api.qcmm01.com
 ||doo.hosr.xyz
 ||ai.6onm.fun
+
+! 2022-09-22 https://m.gnvshen.com
+m.gnvshen.com##[href^="http://www.zhlzou.cn/index.html"]
+||res.buuxk.com:85/images/psd.jpg$image
+||sgls.wk4y.cn
+m.gnvshen.com##[src="https://t1.buuxk.com:85/tb.jpg"]
+m.gnvshen.com##[href^="http://www.zhlzou.cn/ldfa/ldfa.php"]
+m.gnvshen.com##[src="https://m.gnvshen.com/images/g/tg.gif"]
+m.gnvshen.com##[href^="https://lt.ertya.top:21311/lmmx/index.html"]
