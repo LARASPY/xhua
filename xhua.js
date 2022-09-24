@@ -36,6 +36,7 @@
 // @include      /https?\:\/\/\w+\.(?:xiure)\w+\.\w+/
 // @include      /https?\:\/\/\w+\.xrmn[0-9]{0,}.[a-zA-Z]{0,}./
 // @include      /https?\:\/\/(www\.)?[0-9]*(m|w|faw|fa)\.(cc|link)/
+// @include      /https?\:\/\/www.117.life/
 // @include      /https?\:\/\/(\w+\.)?tuiimg\.com/
 // @include      /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/
 // @include      /https?\:\/\/\w+\.(mmm131|mm1\d+)\.\w+/
@@ -389,7 +390,8 @@ let site = {
         hostnames: [
             'www.112w.cc',
             'www.112w.cc\/c49.aspx',
-            'www.24fa.link'
+            'www.24fa.link',
+            'www.117.life'
         ],
         pattern: /https?\:\/\/(www\.)?[0-9]*(m|w|faw|fa)\.(cc|link)/,
         iStatus: false,
@@ -738,13 +740,11 @@ let mainArr = [
 ];
 let fancyboxyArr = [
     'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js',
-    'https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js',
-    'https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js'
+    'https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js'
 ];
 let gridzoneCss = [
     'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js',
-    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js',
-    "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/gridzonecss.js"
+    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js'
 ]
 let Alpha_Script = {
     obtainHtml: function (options) {
