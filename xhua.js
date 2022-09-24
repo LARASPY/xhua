@@ -68,6 +68,7 @@
 // @include      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
 // @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
+// @include      /https?\:\/\/www.cool18.com/bbs(2|5|6|10)?\//
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -718,27 +719,33 @@ let site = {
         pattern: /https?\:\/\/dongtidemi\w*.(com|net|org)/,
         iStatus: false,
         _break: false
+    },
+    cool18: {
+        id: 56,
+        name: "留园酷18",
+        hostnames: [
+            'cool18.com'
+        ],
+        pattern: /https?\:\/\/www.cool18.com/,
+        iStatus: false,
+        _break: false
     }
 };
-
 let mainArr = [
     'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js',
     'https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js',
     'https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681'
 ];
-
 let fancyboxyArr = [
     'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js',
     'https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js',
     'https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/fancybox4.js'
 ];
-
 let gridzoneCss = [
     'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js',
     'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js',
     "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/gridzonecss.js"
 ]
-
 let Alpha_Script = {
     obtainHtml: function (options) {
         options = options || {};
@@ -769,11 +776,9 @@ let Alpha_Script = {
         return Object.prototype.toString.apply(value) === '[object Array]';
     }
 };
-
 function priorityLog() {
     console.log.apply(this, arguments);
 }
-
 function currentUrlActivation() {
     let origin = window.location.origin;
     let hostName = window.location.hostname;
@@ -829,9 +834,7 @@ function currentUrlActivation() {
     }
     // log("合并数组: \n", site.Hentai.hostnames.concat(site.Pron.hostnames));
 }
-
 function addScriptCss() {
-
     // let fancyboxLink = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css";
     // let fancyboxData = await Get(fancyboxLink);
     addStyle(fancyBoxCss);
@@ -839,7 +842,6 @@ function addScriptCss() {
         addStyle(fancyBoxCssAdditon);
     }
 }
-
 function addScript_(statement = null, src = null, isModule = false) {
     let mountElement = document.getElementsByTagName('head')[0];
     if (mountElement) {
@@ -864,9 +866,7 @@ function addScript_(statement = null, src = null, isModule = false) {
     }
     return null;
 }
-
 async function startMain_(arrs = null) {
-
     function isEmpty(param) {
         if (param) {
             var param_type = typeof (param);
@@ -953,10 +953,8 @@ async function startMain_(arrs = null) {
         await initialArrFunction(fancyboxyArr);
     }
 }
-
 function startFancyBoxScript() {
     addScriptCss();
-
     // 观察者 MutationObserver事件
     function type(param) {
         // es6中null的类型为object
@@ -1062,8 +1060,6 @@ function startFancyBoxScript() {
         }
     }
 }
-
-
 function activateFancyBox(isBoxAutoControl = null) {
     //激活fancybox
     if (!isEmpty(isBoxAutoControl)) {
@@ -1072,7 +1068,6 @@ function activateFancyBox(isBoxAutoControl = null) {
     imagePluginSwitch[0].isViewerOpen = false;
     imagePluginSwitch[0].isFancyBox = true;
 }
-
 function aImgTagPackaging(images) {
     let id = setInterval(function () {
         if ($('.sl-c-pic').length > 0) {
@@ -1120,7 +1115,6 @@ function aImgTagPackaging(images) {
     }
     return $(a_imgTag);
 }
-
 function popUpMenu() {
     let popUpStr = '<div id="popUpContent" style="display: none;"><div style="height:100%; width:100%; position:fixed; _position:absolute; top:0; z-index:99999; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div><div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;"><div id="popUpLinks" style="position:absolute;left:20px;top:20px;height:260px;width:260px;overflow:auto;word-wrap:break-word;"></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="popUpQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;"/></div></div>';
     let siteListHtml;
@@ -1278,7 +1272,6 @@ function type(param) {
             });
         };
         let activateSlidingFunc = function () {
-
             let id = setInterval(function () {
                 let dynamicTimeStamp = new Date().getTime();
                 let misTiming = dynamicTimeStamp - newTimeStamp;
@@ -1331,6 +1324,7 @@ function type(param) {
                                             console.groupCollapsed('imagesGroup_' + _i);
                                         }
                                         log('response pageUrl:\n', _pageUrl);
+                                        // log('URL：' + pageUrl, '\n最终 URL：' + response.finalUrl, '\n返回内容：' + response.responseText)
                                         // response.status=403服务器拒绝爬虫可能通过改cookie的方法来做
                                         if (response && response.status && response.status >= 200 && response.status < 300) {
                                             let html = response.responseText;
@@ -3598,7 +3592,7 @@ function type(param) {
         let match = currentPathname.match(/\/(.+?\/)(.*)(?:\/\d+)?(?=\.)/m);
         log("match: \n", match);
         let skip1 = currentHref.match(/\/photo\//g);
-        if (match && !isEmpty(skip1) ) {
+        if (match && !isEmpty(skip1)) {
             let totalPageCnt = 1;
             let partPreUrl = match[1];
             let pageId = match[2];
@@ -4917,6 +4911,61 @@ function type(param) {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
+    }).start();
+
+    /* --------------------------------------------www.cool18.com-------------------------------------- */
+
+    injectBtns().domain(site.cool18.hostnames).removeAD(function () {
+        setInterval(function () {
+            $(".img_ad_list").remove();
+        }, 100);
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        curSite.isJavaScriptObject = true;
+        $('div pre').hide();
+        $('.show_content pre').hide();
+        //android
+    }, function () {
+        $('div pre').show();
+        $('.show_content pre').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            if (os.isPc) {
+                $('.show_content table').after(injectComponent);
+            } else {
+                $('div pre').parent().prepend(injectComponent);
+            }
+        }
+        GM_addStyle('div#c_container{display:block;text-align:-webkit-center}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find("#shownewsc img");
+                if(imgs.length===0){
+                    imgs = $(document).find(".show_content img");
+                }
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    log("value #", value);
+                    $(value).attr({'data-fancybox': 'images','id':'imgLocation'+index})
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
     }).start();
 })();
 
