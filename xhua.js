@@ -1303,6 +1303,7 @@ function type(param) {
             let id = setInterval(function () {
                 if ($) {
                     clearInterval(id);
+                    // 启动滑动监听
                     activateSlidingFunc();
                     let breakPageLoop = false;
                     for (let i = 0, len = pageUrls.length; i < len; i++) {
