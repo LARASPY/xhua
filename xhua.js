@@ -69,7 +69,7 @@
 // @include      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
 // @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
-// @include      /https?\:\/\/www.cool18.com/bbs(2|5|6|10)?\//
+// @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -726,9 +726,10 @@ let site = {
         id: 56,
         name: "留园酷18",
         hostnames: [
-            'cool18.com'
+            'cool18.com',
+            'wap.cool18.com'
         ],
-        pattern: /https?\:\/\/www.cool18.com/,
+        pattern: /https?\:\/\/(www|wap).cool18.com/,
         iStatus: false,
         _break: false
     }
@@ -4925,11 +4926,25 @@ function type(param) {
         $('div pre').hide();
         $('.show_content pre').hide();
         //android
+        let id = setInterval(function () {
+            if ($('.article-content').length === 0) {
+                console.log("content # Hide !!!");
+                clearInterval(id);
+                $('.article-content').hide();
+            }
+        }, 100);
     }, function () {
         $('div pre').show();
         $('.show_content pre').show();
         //android
-    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let id = setInterval(function () {
+            if ($('.article-content').length === 0) {
+                console.log("content # Show !!!");
+                clearInterval(id);
+                $('.article-content').show();
+            }
+        }, 100);
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
@@ -4943,7 +4958,11 @@ function type(param) {
             if (os.isPc) {
                 $('.show_content table').after(injectComponent);
             } else {
-                $('div pre').parent().prepend(injectComponent);
+                if (/app=index/.test(location.search)) {
+                    $('.article-head').after(injectComponent);
+                } else {
+                    $('div pre').parent().prepend(injectComponent);
+                }
             }
         }
         GM_addStyle('div#c_container{display:block;text-align:-webkit-center}');
@@ -4953,13 +4972,13 @@ function type(param) {
                 log("item #", item);
                 clearInterval(id);
                 let imgs = $(document).find("#shownewsc img");
-                if(imgs.length===0){
+                if (imgs.length === 0) {
                     imgs = $(document).find(".show_content img");
                 }
                 log("imgs #", imgs);
                 $.each(imgs.clone(), function (index, value) {
-                    log("value #", value);
-                    $(value).attr({'data-fancybox': 'images','id':'imgLocation'+index})
+                    // log("value #", value);
+                    $(value).attr({ 'data-fancybox': 'images', 'id': 'imgLocation' + index })
                     item.append($(value));
                 });
             }
