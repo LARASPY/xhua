@@ -181,7 +181,7 @@
   },
   "king_爱模网": {
     "host": "www.kingdom-en.com",
-    "url": "/(^\\/.)|(\\d+\\.html$)/",
+    "url": "/\\d+_?\\d+\\.html$/",
     "style": ".pic_center img {min-height: 300px;}",
     "pager": {
       "type": 3,
@@ -191,8 +191,18 @@
       "scrollD": 10000
     }
   },
+  "king_爱模网_分类": {
+    "host": "www.kingdom-en.com",
+    "url": "/^\\/(tag|meinv\\w*|\\w*meinv|rentiyizhu)\\//",
+    "pager": {
+      "nextL": "//a[contains(text(),'下一页')]",
+      "pageE": "#container>li",
+      "replaceE": ".list_page",
+      "scrollD": 10000
+    }
+  }, 
   "24tupian": {
-    "host": "www.24tupian.org",
+    "host": "www. 24tupian.org",
     "url": "/\\d{4}\\.html$/",
     "style": ".gtps img {max-width: 98%;}",
     "pager": {
@@ -247,5 +257,37 @@
       "pageE": "#post_content>p",
       "replaceE": ".pagelist"
     }
-  }
+  },
+	"爱美女_": {
+		"host": [
+			"www.2meinv.com",
+			"wap.2meinv.com"
+		],
+		"pager": {
+			"nextL": "//div[@class='page-show' or contains(@class,'article-page')]/a[text()='下一页']",
+			"pageE": ".pp.hh img, ul.detail-list, .arcmain li, #listcon>ul",
+			"replaceE": ".page-show, .article-page"
+		},
+    "function": {
+      "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
+    }
+	},
+	"凸凹吧/撸女吧_m": {
+		"host": [
+			"www.tuao8.com",
+			"www.tuao8.xyz",
+			"www.tuaow.xyz",
+			"www.tuaom.cc",
+			"www.lunu.cc",
+			"www.97mm.cc"
+		],
+		"url": "return !fun.indexOF(/^\\/(post|web)\\//)",
+		"style": "img[src$='.gif'] {display: none !important;}",
+		"pager": {
+			"type": 3,
+			"nextL": "//a[text()='下一页']",
+			"pageE": ".excerpt,.excerpt-multi",
+			"replaceE": ".next-page"
+		}
+	}
 }
