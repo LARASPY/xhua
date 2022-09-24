@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.19
+// @version      4.20
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -3597,11 +3597,8 @@ function type(param) {
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/\/(.+?\/)(.*)(?:\/\d+)?(?=\.)/m);
         log("match: \n", match);
-        let skip0 = currentHref.match(/(?<=\/photos\/)model/g);
-        let skip1 = currentHref.match(/photos?/g);
-        let skip2 = currentHref.match(/\/kind/g);
-        log("skip: " + skip0);
-        if (match && isEmpty(skip0) && !isEmpty(skip1) && isEmpty(skip2)) {
+        let skip1 = currentHref.match(/\/photo\//g);
+        if (match && !isEmpty(skip1) ) {
             let totalPageCnt = 1;
             let partPreUrl = match[1];
             let pageId = match[2];
