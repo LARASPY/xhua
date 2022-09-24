@@ -85,26 +85,6 @@
       "aF": "let iconImgs=document.querySelectorAll('.ck-icon>img');iconImgs.forEach(function(img){img.setAttribute('style','display: inline;')});"
     }
   },
-  "秀丝网_xiuaiss": {
-    "host": ["www.xiuaiss.com"],
-    "pager": {
-      "nextL": ".next",
-      "pageE": "#infinitescroll",
-      "replaceE": ".pagebar",
-      "scrollD": 2000
-    }
-  },
-  "心动美图_wai77": {
-    "host": ["www.wai77.com"],
-    "url": "return (fun.lp() != '/')",
-    "pager": {
-      "type": 3,
-      "nextL": ".current+a",
-      "pageE": "#lightgallery",
-      "replaceE": ".single-nav-links",
-      "scrollD": 500
-    }
-  },
   "小黄书 - 搜索": {
     "host": "/(tw|kr)?(\\.)?xchina\\.co/",
     "url": "/^\\/search\\/.+\\/.*\\.html$/",
@@ -149,6 +129,38 @@
       "scrollD": 10000
     }
   },
+  "秀丝网_xiuaiss": {
+    "host": ["www.xiuaiss.com"],
+    "pager": {
+      "nextL": ".next",
+      "pageE": "#infinitescroll",
+      "replaceE": ".pagebar",
+      "scrollD": 2000
+    }
+  },
+  "心动美图_wai77": {
+    "host": ["www.wai77.com"],
+    "url": "return ((fun.lp() != '/') && !fun.indexOF(/^\\/(category|tag)\\//))",
+    "pager": {
+      "type": 3,
+      "nextL": ".current+a",
+      "pageE": "#lightgallery",
+      "replaceE": ".single-nav-links"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('#lightgallery');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+    }
+  },
+  "心动美图_wai77_category": {
+    "host": ["www.wai77.com"],
+    "url": "/^\\/(category|tag)\\//",
+    "pager": {
+      "type": 3,
+      "nextL": ".next",
+      "pageE": "#recent-content>div",
+      "replaceE": ".nav-links"
+    }
+  },
   "爱女神_99nvshen": {
     "host": "www.99nvshen.com",
     "url": "return(fun.indexOF(/^\\/(galleryList|modelList|articles)\\//) || fun.indexOF('/album/'))",
@@ -177,6 +189,9 @@
       "nextL": ".active+* a",
       "pageE": ".gallery-detail-content",
       "replaceE": ".pagination"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-header');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "king_爱模网": {
@@ -189,6 +204,9 @@
       "pageE": ".pic_center",
       "replaceE": ".article_page,.pages2",
       "scrollD": 10000
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.pic_center');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "king_爱模网_分类": {
@@ -200,27 +218,34 @@
       "replaceE": ".list_page",
       "scrollD": 10000
     }
-  }, 
+  },
   "24tupian": {
-    "host": "www. 24tupian.org",
-    "url": "/\\d{4}\\.html$/",
+    "host": "www.24tupian.org",
+    "url": "/\\d{4}(_\\d+)?\\.html$/",
     "style": ".gtps img {max-width: 98%;}",
     "pager": {
       "nextL": "//div[@class='box']//a[contains(text(),'下一页')]",
       "pageE": ".gtps li",
-      "replaceE": ".page"
+      "replaceE": ".page",
+      "scrollD": 1000
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=)m(?=\\w*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
-  "美图网_tuli": {
+  "美图网": {
     "host": ["www.tuli.cc", "m.tuli.cc", "www.nvsheng.cc"],
     "url": "/\\/\\d+(_\\d+)?\\.html$/",
-    "style": ".img-next{visibility: hidden !important;}",
+    "style": ".img-next{visibility:hidden!important}.header{z-index:2!important}.wap-off{z-index:1!important}",
     "pager": {
       "type": 3,
       "nextL": "//a[contains(text(),'下一页')]",
       "pageE": ".info-imtg-box>img",
       "replaceE": ".pagebar",
       "scrollD": 10000
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.info-imtg-box>img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "美图网_分类": {
@@ -235,7 +260,7 @@
       "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
     }
   },
-  "Cool18.com_性感地带": {
+  "留园酷18_性感地带": {
     "host": "www.cool18.com",
     "url": "/\\/bbs10\\//",
     "blank": 3,
@@ -256,38 +281,61 @@
       "nextL": ".pagelist>span+a",
       "pageE": "#post_content>p",
       "replaceE": ".pagelist"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('#post_content>p');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
-	"爱美女_": {
-		"host": [
-			"www.2meinv.com",
-			"wap.2meinv.com"
-		],
-		"pager": {
-			"nextL": "//div[@class='page-show' or contains(@class,'article-page')]/a[text()='下一页']",
-			"pageE": ".pp.hh img, ul.detail-list, .arcmain li, #listcon>ul",
-			"replaceE": ".page-show, .article-page"
-		},
+  "爱美女": {
+    "host": ["www.2meinv.com", "wap.2meinv.com"],
+    "pager": {
+      "nextL": "//div[@class='page-show' or contains(@class,'article-page')]/a[text()='下一页']",
+      "pageE": ".pp.hh img, ul.detail-list, .arcmain li, #listcon>ul",
+      "replaceE": ".page-show, .article-page"
+    },
     "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.tal');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}",
       "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
     }
-	},
-	"凸凹吧/撸女吧_m": {
-		"host": [
-			"www.tuao8.com",
-			"www.tuao8.xyz",
-			"www.tuaow.xyz",
-			"www.tuaom.cc",
-			"www.lunu.cc",
-			"www.97mm.cc"
-		],
-		"url": "return !fun.indexOF(/^\\/(post|web)\\//)",
-		"style": "img[src$='.gif'] {display: none !important;}",
-		"pager": {
-			"type": 3,
-			"nextL": "//a[text()='下一页']",
-			"pageE": ".excerpt,.excerpt-multi",
-			"replaceE": ".next-page"
-		}
-	}
+  },
+  "凸凹吧/撸女吧": {
+    "host": [
+      "www.tuao8.com",
+      "www.tuao8.xyz",
+      "www.tuaow.xyz",
+      "www.tuaom.cc",
+      "www.lunu.cc",
+      "www.97mm.cc"
+    ],
+    "url": "/^\\/(post|web)\\//",
+    "style": "img[src$='.gif'] {display: none !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": "li.next-page>a",
+      "pageE": ".entry img, .article-content img",
+      "replaceE": "#dm-fy"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.entry img, .article-content img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+    }
+  },
+  "凸凹吧/撸女吧_m": {
+    "host": [
+      "www.tuao8.com",
+      "www.tuao8.xyz",
+      "www.tuaow.xyz",
+      "www.tuaom.cc",
+      "www.lunu.cc",
+      "www.97mm.cc"
+    ],
+    "url": "return !fun.indexOF(/^\\/(post|web)\\//)",
+    "style": "img[src$='.gif'] {display: none !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": "//a[text()='下一页']",
+      "pageE": ".excerpt,.excerpt-multi",
+      "replaceE": ".next-page",
+      "scrollD": 10000
+    }
+  }
 }

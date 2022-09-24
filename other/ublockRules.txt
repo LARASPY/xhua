@@ -1,4 +1,4 @@
-! 2022-08-28 https://www.mfsft.com
+! 2022-08-28 https://www.mfsft.com 免费私房图-使用必要规则
 /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/([rp]||top)\d*.js)/
 
 ! 2022/8/28 https://www.248m.cc
@@ -34,3 +34,20 @@ m.gnvshen.com##[src="https://t1.buuxk.com:85/tb.jpg"]
 m.gnvshen.com##[href^="http://www.zhlzou.cn/ldfa/ldfa.php"]
 m.gnvshen.com##[src="https://m.gnvshen.com/images/g/tg.gif"]
 m.gnvshen.com##[href^="https://lt.ertya.top:21311/lmmx/index.html"]
+
+! 2022-09-23 https://www.97mm.cc
+www.97mm.cc##[href="https://www.117books.com/"]
+www.97mm.cc##[href="https://www.tuaobook.com"]
+
+! 2022-09-23 https://xchina.co
+xchina.co##.push-bottom
+
+! 2022-09-23 https://www.wai77.com 心动美图-使用必要规则
+||lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/lightgallery/2.4.0/plugins/fullscreen/lg-fullscreen.min.js$script,domain=www.wai77.com
+||lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/lightgallery/2.4.0/plugins/zoom/lg-zoom.min.js$script,domain=www.wai77.com
+
+! 2022-09-24 https://www.117.life
+||w.9js6.icu
+
+! 2022-09-24 https://www.97mm.cc
+||www.117.life^$domain=www.97mm.cc
