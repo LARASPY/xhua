@@ -3,7 +3,6 @@ function log() {
     console.log.apply(this, arguments);
   }
 }
-
 function addStateMent(head, type, src, textContent, setAttribute) {
   let statement = document.createElement(type);
   if (src && type === "script") {
@@ -13,7 +12,7 @@ function addStateMent(head, type, src, textContent, setAttribute) {
   }
   if (textContent) statement.textContent = textContent;
   if (setAttribute) {
-    // log(setAttribute);
+    // log(' # ',setAttribute);
     for (const [key, value] of Object.entries(setAttribute)) {
       statement.setAttribute(key, value);
     }
@@ -29,8 +28,8 @@ function isMobile() {
   );
 }
 function alphaPlay(obj, method) {	//渐隐 渐显 method有两个值show或hiden
-  var n = (method == "show") ? 0 : 100;
-  var time = setInterval(function () {
+  let n = (method == "show") ? 0 : 100;
+  let time = setInterval(function () {
     if (method == "show") {
       if (n < 100) {
         n += 10;
@@ -56,15 +55,15 @@ function alphaPlay(obj, method) {	//渐隐 渐显 method有两个值show或hiden
     }
   }, 30);
 }
-function fancyboxStart(document) {
+function fancyBoxStart(document) {
   try {
     if (Fancybox !== undefined && $ !== undefined) {
       // document.querySelector('.loading-box').style["display"] = "none";
-      console.log("Fancybox && $ already exists!!!");
+      log(' # ', "Fancybox && $ already exists!!!");
       return;
     }
   } catch (error) {
-    console.log(error);
+    log(' # ', error);
   }
   let head = document.getElementsByTagName("head")[0];
   let srcList = ["https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"];
@@ -78,43 +77,32 @@ function fancyboxStart(document) {
       srcList.push(
         "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js"
       );
-      for (var src of srcList) {
+      for (let src of srcList) {
         addStateMent(head, "script", src);
       }
-      let loadingCss = `
-      .loading-box{position:fixed;top:50px;left:0;z-index:999;display:flex;width:100%;height:50px;align-items:center}
-      .loading{margin:0 auto;padding-right:32px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}`;
-      addStateMent(head, "style", null, loadingCss, typeStyle);
-      let loadingBox = document.createElement('div');
-      let loadingP = document.createElement('p');
-      let parent = document.querySelector('body');
-      loadingP.setAttribute('class', 'loading');
-      loadingBox.setAttribute('class', 'loading-box');
-      loadingP.innerHTML = 'FancyBox loading...';
-      loadingBox.appendChild(loadingP);
-      if (document.querySelector('.loading-box')) {
+      let loadingBox = document.querySelector('.loading-box');
+      let loadingP;
+      if (loadingBox) {
+        loadingP = loadingBox.querySelector('.loading');
       } else {
-        parent.insertBefore(loadingBox, parent.children[0]);
         setTimeout(() => {
           alphaPlay(loadingBox, "hiden");
           loadingBox.style["z-index"] = "-1";
         }, 2000);
       }
-      console.log("Fancybox loading...");
+      log(' # ', "Fancybox loading...");
       try {
         if (Fancybox && $) {
-          let loadingBox = document.querySelector('.loading-box');
-          let loadingP = loadingBox.querySelector('.loading');
-          console.log("Fancybox && $ Initialization succeeded!!!");
+          log(' # ', "Fancybox && $ Initialization succeeded!!!");
           loadingP.innerHTML = 'FancyBox succeeded!';
-          $(loadingP).parent().css({ 'opacity': '0', 'z-index': '999' });
+          $(loadingP).parent().css({ 'opacity': '0', 'z-index': '999999' });
           $(loadingP).css({ 'background': '#fff9eb', 'padding-right': 'unset', 'padding': '0px 5px' });
           alphaPlay(loadingBox, "show");
           clearInterval(id);
           resolve();
         }
       } catch (error) {
-        console.log(error);
+        log(' # ', error);
       }
     }, 100);
   })
@@ -140,7 +128,7 @@ function fancyboxStart(document) {
       return "Android OK";
     })
     .then(function (value) {
-      console.log(value);
+      log(' # ', value);
       let imagePluginSwitch = [
         {
           isViewerOpen: false,
@@ -171,28 +159,28 @@ function fancyboxStart(document) {
         attributeFilter: ["class"],
       };
       // 当观察到突变时执行的回调函数
-      const Callbacks = function (mutationsList) {
+      const callbacks = function (mutationsList) {
         mutationsList.forEach(function (item, index) {
-          // log(type(item.type) + " " + item.type);
+          // log(' # ',type(item.type) + " " + item.type);
           if ("attributes" === item.type) {
             if (
               item.target.className ===
               "fancybox__slide has-image can-zoom_in is-selected"
             ) {
-              log(item);
+              log(' # ', item);
               addEvent(item);
             } else if (
               item.target.className ===
               "fancybox__container is-animated is-closing"
             ) {
-              log(item);
+              log(' # ', item);
               destroyFun();
             }
           }
         });
       };
       // 创建一个链接到回调函数的观察者实例
-      const Observer = new MutationObserver(Callbacks);
+      const Observer = new MutationObserver(callbacks);
       ContentContainer && Observer.observe(ContentContainer, configObserver);
       function addEvent(item) {
         slideIndex =
@@ -203,7 +191,7 @@ function fancyboxStart(document) {
           log("open - # " + slideIndex + " slide is open!");
         }
       }
-      function destroyFun(fancybox, slide) {
+      function destroyFun() {
         log("close - # " + slideIndex + " slide is closed!");
         let elementById = document.getElementById("imgLocation" + slideIndex);
         if (elementById) {
@@ -248,4 +236,4 @@ function fancyboxStart(document) {
       }
     });
 }
-fancyboxStart(window.document);
+fancyBoxStart(window.document);
