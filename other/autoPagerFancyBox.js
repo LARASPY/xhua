@@ -28,9 +28,38 @@ function isMobile() {
     (window.screen.width < 500 && window.screen.height < 800)
   );
 }
+function alphaPlay(obj, method) {	//渐隐 渐显 method有两个值show或hiden
+  var n = (method == "show") ? 0 : 100;
+  var time = setInterval(function () {
+    if (method == "show") {
+      if (n < 100) {
+        n += 10;
+        if (window.ActiveXObject) {
+          obj.style.cssText = "filter:alpha(opacity=" + n + ")";
+        } else {
+          (n == 100) ? obj.style.opacity = 1 : obj.style.opacity = "0." + n;
+        }
+      } else {
+        clearTimeout(time);
+      }
+    } else {
+      if (n > 0) {
+        n -= 10;
+        if (window.ActiveXObject) {
+          obj.style.cssText = "filter:alpha(opacity=" + n + ")";
+        } else {
+          obj.style.opacity = "0." + n;
+        }
+      } else {
+        clearTimeout(time);
+      }
+    }
+  }, 30);
+}
 function fancyboxStart(document) {
   try {
     if (Fancybox !== undefined && $ !== undefined) {
+      // document.querySelector('.loading-box').style["display"] = "none";
       console.log("Fancybox && $ already exists!!!");
       return;
     }
@@ -42,7 +71,8 @@ function fancyboxStart(document) {
   let fancyboxCssArrr = [
     "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.css",
   ];
-  let itemTpye = { rel: "stylesheet" };
+  let relStyle = { rel: "stylesheet" };
+  let typeStyle = { name: "type", value: "text/css" };
   new Promise(function (resolve, reject) {
     let id = setInterval(function () {
       srcList.push(
@@ -51,11 +81,40 @@ function fancyboxStart(document) {
       for (var src of srcList) {
         addStateMent(head, "script", src);
       }
-      console.log("waiting...");
-      if (Fancybox && $) {
-        console.log("Fancybox && $ Initialization succeeded!!!");
-        clearInterval(id);
-        resolve();
+      let loadingCss = `
+      .loading-box{position:fixed;top:50px;left:0;z-index:999;display:flex;width:100%;height:50px;align-items:center}
+      .loading{margin:0 auto;padding-right:32px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}`;
+      addStateMent(head, "style", null, loadingCss, typeStyle);
+      let loadingBox = document.createElement('div');
+      let loadingP = document.createElement('p');
+      let parent = document.querySelector('body');
+      loadingP.setAttribute('class', 'loading');
+      loadingBox.setAttribute('class', 'loading-box');
+      loadingP.innerHTML = 'FancyBox loading...';
+      loadingBox.appendChild(loadingP);
+      if (document.querySelector('.loading-box')) {
+      } else {
+        parent.insertBefore(loadingBox, parent.children[0]);
+        setTimeout(() => {
+          alphaPlay(loadingBox, "hiden");
+          loadingBox.style["z-index"] = "-1";
+        }, 2000);
+      }
+      console.log("Fancybox loading...");
+      try {
+        if (Fancybox && $) {
+          let loadingBox = document.querySelector('.loading-box');
+          let loadingP = loadingBox.querySelector('.loading');
+          console.log("Fancybox && $ Initialization succeeded!!!");
+          loadingP.innerHTML = 'FancyBox succeeded!';
+          $(loadingP).parent().css({ 'opacity': '0', 'z-index': '999' });
+          $(loadingP).css({ 'background': '#fff9eb', 'padding-right': 'unset', 'padding': '0px 5px' });
+          alphaPlay(loadingBox, "show");
+          clearInterval(id);
+          resolve();
+        }
+      } catch (error) {
+        console.log(error);
       }
     }, 100);
   })
@@ -73,9 +132,9 @@ function fancyboxStart(document) {
       .fancybox__thumb{border-radius:6px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3),0 2px 4px -1px rgba(0,0,0,0.26)}
       .is-nav-selected .fancybox__thumb{transform:scale(1.25)}
       .is-nav-selected .fancybox__thumb::after{display:none}`;
-      addStateMent(head, "link", fancyboxCssArrr[0], null, itemTpye);
+      addStateMent(head, "link", fancyboxCssArrr[0], null, relStyle);
       if (!isMobile()) {
-        addStateMent(head, "style", null, fancyBoxCssAdditon, itemTpye);
+        addStateMent(head, "style", null, fancyBoxCssAdditon, typeStyle);
         return "PC OK";
       }
       return "Android OK";
