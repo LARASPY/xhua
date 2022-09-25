@@ -18,7 +18,7 @@
 
 - **其他**
 
-  > **Ⅰ.** ViewerJs 已退役，FancyBox 全适配
+  > **Ⅰ.** ViewerJs 已退役，FancyBox 全适配，如果<mark> **Fancybox 滑动卡顿** </mark>可以关闭右上角缩略图开关解决。
   >
   > **Ⅱ.** 常用插件
   >
@@ -132,7 +132,7 @@
   > |      ✔ | <a href='https://www.ilovexs.com/' target='_blank'><code>NongMo˙¹⁸⁺</code></a>                                                                                                                                                                 |      ✔ | <a href='https://mitaku.net/' target='_blank'><code>MitakuCosplay</code></a>                                                                                                                                                                                                                                                     |
   > |      ✔ | <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code></a>                                                                                                                                                                        |      - | <a href='https://nudecosplaygirls.com/' target='_blank'><code>NUDECOSPLAY˙¹⁸⁺</code></a>                                                                                                                                                                                                                                         |
   > |      ✖ | <del><a href='https://nudebird.biz/' target='_blank'><code>NudeBird˙¹⁸⁺</code></a></del>                                                                                                                                                       |      ✔ | <a href='https://dongtidemi.com/' target='_blank'><code>胴体的秘密</code></a>                                                                                                                                                                                                                                                    |
-  > |     🍂 | <a href='https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt' target='_blank'><code>ublock 其他去广告规则</code></a> 🆕                                                                            |     🍂 | <a href='https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/autoCustomRules.json' target='_blank'><code>AutoPage 无缝翻页规则</code></a> 🆕                                                                                                                                                         |
+  > |     🍂 | <a href='https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt' target='_blank'><code>ublock 其他去广告规则</code></a> 🆕<br/>&emsp;&emsp;`更新时间:2022-09-24`                                      |     🍂 | <a href='https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/autoCustomRules.json' target='_blank'><code>AutoPage 无缝翻页规则</code></a> 🆕<br/>&emsp;&emsp;`更新时间:2022-09-25`                                                                                                                   |
   > |      ✔ | <a href='https://www.cool18.com/' target='_blank'><code>留园酷 18</code></a>                                                                                                                                                                   |        |                                                                                                                                                                                                                                                                                                                                  |
 
 - **未适配网址**
@@ -145,8 +145,8 @@
   > |      ✔ | <a href='https://www.99nvshen.com/' target='_blank'><code>爱女神</code></a>          | ✔      | <a href='https://www.kingdom-en.com/' target='_blank'><code>king 爱模网</code></a> |
   > |      ✔ | <a href='https://www.24tupian.org' target='_blank'><code>24tupian</code></a>         | ✔      | <a href='https://wap.2meinv.com/' target='_blank'><code>爱美女</code></a>          |
   > |      ✔ | <a href='https://www.yuleba.org/b/10-0.html' target='_blank'><code>娱乐吧</code></a> | ✔      | <a href='https://www.97mm.cc/' target='_blank'><code>撸女吧</code></a>             |
-  > |      ✔ | <a href='http://www.imn5.net/' target='_blank'><code>爱美女网</code></a>             | ✔      | <a href='https://www.6evu.com/' target='_blank'><code>遛无写真</code></a>          |
+  > |      ✔ | <a href='https://www.taotucc.com/' target='_blank'><code>taotuxp.com</code></a>      | ✔      | <a href='https://www.6evu.com/' target='_blank'><code>遛无写真</code></a>          |
   > |      ✔ | <a href='https://hitxhot.com/' target='_blank'><code>Hit-x-Hot</code></a>            | ✔      | <a href='https://www.nvsheng.cc/' target='_blank'><code>美图网</code></a>          |
   > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>        | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>            |
   > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>           | ✔      | <a href='https://www.2avtt.com/' target='_blank'><code>超级美女图库</code></a>     |
-  > |      ✔ | <a href='https://www.taotucc.com/' target='_blank'><code>taotuxp.com</code></a>      |        |                                                                                    |
+  > |        |                                                                                      |        |                                                                                    |
