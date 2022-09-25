@@ -59,6 +59,9 @@ function fancyBoxStart(document) {
   try {
     if (Fancybox !== undefined && $ !== undefined) {
       // document.querySelector('.loading-box').style["display"] = "none";
+      let loadingBox = document.querySelector('.loading-box');
+      alphaPlay(loadingBox, "hiden");
+      loadingBox.style["z-index"] = "-1";
       log(' # ', "Fancybox && $ already exists!!!");
       return;
     }
