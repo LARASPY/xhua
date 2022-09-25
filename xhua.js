@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.20
+// @version      4.21
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -70,6 +70,7 @@
 // @include      /https?\:\/\/(www|m).meitu131.com/
 // @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
 // @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
+// @include      /https?\:\/\/mm.tvv.tw\/archives\//
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -730,6 +731,16 @@ let site = {
             'wap.cool18.com'
         ],
         pattern: /https?\:\/\/(www|wap).cool18.com/,
+        iStatus: false,
+        _break: false
+    },
+    tvvtw: {
+        id: 57,
+        name: "妹妹图",
+        hostnames: [
+            'mm.tvv.tw'
+        ],
+        pattern: /https?\:\/\/mm.tvv.tw/,
         iStatus: false,
         _break: false
     }
@@ -4979,6 +4990,49 @@ function type(param) {
                 $.each(imgs.clone(), function (index, value) {
                     // log("value #", value);
                     $(value).attr({ 'data-fancybox': 'images', 'id': 'imgLocation' + index })
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------mm.tvv.tw------------------------------------------- */
+
+    injectBtns().domain(site.tvvtw.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.blog-details-text').hide();
+        //android
+    }, function () {
+        $('.blog-details-text').show();
+        //android
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.blog-date').first().after(injectComponent);
+        }
+        GM_addStyle('*{-webkit-box-sizing:unset;-moz-box-sizing:unset;box-sizing:unset;-webkit-transition-timing-function:unset;-moz-transition-timing-function:unset;-o-transition-timing-function:unset;transition-timing-function:unset;-webkit-transition-duration:unset;-moz-transition-duration:unset;-o-transition-duration:unset;transition-duration:unset}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".blog-details-text img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    $(value).attr({ 'data-fancybox': 'images', 'id': 'imgLocation' + index });
+                    $(value).removeAttr("data-cfsrc class");
                     item.append($(value));
                 });
             }
