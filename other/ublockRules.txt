@@ -51,3 +51,7 @@ xchina.co##.push-bottom
 
 ! 2022-09-24 https://www.97mm.cc
 ||www.117.life^$domain=www.97mm.cc
+
+! 2022-09-25 https://x.97mm.cc
+x.97mm.cc##div:nth-of-type(1) > [href="https://www.248w.co/mc49.aspx"]
+x.97mm.cc##body > div > [href="https://www.248w.co/mc49.aspx"]
