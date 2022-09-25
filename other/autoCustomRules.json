@@ -123,6 +123,7 @@
     "host": "/(tw|kr)?(\\.)?xchina\\.co/",
     "url": "/^\\/(photos|videos|models)(\\/|\\.html)/",
     "pager": {
+      "blank":3,
       "nextL": "a.next",
       "pageE": ".list>.item,.videos",
       "replaceE": ".pager",
@@ -148,7 +149,7 @@
       "replaceE": ".single-nav-links"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('#lightgallery');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('#lightgallery');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "心动美图_wai77_category": {
@@ -191,7 +192,7 @@
       "replaceE": ".pagination"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-header');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-header');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "king_爱模网": {
@@ -206,7 +207,7 @@
       "scrollD": 10000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.pic_center');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.pic_center');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "king_爱模网_分类": {
@@ -230,7 +231,7 @@
       "scrollD": 1000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=)m(?=\\w*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=)m(?=\\w*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "美图网": {
@@ -245,7 +246,7 @@
       "scrollD": 10000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.info-imtg-box>img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.info-imtg-box>img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "美图网_分类": {
@@ -283,7 +284,7 @@
       "replaceE": ".pagelist"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('#post_content>p');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('#post_content>p');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "爱美女": {
@@ -294,7 +295,7 @@
       "replaceE": ".page-show, .article-page"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.tal');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}",
+      "aF": "let pageEParentChildImgs=document.querySelector('.tal');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}",
       "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
     }
   },
@@ -316,7 +317,7 @@
       "replaceE": "#dm-fy"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.entry img, .article-content img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.entry img, .article-content img');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "凸凹吧/撸女吧_m": {
@@ -337,5 +338,46 @@
       "replaceE": ".next-page",
       "scrollD": 10000
     }
-  }
+  },
+	"2avtt.com": {
+		"host": [
+			"www.2avtt.com",
+			"m.2avtt.com"
+		],
+		"url": "/\\/\\d+(_\\d+)?\\.html$/",
+		"pager": {
+			"nextL": ".thisclass+li>a, .wallpaper-container>a:last-of-type",
+			"pageE": "#photoMain, .wallpaper-container>a",
+			"replaceE": ".page"
+		},
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.wallpaper-container>a');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+    }
+	},
+	"2avtt.com_分类": {
+		"host": [
+			"www.2avtt.com",
+			"m.2avtt.com"
+		],
+		"url": "return !fun.indexOF(/\\/\\d+(_\\d+)?\\.html$/)",
+		"pager": {
+			"nextL": "//a[text()='下一页']",
+			"pageE": ".silder>.items",
+			"replaceE": ".action"
+		}
+	},
+	"爱看图吧": {
+		"host": "www.9iktb.com",
+		"url": "/^\\/gallery\\//",
+		"style": ".gallery-detail-img>img {min-height: 300px;}",
+		"pager": {
+			"type": 3,
+			"nextL": "li.active+li>a",
+			"pageE": ".gallery-detail-content",
+			"replaceE": ".pagination"
+		},
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-content');if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox_v0.2.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+    }
+	}
 }
