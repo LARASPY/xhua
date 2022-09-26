@@ -149,7 +149,7 @@
       "replaceE": ".single-nav-links"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('#lightgallery');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('#lightgallery');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "心动美图_wai77_category": {
@@ -192,7 +192,7 @@
       "replaceE": ".pagination"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-header');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-header');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "king_爱模网": {
@@ -207,7 +207,7 @@
       "scrollD": 10000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.pic_center');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.pic_center');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "king_爱模网_分类": {
@@ -232,7 +232,7 @@
       "scrollD": 1000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3_AutoStartFalse.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4_AutoStartFalse.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "美图网": {
@@ -247,7 +247,7 @@
       "scrollD": 10000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.info-imtg-box>img');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.info-imtg-box>img');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "美图网_分类": {
@@ -285,7 +285,7 @@
       "replaceE": ".pagelist"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('#post_content>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('#post_content>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "taotuxp.com_美女图片_root": {
@@ -305,7 +305,7 @@
       "replaceE": ".page-show, .article-page"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.tal');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}",
+      "aF": "let pageEParentChildImgs=document.querySelector('.tal');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}",
       "bF": "pageE.forEach(function(imgs){let css=[0,'a[data-original]','data-original'];imgs.querySelectorAll('img').forEach(function(one){if(one.tagName==='IMG'){if(one.getAttribute(css[2])){one.src=one.getAttribute(css[2])}else if(one.dataset.src){one.src=one.dataset.src}}else{one.querySelectorAll(css[1]).forEach(function(now){if(now.getAttribute(css[2])){now.src=now.getAttribute(css[2])}else if(now.dataset.src){now.src=now.dataset.src}})}});}); return pageE"
     }
   },
@@ -324,10 +324,12 @@
       "type": 3,
       "nextL": "li.next-page>a",
       "pageE": ".entry img, .article-content img",
-      "replaceE": "#dm-fy"
+      "replaceE": "#dm-fy",
+      "scrollE": "#postnavi",
+      "scrollD": 5000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.entry img, .article-content img');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.entry img, .article-content img');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "凸凹吧/撸女吧_m": {
@@ -358,7 +360,7 @@
       "replaceE": ".page"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.wallpaper-container>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.wallpaper-container>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "2avtt.com_分类": {
@@ -381,7 +383,7 @@
       "replaceE": ".pagination"
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-content');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gallery-detail-content');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "爱看图吧_分类": {
@@ -406,7 +408,7 @@
     },
     "function": {
       "bF": "return fun.src_bF(pageE)",
-      "aF": "let pageEParentChildImgs=document.querySelector('.photos-list>.album-photo');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.photos-list>.album-photo');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
   "微图坊_分类": {
@@ -439,127 +441,121 @@
       "bF": "pageE.forEach(function(one){let img=one.querySelector('img');img.setAttribute('style','');let src=img.getAttribute('data-cfsrc');img.setAttribute('src',src)});return pageE;"
     }
   },
-	"娱乐吧": {
-		"host": [
-			"www.yuleba.org",
-			"m.yuleba.org"
-		],
-		"url": "/^\\/a\\//",
-		"style": ".b_img>.paging {float: left;}",
-		"pager": {
-			"type": 3,
-			"nextL": "//div[@class='paging']/a[text()='下一页']",
-			"pageE": ".a_img>p",
-			"replaceE": ".paging"
-		},
+  "娱乐吧": {
+    "host": ["www.yuleba.org", "m.yuleba.org"],
+    "url": "/^\\/a\\//",
+    "style": ".b_img>.paging {float: left;}",
+    "pager": {
+      "type": 3,
+      "nextL": "//div[@class='paging']/a[text()='下一页']",
+      "pageE": ".a_img>p",
+      "replaceE": ".paging"
+    },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.a_img>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3_AutoStartFalse.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.a_img>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBoxAutoStartFalse@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
-	},
-	"娱乐吧_分类": {
-		"host": [
-			"www.yuleba.org",
-			"m.yuleba.org"
-		],
-		"url": "/^\\/b\\//",
-		"style": ".b_img>.paging {float: left;}",
-    "blank":3,
-		"pager": {
-			"type": 3,
-			"nextL": "//div[@class='paging']/a[text()='下一页']",
-			"pageE": ".b_img>ul",
-			"replaceE": ".paging"
-		}
-	},
-	"娱乐吧_小说": {
-		"host": "x.97mm.cc",
-    "url":"return !fun.indexOF(/\\/post\\//)",
-    "blank":3,
-		"pager": {
-			"nextL": "//a[text()='下一页']",
-			"pageE": ".content>article",
-			"replaceE": ".pagination"
-		}
-	},
-	"娱乐吧_小说章节": {
-		"host": "x.97mm.cc",
-    "url":"/\\/post\\//",
-    "style":".panel{display:unset!important}",
-		"pager": {
-      "type":3,
-			"nextL": "a[href='#']+a",
-			"pageE": ".article-content pre",
-			"replaceE": ".pages",
-      "scrollD":10000
-		},
-    "function":{
-      "aF":"document.querySelector('.pages').remove();"
+  },
+  "娱乐吧_分类": {
+    "host": ["www.yuleba.org", "m.yuleba.org"],
+    "url": "/^\\/b\\//",
+    "style": ".b_img>.paging {float: left;}",
+    "blank": 3,
+    "pager": {
+      "type": 3,
+      "nextL": "//div[@class='paging']/a[text()='下一页']",
+      "pageE": ".b_img>ul",
+      "replaceE": ".paging"
     }
-	},
-	"遛无写真": {
-		"host": "www.6evu.com",
-		"url": "/^\\/\\d+\\.html/",
-		"style": "#post_content>.code-block, .single-ad, .single-adphone {display: none !important;}",
-		"pager": {
-			"type": 3,
-			"nextL": ".pagelist>span+a",
-			"pageE": "#post_content",
-			"replaceE": ".pagelist"
-		},
+  },
+  "娱乐吧_小说": {
+    "host": "x.97mm.cc",
+    "url": "return !fun.indexOF(/\\/post\\//)",
+    "blank": 3,
+    "pager": {
+      "nextL": "//a[text()='下一页']",
+      "pageE": ".content>article",
+      "replaceE": ".pagination"
+    }
+  },
+  "娱乐吧_小说章节": {
+    "host": "x.97mm.cc",
+    "url": "/\\/post\\//",
+    "style": ".panel{display:unset!important}",
+    "pager": {
+      "type": 3,
+      "nextL": "a[href='#']+a",
+      "pageE": ".article-content pre",
+      "replaceE": ".pages",
+      "scrollD": 10000
+    },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('#post_content');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "document.querySelector('.pages').remove();"
     }
-	},
-	"Hit-x-Hot": {
-		"host": "hitxhot.com",
-		"url": "/\\/gallerys/",
-		"style": ".contain.refill:not(.relatedvideos) {display: none !important;}",
-		"pager": {
-			"type": 3,
-			"nextL": "//a[@class='page-numbers' and text()='Next >']",
-			"pageE": ".contentme",
-			"replaceE": ".pagination-site"
-		},
+  },
+  "遛无写真": {
+    "host": "www.6evu.com",
+    "url": "/^\\/\\d+\\.html/",
+    "style": "#post_content>.code-block, .single-ad, .single-adphone {display: none !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": ".pagelist>span+a",
+      "pageE": "#post_content",
+      "replaceE": ".pagelist"
+    },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.contentme');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('#post_content');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
-	},
-	"Hit-x-Hot_分类": {
-		"host": "hitxhot.com",
-		"url": "return !fun.indexOF(/\\/gallerys/)",
-    "blank":3,
-		"pager": {
-			"type": 3,
-			"nextL": ".next",
-			"pageE": ".thcovering-video",
-			"replaceE": ".pagination-site"
-		}
-	},
-	"美女目录网_list": {
-		"host": "www.mnmulu.com",
-		"url": "/(^\\/photos\\/.*_list\\/)|\\/search\\//",
-    "blank":3,
-		"pager": {
-      "type":3,
-			"nextL": "js; return fun.getNextUP('page=',/page=\\d+$/)",
-			"pageE": ".photo-list.row > .item",
-			"replaceE": ".pagination",
-      "scrollE":"//nav[@class='pagination mb mt'][2] | //nav[@class='pagination'][2]"
-		}
-	},
-	"美女目录网": {
-		"host": "www.mnmulu.com",
-		"url": "/^\\/photos\\//",
-		"pager": {
-      "type":3,
-			"nextL": "//a[text()='下一张>']",
-			"pageE": ".photo-box>a",
-			"replaceE": ".tools.row .text-right,.tools.row .text-left",
-      "scrollE":".photo-comment",
-      "scrollD":10000
-		},
+  },
+  "Hit-x-Hot": {
+    "host": "hitxhot.com",
+    "url": "/\\/gallerys/",
+    "style": ".contain.refill:not(.relatedvideos) {display: none !important;}",
+    "pager": {
+      "type": 3,
+      "nextL": "//a[@class='page-numbers' and text()='Next >']",
+      "pageE": ".contentme",
+      "replaceE": ".pagination-site"
+    },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.photo-box>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.3.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.contentme');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
-	}
+  },
+  "Hit-x-Hot_分类": {
+    "host": "hitxhot.com",
+    "url": "return !fun.indexOF(/\\/gallerys/)",
+    "blank": 3,
+    "pager": {
+      "type": 3,
+      "nextL": ".next",
+      "pageE": ".thcovering-video",
+      "replaceE": ".pagination-site"
+    }
+  },
+  "美女目录网_list": {
+    "host": "www.mnmulu.com",
+    "url": "/(^\\/photos\\/.*_list\\/)|\\/search\\//",
+    "blank": 3,
+    "pager": {
+      "type": 3,
+      "nextL": "js; return fun.getNextUP('page=',/page=\\d+$/)",
+      "pageE": ".photo-list.row > .item",
+      "replaceE": ".pagination",
+      "scrollE": "//nav[@class='pagination mb mt'][2] | //nav[@class='pagination'][2]"
+    }
+  },
+  "美女目录网": {
+    "host": "www.mnmulu.com",
+    "url": "/^\\/photos\\//",
+    "pager": {
+      "type": 3,
+      "nextL": "//a[text()='下一张>']",
+      "pageE": ".photo-box>a",
+      "replaceE": ".tools.row .text-right,.tools.row .text-left",
+      "scrollE": ".photo-comment",
+      "scrollD": 10000
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.photo-box>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.log(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent.insertBefore(loadingBox,parent.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+    }
+  }
 }

@@ -27,21 +27,31 @@ function isMobile() {
     (window.screen.width < 500 && window.screen.height < 800)
   );
 }
-function alphaPlay(obj, method) {	//渐隐 渐显 method有两个值show或hiden
+function alphaPlay(obj, method) {
+  //渐隐 渐显 method有两个值show或hiden
   let n = (method == "show") ? 0 : 100;
+  let opacity = obj.style["opacity"];
   let time = setInterval(function () {
     if (method == "show") {
+      if (opacity !== undefined && opacity === "1") {
+        clearTimeout(time);
+        return;
+      }
       if (n < 100) {
         n += 10;
         if (window.ActiveXObject) {
           obj.style.cssText = "filter:alpha(opacity=" + n + ")";
         } else {
-          (n == 100) ? obj.style.opacity = 1 : obj.style.opacity = "0." + n;
+          (n == 100) ? (obj.style.opacity = 1) : (obj.style.opacity = "0." + n);
         }
       } else {
         clearTimeout(time);
       }
     } else {
+      if (opacity !== undefined && opacity === "0") {
+        clearTimeout(time);
+        return;
+      }
       if (n > 0) {
         n -= 10;
         if (window.ActiveXObject) {
@@ -59,9 +69,6 @@ function fancyBoxStart(document) {
   try {
     if (Fancybox !== undefined && $ !== undefined) {
       // document.querySelector('.loading-box').style["display"] = "none";
-      let loadingBox = document.querySelector('.loading-box');
-      alphaPlay(loadingBox, "hiden");
-      loadingBox.style["z-index"] = "-1";
       log(' # ', "Fancybox && $ already exists!!!");
       return;
     }
@@ -87,11 +94,6 @@ function fancyBoxStart(document) {
       let loadingP;
       if (loadingBox) {
         loadingP = loadingBox.querySelector('.loading');
-      } else {
-        setTimeout(() => {
-          alphaPlay(loadingBox, "hiden");
-          loadingBox.style["z-index"] = "-1";
-        }, 2000);
       }
       log(' # ', "Fancybox loading...");
       try {
@@ -101,6 +103,10 @@ function fancyBoxStart(document) {
           $(loadingP).parent().css({ 'opacity': '0', 'z-index': '999999' });
           $(loadingP).css({ 'background': '#fff9eb', 'padding-right': 'unset', 'padding': '0px 5px' });
           alphaPlay(loadingBox, "show");
+          setTimeout(() => {
+            alphaPlay(loadingBox, "hiden");
+            loadingBox.style["z-index"] = "-1";
+          }, 5000);
           clearInterval(id);
           resolve();
         }
