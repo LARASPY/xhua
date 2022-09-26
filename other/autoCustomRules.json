@@ -448,7 +448,7 @@
     "pager": {
       "type": 3,
       "nextL": "//div[@class='paging']/a[text()='下一页']",
-      "pageE": ".a_img>p",
+      "pageE": ".a_img>p,.picture>p",
       "replaceE": ".paging"
     },
     "function": {
