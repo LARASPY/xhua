@@ -232,7 +232,7 @@
       "scrollD": 1000
     },
     "function": {
-      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.4_AutoStartFalse.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
+      "aF": "let pageEParentChildImgs=document.querySelector('.gtps li');if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let head=document.getElementsByTagName('head')[0];let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBoxAutoStartFalse@v_0.4.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.log('Parent element not found!')}"
     }
   },
   "美图网": {
