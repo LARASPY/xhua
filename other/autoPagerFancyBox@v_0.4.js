@@ -73,7 +73,7 @@ function fancyBoxStart(document) {
       return;
     }
   } catch (error) {
-    log(' # ', error);
+    console.error(' # ', error);
   }
   let head = document.getElementsByTagName("head")[0];
   let srcList = ["https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js"];
@@ -87,13 +87,16 @@ function fancyBoxStart(document) {
       srcList.push(
         "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js"
       );
-      for (let src of srcList) {
-        addStateMent(head, "script", src);
-      }
       let loadingBox = document.querySelector('.loading-box');
       let loadingP;
-      if (loadingBox) {
+      if (loadingBox!==null) {
         loadingP = loadingBox.querySelector('.loading');
+      } else {
+        console.error(" # ", "Loading-Box non-existent!!!");
+        return;
+      }
+      for (let src of srcList) {
+        addStateMent(head, "script", src);
       }
       log(' # ', "Fancybox loading...");
       try {
@@ -111,7 +114,7 @@ function fancyBoxStart(document) {
           resolve();
         }
       } catch (error) {
-        log(' # ', error);
+        console.error(' # ', error);
       }
     }, 100);
   })
@@ -210,7 +213,7 @@ function fancyBoxStart(document) {
             inline: "center",
           });
         } else {
-          console.error("未定位id！");
+          console.error(" # ", "未定位id！");
         }
       }
       if (imagePluginSwitch[0].isFancyBox) {
