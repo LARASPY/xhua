@@ -64,5 +64,5 @@
   > |      ✔ | <a href='https://www.taotucc.com/' target='_blank'><code>taotuxp.com</code></a> | ✔      | <a href='https://www.6evu.com/' target='_blank'><code>遛无写真</code></a>            |
   > |      ✔ | <a href='https://hitxhot.com/' target='_blank'><code>Hit-x-Hot</code></a>       | ✔      | <a href='https://www.nvsheng.cc/' target='_blank'><code>美图网</code></a>            |
   > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>   | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>              |
-  > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>      |        |                                                                                      |
+  > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>      | ✔      | <a href='https://www.24cos.org/' target='_blank'><code>COS 美女图</code></a>         |
   > |        |                                                                                 |        |                                                                                      |
