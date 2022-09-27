@@ -198,7 +198,6 @@
   "king_爱模网": {
     "host": "www.kingdom-en.com",
     "url": "/\\d+_?\\d+\\.html$/",
-    "style": ".pic_center img {min-height: 300px;}",
     "pager": {
       "type": 3,
       "nextL": "//a[contains(text(),'下一页')]",
