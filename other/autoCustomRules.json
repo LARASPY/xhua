@@ -606,5 +606,25 @@
       "pageE": ".light-list-items>.mb-3",
       "replaceE": ".light-pagination"
     }
-  }
+  },
+	"Steam 创意工坊 - 项目列表": {
+		"host": "steamcommunity.com",
+		"url": "return (fun.indexOF('/workshop/browse') || fun.indexOF('/myworkshopfiles/'))",
+    "style":".ugc.has_adult_content div.imgWallItem,.ugc.has_adult_content img{filter:unset}",
+		"pager": {
+			"nextL": "//a[@class='pagebtn' and text()='>']",
+			"pageE": ".workshopBrowseItems>*,.workshopItemSubscription,.workshopItemSubscription+script",
+			"replaceE": ".workshopBrowsePaging",
+			"scriptT": 2,
+			"type": 1,
+			"scrollD": 2000,
+			"interval": 500,
+			"insertP": [
+				".workshopBrowseItems>*,.workshopItemSubscription,.workshopItemSubscription+script",
+				5
+			]
+		},
+		"SiteTypeID": 242,
+		"pageUrl": "https://steamcommunity.com/workshop/browse/?appid=431960&browsesort=createdbyfollowed&actualsort=createdbyfollowed&p=4"
+	}
 }
