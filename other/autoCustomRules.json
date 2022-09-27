@@ -213,6 +213,7 @@
   "king_爱模网_分类": {
     "host": "www.kingdom-en.com",
     "url": "/^\\/(tag|meinv\\w*|\\w*meinv|rentiyizhu)\\//",
+    "blank":3,
     "pager": {
       "nextL": "//a[contains(text(),'下一页')]",
       "pageE": "#container>li",
@@ -560,7 +561,7 @@
   },
   "COS美女图24cos_分类": {
     "host": "www.24cos.org",
-    "url":"return (!fun.indexOF(/\\/\\d+-\\d+\\//) && !fun.indexOF(/\\/\\d+\\.html/))",
+    "url": "return (!fun.indexOF(/\\/\\d+-\\d+\\//) && !fun.indexOF(/\\/\\d+\\.html/))",
     "pager": {
       "nextL": ".on+a",
       "pageE": ".cdiv li,.cdiv .cmsg",
@@ -569,8 +570,8 @@
   },
   "COS美女图24cos_非高清页": {
     "host": "www.24cos.org",
-    "url":"return (!fun.indexOF(/\\/\\d+-\\d+\\//) && fun.indexOF(/\\/\\d+\\.html/))",
-    "style":".mtp li{margin-left:unset}.tpmh img{filter:unset}.img p{text-align:center}.mimg li{height:auto}.mimg img,.mimg li{width:100%}.dmsg{text-indent:unset;line-height:unset}a>img{max-width:100%}",
+    "url": "return (!fun.indexOF(/\\/\\d+-\\d+\\//) && fun.indexOF(/\\/\\d+\\.html/))",
+    "style": ".mtp li{margin-left:unset}.tpmh img{filter:unset}.img p{text-align:center}.mimg li{height:auto}.mimg img,.mimg li{width:100%}.dmsg{text-indent:unset;line-height:unset}a>img{max-width:100%}",
     "pager": {
       "type": 3,
       "nextL": "js; let pageNext=document.querySelector('.on+a');if(!pageNext){return location.origin+location.pathname.replace(/.html/,'_1.html')}else{return pageNext.href}",
@@ -584,8 +585,8 @@
   },
   "COS美女图24cos_高清页": {
     "host": "www.24cos.org",
-    "url":"/\\/\\d+-\\d+\\//",
-    "style":".mtp li{margin-left:unset}.tpmh img{filter:unset}.img p{text-align:center}.mimg li{height:auto}.mimg img,.mimg li{width:100%}.dmsg{text-indent:unset;line-height:unset}a>img{max-width:100%}",
+    "url": "/\\/\\d+-\\d+\\//",
+    "style": ".mtp li{margin-left:unset}.tpmh img{filter:unset}.img p{text-align:center}.mimg li{height:auto}.mimg img,.mimg li{width:100%}.dmsg{text-indent:unset;line-height:unset}a>img{max-width:100%}",
     "pager": {
       "type": 3,
       "nextL": ".on+a",
@@ -597,13 +598,13 @@
       "aF": "let pageEParentChildImgs=document.querySelector('.img p>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.5.js';head.appendChild(script);for(let index=0;index<items.length;index++){let img=items[index];if(/(?<=\\/)m(?=.*\\.jpg)/.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
   },
-	"ScriptCat": {
-		"host": "scriptcat.org",
-		"url": "/^\\/search/",
-		"pager": {
-			"nextL": "li[title='Next Page'] a",
-			"pageE": ".light-list-items>.mb-3",
-			"replaceE": ".light-pagination"
-		}
-	}
+  "ScriptCat": {
+    "host": "scriptcat.org",
+    "url": "/^\\/search/",
+    "pager": {
+      "nextL": "li[title='Next Page'] a",
+      "pageE": ".light-list-items>.mb-3",
+      "replaceE": ".light-pagination"
+    }
+  }
 }
