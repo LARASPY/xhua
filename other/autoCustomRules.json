@@ -212,7 +212,7 @@
   "king_爱模网_分类": {
     "host": "www.kingdom-en.com",
     "url": "/^\\/(tag|meinv\\w*|\\w*meinv|rentiyizhu)\\//",
-    "blank":3,
+    "blank": 3,
     "pager": {
       "nextL": "//a[contains(text(),'下一页')]",
       "pageE": "#container>li",
@@ -230,7 +230,7 @@
       "pageE": ".gtps li,#imgshow>a",
       "replaceE": ".page,.bb ul",
       "scrollD": 10000,
-      "scrollE":".page,body>strong"
+      "scrollE": ".page,body>strong"
     },
     "function": {
       "aF": "let pageEParentChildImgs=document.querySelector('.gtps li,#imgshow>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.5.js';head.appendChild(script);for(let index=1;index<items.length;index++){let img=items[index];if(/(?<=\\/\\/)imgs\\./.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/\\/)imgs/,'big').replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
@@ -376,7 +376,6 @@
   "爱看图吧": {
     "host": "www.9iktb.com",
     "url": "/^\\/gallery\\//",
-    "style": ".gallery-detail-img>img {min-height: 300px;}",
     "pager": {
       "type": 3,
       "nextL": "li.active+li>a",
@@ -577,7 +576,7 @@
       "nextL": "js; let pageNext=document.querySelector('.on+a');if(!pageNext){return location.origin+location.pathname.replace(/.html/,'_1.html')}else{return pageNext.href}",
       "pageE": ".mtp>li",
       "replaceE": ".page",
-      "scrollD": 100000
+      "scrollD": 10000
     },
     "function": {
       "aF": "let pageEParentChildImgs=document.querySelector('.mtp>li');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.5.js';head.appendChild(script);let vipText=document.querySelector('.pmid span.red');if(vipText)vipText=vipText.innerHTML;for(let index=0;index<items.length;index++){let img=items[index];if(!/vip|VIP/.test(vipText)){if(/(?<=\\/)m(?=.*\\.jpg)/.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
@@ -592,7 +591,7 @@
       "nextL": ".on+a",
       "pageE": ".img p>a",
       "replaceE": ".page",
-      "scrollD": 100000
+      "scrollD": 10000
     },
     "function": {
       "aF": "let pageEParentChildImgs=document.querySelector('.img p>a');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let items=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPagerFancyBox@v_0.5.js';head.appendChild(script);for(let index=0;index<items.length;index++){let img=items[index];if(/(?<=\\/)m(?=.*\\.jpg)/.test(img.src)){let src=img.src;img.setAttribute('src',src.replace(/(?<=\\/)m(?=.*\\.jpg)/,''))}if(img.tagName==='IMG'){img.setAttribute('data-fancybox','autoPageImages');img.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
@@ -606,5 +605,25 @@
       "pageE": ".light-list-items>.mb-3",
       "replaceE": ".light-pagination"
     }
+  },
+  "Steam 创意工坊 - 项目列表": {
+    "host": "steamcommunity.com",
+    "url": "return (fun.indexOF('/workshop/browse') || fun.indexOF('/myworkshopfiles/'))",
+    "style": ".ugc.has_adult_content div.imgWallItem,.ugc.has_adult_content img{filter:unset}",
+    "pager": {
+      "nextL": "//a[@class='pagebtn' and text()='>']",
+      "pageE": ".workshopBrowseItems>*,.workshopItemSubscription,.workshopItemSubscription+script",
+      "replaceE": ".workshopBrowsePaging",
+      "scriptT": 2,
+      "type": 1,
+      "scrollD": 2000,
+      "interval": 500,
+      "insertP": [
+        ".workshopBrowseItems>*,.workshopItemSubscription,.workshopItemSubscription+script",
+        5
+      ]
+    },
+    "SiteTypeID": 242,
+    "pageUrl": "https://steamcommunity.com/workshop/browse/?appid=431960&browsesort=createdbyfollowed&actualsort=createdbyfollowed&p=4"
   }
 }
