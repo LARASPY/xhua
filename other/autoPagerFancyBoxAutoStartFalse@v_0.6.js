@@ -89,7 +89,7 @@ function fancyBoxStart(document) {
       );
       let loadingBox = document.querySelector('.loading-box');
       let loadingP;
-      if (loadingBox!==null) {
+      if (loadingBox !== null) {
         loadingP = loadingBox.querySelector('.loading');
       } else {
         console.error(" # ", "Loading-Box non-existent!!!");
@@ -145,8 +145,7 @@ function fancyBoxStart(document) {
         {
           isViewerOpen: false,
           isFancyBox: true,
-          isFancyBoxFullScreen: false,
-          isFancyBoxAutoStartFalse: false,
+          isFancyBoxFullScreen: false
         },
       ];
       // 观察者 MutationObserver事件
@@ -233,16 +232,12 @@ function fancyBoxStart(document) {
             },
             Thumbs: { minScreenHeight: 0 },
           });
-        } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
+        } else {
           Fancybox.bind("[data-fancybox='autoPageImages']", {
             Thumbs: {
               autoStart: false,
               Carousel: { fill: false, center: true },
             },
-          });
-        } else {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Thumbs: { Carousel: { fill: false, center: true } },
           });
         }
       }

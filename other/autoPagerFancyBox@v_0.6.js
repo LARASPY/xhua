@@ -143,10 +143,9 @@ function fancyBoxStart(document) {
       log(' # ', value);
       let imagePluginSwitch = [
         {
-          isViewerOpen: false,
           isFancyBox: true,
           isFancyBoxFullScreen: false,
-          isFancyBoxAutoStartFalse: true,
+          isFancyBoxAutoStartFalse: false,
         },
       ];
       // 观察者 MutationObserver事件
