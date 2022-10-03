@@ -60,7 +60,7 @@ x.97mm.cc##body > div > [href="https://www.248w.co/mc49.aspx"]
 ||kk.lywdoo.cn
 ||m.fzchpos.com
 ||news.17173.com
-||api.dfes68.com
-||too.l4qe.xyz
 ||tylll.paradisemall.net
 ||w82.qat5.top
+/https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/
+/https?\:\/\/api\.\w{6}\.com\/.*/
