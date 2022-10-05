@@ -560,9 +560,18 @@
   },
   "COS美女图24cos_分类": {
     "host": "www.24cos.org",
-    "url": "return (!fun.indexOF(/\\/\\d+-\\d+\\//) && !fun.indexOF(/\\/\\d+\\.html/))",
+    "url": "return !fun.indexOF(/\\/\\d+-\\d+\\/|\\/\\d+\\.html|\\/serch\\.aspx/)",
     "pager": {
       "nextL": ".on+a",
+      "pageE": ".cdiv li,.cdiv .cmsg",
+      "replaceE": ".page"
+    }
+  },
+  "COS美女图24cos_search": {
+    "host": "www.24cos.org",
+    "url": "return !fun.indexOF(/\\/\\d+-\\d+\\/|\\/\\d+\\.html/)",
+    "pager": {
+      "nextL": ".page em+a",
       "pageE": ".cdiv li,.cdiv .cmsg",
       "replaceE": ".page"
     }
