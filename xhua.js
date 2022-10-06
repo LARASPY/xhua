@@ -34,7 +34,7 @@
 // @include      /https?\:\/\/madoupan\.\w+/
 // @include      /https?\:\/\/mrcong\.com/
 // @include      /https?\:\/\/\w+\.(?:xiure)\w+\.\w+/
-// @include      /https?\:\/\/\w+\.xrmn[0-9]{0,}.[a-zA-Z]{0,}./
+// @include      /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}./
 // @include      /https?\:\/\/(www\.)?[0-9]*(m|w|faw|fa)\.(cc|link)/
 // @include      /https?\:\/\/www.117.life/
 // @include      /https?\:\/\/(\w+\.)?tuiimg\.com/
@@ -384,7 +384,7 @@ let site = {
         hostnames: [
             'www.xrmn5.cc'
         ],
-        pattern: /https?\:\/\/\w+\.xrmn[0-9]{0,}.[a-zA-Z]{0,}/,
+        pattern: /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}/,
         iStatus: false,
         _break: false
     },
