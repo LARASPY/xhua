@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.21
+// @version      4.22
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -70,7 +70,10 @@
 // @include      /https?\:\/\/(www|m).meitu131.com/
 // @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
 // @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
-// @include      /https?\:\/\/mm.tvv.tw\/archives\//
+// @include      /https?\:\/\/mm.tvv.tw\/archives/
+// @include      /https?\:\/\/www\.f\d+m(n|m)\.com/
+// @include      /https?\:\/\/www\.446m\.com/
+// @include      /https?\:\/\/www\.elitebabes\.com/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -97,7 +100,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 function log() {
     if (isDebugMain) {
@@ -743,6 +746,36 @@ let site = {
         pattern: /https?\:\/\/mm.tvv.tw/,
         iStatus: false,
         _break: false
+    },
+    f4mm: {
+        id: 58,
+        name: "F4MM爱骚",
+        hostnames: [
+            'www.f4mn.com'
+        ],
+        pattern: /https?\:\/\/www\.f\d+m(n|m)\.com/,
+        iStatus: false,
+        _break: false
+    },
+    _446m: {
+        id: 58,
+        name: "萌图社",
+        hostnames: [
+            'www.446m.com'
+        ],
+        pattern: /https?\:\/\/www\.446m\.com/,
+        iStatus: false,
+        _break: false
+    },
+    elitebabes: {
+        id: 58,
+        name: "Elite Babes",
+        hostnames: [
+            'www.elitebabes.com'
+        ],
+        pattern: /https?\:\/\/www\.elitebabes\.com/,
+        iStatus: false,
+        _break: false
     }
 };
 let mainArr = [
@@ -991,16 +1024,20 @@ function startFancyBoxScript() {
     // 当观察到突变时执行的回调函数
     const Callbacks = function (mutationsList) {
         mutationsList.forEach(function (item, index) {
-            // log(type(item.type) + " " + item.type);
-            if ("attributes" == item.type) {
+            if ("attributes" === item.type) {
+                // log(item);
                 if (
-                    item.target.className ==
-                    "fancybox__slide has-image can-zoom_in is-selected"
+                    item.target.className ===
+                    "fancybox__carousel is-draggable"
                 ) {
-                    // if (isDebugMain) console.groupCollapsed("MutationObserver");
-                    log("MutationRecord: - #", item);
-                    addEvent(item);
-                    // if (isDebugMain) console.groupEnd("MutationObserver");
+                    log(' # ', item);
+                    openEvent(item);
+                } else if (
+                    item.target.className ===
+                    "fancybox__container is-animated is-closing"
+                ) {
+                    log(' # ', item);
+                    closeEvent();
                 }
             }
         });
@@ -1008,16 +1045,15 @@ function startFancyBoxScript() {
     // 创建一个链接到回调函数的观察者实例
     const Observer = new MutationObserver(Callbacks);
     ContentContainer && Observer.observe(ContentContainer, configObserver);
-    function addEvent(item) {
+    function openEvent(item) {
         slideIndex =
-            item.target.parentElement.parentElement.parentElement.parentElement
-                .children[1].firstElementChild.firstElementChild.firstChild.innerText -
-            1;
+            item.target.offsetParent.childNodes[1].firstChild.firstChild
+                .childNodes[0].innerText - 1;
         if (slideIndex) {
             log("open - # " + slideIndex + " slide is open!");
         }
     }
-    function destroyFun(fancybox, slide) {
+    function closeEvent() {
         log("close - # " + slideIndex + " slide is closed!");
         let elementById = document.getElementById("imgLocation" + slideIndex);
         if (elementById) {
@@ -1028,6 +1064,8 @@ function startFancyBoxScript() {
                 behavior: behavior_,
                 inline: "center",
             });
+        } else {
+            console.error(" # ", "未定位id！");
         }
     }
     if (imagePluginSwitch[0].isFancyBox) {
@@ -1040,34 +1078,15 @@ function startFancyBoxScript() {
                 hideClass: false,
                 closeButton: "top",
                 Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
-                Thumbs: { minScreenHeight: 0 },
-                on: {
-                    destroy: (fancybox, slide) => {
-                        destroyFun(fancybox, slide);
-                    },
-                },
+                Thumbs: { minScreenHeight: 0 }
             });
         } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
             Fancybox4.bind("[data-fancybox='images']", {
-                Thumbs: { autoStart: false, Carousel: { fill: false, center: true } },
-                on: {
-                    done: (fancybox, slide) => {
-                        slideIndex = fancybox.getSlide().index;
-                        log("#" + fancybox.getSlide().index + "slide is loaded!");
-                    },
-                    destroy: (fancybox, slide) => {
-                        destroyFun(fancybox, slide);
-                    },
-                },
+                Thumbs: { autoStart: false, Carousel: { fill: false, center: true } }
             });
         } else {
             Fancybox4.bind("[data-fancybox='images']", {
-                Thumbs: { Carousel: { fill: false, center: true } },
-                on: {
-                    destroy: (fancybox, slide) => {
-                        destroyFun(fancybox, slide);
-                    },
-                },
+                Thumbs: { Carousel: { fill: false, center: true } }
             });
         }
     }
@@ -5030,9 +5049,142 @@ function type(param) {
                 let imgs = $(document).find(".blog-details-text img");
                 log("imgs #", imgs);
                 $.each(imgs.clone(), function (index, value) {
-                    // log("value #", value);
-                    $(value).attr({ 'data-fancybox': 'images', 'id': 'imgLocation' + index });
+                    // log("value #", value);img[label="sl"]
+                    $(value).attr({ 'label': "sl", 'data-fancybox': 'images', 'id': 'imgLocation' + index });
                     $(value).removeAttr("data-cfsrc class");
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.f4mn.com---------------------------------------- */
+
+    injectBtns().domain(site.f4mm.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('#masonry').hide();
+        //android
+    }, function () {
+        $('#masonry').show();
+        //android
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.alert.alert-dismissible.alert-light.mx-auto.d-block').first().after(injectComponent);
+        }
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find("#masonry>div");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    let img = $(value).find('img');
+                    let src = img.attr('data-src');
+                    log(' # src', src);
+                    img.attr({ 'label': "sl", 'src': src });
+                    $(value).attr({ 'id': 'imgLocation' + index });
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.446m.com---------------------------------------- */
+
+    injectBtns().domain(site._446m.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.post-content p').hide();
+        //android
+    }, function () {
+        $('.post-content p').show();
+        //android
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.post-content p').parent().prepend(injectComponent);
+        }
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".post-content p>span");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    let img = $(value).find('img');
+                    let src = img.attr('data-original');
+                    log(' # src', src);
+                    img.attr({ 'label': "sl", 'src': src });
+                    $(value).attr({ 'id': 'imgLocation' + index });
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.elitebabes.com---------------------------------- */
+
+    injectBtns().domain(site.elitebabes.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.list-gallery.a.css').hide();
+        //android
+    }, function () {
+        $('.list-gallery.a.css').show();
+        //android
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.list-gallery.a.css').prev().after(injectComponent);
+        }
+        GM_addStyle('button,input[type=button],input[type=reset],input[type=submit]{float:unset!important;text-align:center}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".list-gallery.a.css a");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    $(value).find('img').attr({ 'label': "sl" });
+                    $(value).attr({ 'id': 'imgLocation' + index });
                     item.append($(value));
                 });
             }

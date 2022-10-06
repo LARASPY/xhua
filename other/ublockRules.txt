@@ -64,3 +64,13 @@ x.97mm.cc##body > div > [href="https://www.248w.co/mc49.aspx"]
 ||w82.qat5.top
 /https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/
 /https?\:\/\/api\.\w{6}\.com\/.*/
+
+! 2022-10-05 https://www.elitebabes.com
+www.elitebabes.com##[src*="/memberskam/include_hnw"]
+www.elitebabes.com##.wide-hide.list-triple
+! 2022-10-05 https://www.hegrehunter.com
+www.hegrehunter.com##[src*="/memberskam/include_hnw"]
+
+! 2022-10-06 https://xgirlscollection.com
+||assets.pinterest.com^$domain=xgirlscollection.com
+xgirlscollection.com##.icon-bar
