@@ -176,16 +176,16 @@ function fancyBoxStart(document) {
           if ("attributes" === item.type) {
             if (
               item.target.className ===
-              "fancybox__slide has-image can-zoom_in is-selected"
+              "fancybox__carousel is-draggable"
             ) {
               log(' # ', item);
-              addEvent(item);
+              openEvent(item);
             } else if (
               item.target.className ===
               "fancybox__container is-animated is-closing"
             ) {
               log(' # ', item);
-              destroyFun();
+              closeEvent();
             }
           }
         });
@@ -193,16 +193,15 @@ function fancyBoxStart(document) {
       // 创建一个链接到回调函数的观察者实例
       const Observer = new MutationObserver(callbacks);
       ContentContainer && Observer.observe(ContentContainer, configObserver);
-      function addEvent(item) {
+      function openEvent(item) {
         slideIndex =
-          item.target.parentElement.parentElement.parentElement.parentElement
-            .children[1].firstElementChild.firstElementChild.firstChild
-            .innerText - 1;
+          item.target.offsetParent.childNodes[1].firstChild.firstChild
+            .childNodes[0].innerText - 1;
         if (slideIndex) {
           log("open - # " + slideIndex + " slide is open!");
         }
       }
-      function destroyFun() {
+      function closeEvent() {
         log("close - # " + slideIndex + " slide is closed!");
         let elementById = document.getElementById("imgLocation" + slideIndex);
         if (elementById) {
