@@ -5165,11 +5165,11 @@ function type(param) {
             $('.list-gallery.a.css').prev().after(injectComponent);
         }
         GM_addStyle('input[type=button]{float:unset!important;text-align:center}#c_container img{width:100%}input{width:unset!important}');
-        Get('http://localhost/elitebabes/icons/icomoon.woff2');
+        Get('https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/elitebabes/icons/icomoon.woff2');
         if (/^\/$|^\/(members|archive|random|latest-updates|top-rated-babes|discover|videos)\//img.test(location.pathname)) {
-            addStyle(null, 'http://localhost/elitebabes/elitebabes_origin.css');
+            addStyle(null, 'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/elitebabes/elitebabes_origin.css');
         } else {
-            addStyle(null, 'http://localhost/elitebabes/elitebabes.css');
+            addStyle(null, 'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/elitebabes/elitebabes.css');
         }
         let id = setInterval(function () {
             let item = $("#c_container");
