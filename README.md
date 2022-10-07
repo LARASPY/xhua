@@ -10,7 +10,7 @@
   >
   > 应小伙伴要求，_图聚合展示 by xhua_ 已修复完成。
   >
-  > 脚本同时也新添加了 ViewerJs 和**FancyBox**插件，方便点击阅览。当然可以打开 <u>&nbsp;[**Mic Mic Idol**](https://www.micmicidol.com/)&nbsp;</u>或者<u>&nbsp;[**爱看&nbsp;INS**](https://www.ikanins.com/)&nbsp;</u>感受一下。
+  > 脚本同时也新添加了 ViewerJs 和**FancyBox**插件，方便点击阅览。当然可以打开 <u>&nbsp;[**Mic Mic Idol**](https://www.micmicidol.com/)&nbsp;</u> 或者 <u>&nbsp;[**爱看&nbsp;INS**](https://www.ikanins.com/)&nbsp;</u> 感受一下。
   >
   > FancyBox 带来的别样体验，请注意**手机版**点击播放按钮旁边的**全屏按钮**体验更舒服。
   >
@@ -45,7 +45,7 @@
   >
   > **Ⅴ.** <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
   >
-  > **Ⅵ.** 关于手机版的网址链接跳转，如果使用本油猴脚本**可用网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个[`Markdown网站`](http://jbt.github.io/markdown-editor/)，Markdown 代码在<a href='https://github.com/LARASPY/xhua' target='_blank' target='_blank'><code>LARASPY</code></a>git 仓库里面，将仓库里面的[**`WebsiteMark.md`**](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/WebsiteMark.md)代码，复制到[`Markdown网站`](http://jbt.github.io/markdown-editor/)里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
+  > **Ⅵ.** 关于手机版的网址链接跳转，如果使用本油猴脚本**可用网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个[`Markdown网站`](http://jbt.github.io/markdown-editor/)，Markdown 代码在<a href='https://github.com/LARASPY/xhua' target='_blank' ><code>LARASPY</code></a>git 仓库里面，将仓库里面的[**`WebsiteMark.md`**](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/WebsiteMark.md)代码，复制到[`Markdown网站`](http://jbt.github.io/markdown-editor/)里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
   >
   > `注:WebsiteMark.md 直链¹更新不及时，原生²更新及时,但是原生² 一般只有翻墙才能访问。`
   >
@@ -152,4 +152,4 @@
   > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>     | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>              |
   > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>        | ✔      | <a href='https://www.24cos.org/' target='_blank'><code>Cos 美女图</code></a>         |
   > |      ✔ | <a href='https://m.xtushe.com/' target='_blank'><code>新老友图社</code></a> 🆕    | ✔      | <a href='https://xgirlscollection.com' target='_blank'><code>xgirls</code></a> 🆕    |
-  > |      ✔ | <a href='https://233.fi/' target='_blank'><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕 |        |                                                                                      |
+  > |      ✔ | <a href='https://233.fi/' target='_blank'><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕 | ✔      | <a href='https://nhentai.net/' target='_blank'><code>Nhentai 漫画</code></a> 🆕      |

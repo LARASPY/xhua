@@ -67,4 +67,4 @@
   > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>     | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>              |
   > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>        | ✔      | <a href='https://www.24cos.org/' target='_blank'><code>Cos 美女图</code></a>         |
   > |      ✔ | <a href='https://m.xtushe.com/' target='_blank'><code>新老友图社</code></a> 🆕    | ✔      | <a href='https://xgirlscollection.com' target='_blank'><code>xgirls</code></a> 🆕    |
-  > |      ✔ | <a href='https://233.fi/' target='_blank'><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕 |        |                                                                                      |
+  > |      ✔ | <a href='https://233.fi/' target='_blank'><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕 | ✔      | <a href='https://nhentai.net/' target='_blank'><code>Nhentai 漫画</code></a> 🆕      |
