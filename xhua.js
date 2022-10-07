@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.22
+// @version      4.23
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -100,7 +100,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 function log() {
     if (isDebugMain) {
@@ -4954,26 +4954,14 @@ function type(param) {
         activateFancyBox();
         curSite.isJavaScriptObject = true;
         $('div pre').hide();
-        $('.show_content pre').hide();
+        $('.show_content pre center').hide();
         //android
-        let id = setInterval(function () {
-            if ($('.article-content').length === 0) {
-                console.log("content # Hide !!!");
-                clearInterval(id);
-                $('.article-content').hide();
-            }
-        }, 100);
+        $('.article-content').hide();
     }, function () {
         $('div pre').show();
-        $('.show_content pre').show();
+        $('.show_content pre center').show();
         //android
-        let id = setInterval(function () {
-            if ($('.article-content').length === 0) {
-                console.log("content # Show !!!");
-                clearInterval(id);
-                $('.article-content').show();
-            }
-        }, 100);
+        $('.article-content').show();
     }).injectAggregationRef(async function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
@@ -4986,7 +4974,7 @@ function type(param) {
             log('push pageUrl:\n', pageUrl);
             pageUrls.push(pageUrl);
             if (os.isPc) {
-                $('.show_content table').after(injectComponent);
+                $('.show_content pre').prepend(injectComponent);
             } else {
                 if (/app=index/.test(location.search)) {
                     $('.article-head').after(injectComponent);
@@ -5008,7 +4996,7 @@ function type(param) {
                 log("imgs #", imgs);
                 $.each(imgs.clone(), function (index, value) {
                     // log("value #", value);
-                    $(value).attr({ 'data-fancybox': 'images', 'id': 'imgLocation' + index })
+                    $(value).attr({ 'label': "sl", 'data-fancybox': 'images', 'id': 'imgLocation' + index })
                     item.append($(value));
                 });
             }
@@ -5096,7 +5084,7 @@ function type(param) {
                     let src = img.attr('data-src');
                     log(' # src', src);
                     img.attr({ 'label': "sl", 'src': src });
-                    $(value).attr({ 'id': 'imgLocation' + index });
+                    $(value).attr({ "data-fancybox": "images", 'id': 'imgLocation' + index });
                     item.append($(value));
                 });
             }
@@ -5110,6 +5098,7 @@ function type(param) {
     injectBtns().domain(site._446m.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
         activateFancyBox();
+        curSite.isJavaScriptObject = true;
         $('.post-content p').hide();
         //android
     }, function () {
@@ -5141,7 +5130,7 @@ function type(param) {
                     let src = img.attr('data-original');
                     log(' # src', src);
                     img.attr({ 'label': "sl", 'src': src });
-                    $(value).attr({ 'id': 'imgLocation' + index });
+                    $(value).attr({ "data-fancybox": "images", 'id': 'imgLocation' + index });
                     item.append($(value));
                 });
             }
@@ -5156,9 +5145,11 @@ function type(param) {
     }).switchAggregationBtn(function () {
         activateFancyBox();
         $('.list-gallery.a.css').hide();
+
         //android
     }, function () {
         $('.list-gallery.a.css').show();
+
         //android
     }).injectAggregationRef(async function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
@@ -5173,7 +5164,13 @@ function type(param) {
             pageUrls.push(pageUrl);
             $('.list-gallery.a.css').prev().after(injectComponent);
         }
-        GM_addStyle('button,input[type=button],input[type=reset],input[type=submit]{float:unset!important;text-align:center}');
+        GM_addStyle('input[type=button]{float:unset!important;text-align:center}#c_container img{width:100%}input{width:unset!important}');
+        Get('http://localhost/elitebabes/icons/icomoon.woff2');
+        if (/^\/$|^\/(members|archive|random|latest-updates|top-rated-babes|discover|videos)\//img.test(location.pathname)) {
+            addStyle(null, 'http://localhost/elitebabes/elitebabes_origin.css');
+        } else {
+            addStyle(null, 'http://localhost/elitebabes/elitebabes.css');
+        }
         let id = setInterval(function () {
             let item = $("#c_container");
             if (item) {
@@ -5183,9 +5180,14 @@ function type(param) {
                 log("imgs #", imgs);
                 $.each(imgs.clone(), function (index, value) {
                     // log("value #", value);
-                    $(value).find('img').attr({ 'label': "sl" });
-                    $(value).attr({ 'id': 'imgLocation' + index });
-                    item.append($(value));
+                    let aTag = $(value);
+                    let img = aTag.find('img');
+                    let src = aTag.attr('href');
+                    img.attr({ 'label': "sl", "src": src });
+                    aTag.attr({ "data-fancybox": "images", 'id': 'imgLocation' + index });
+                    aTag.removeAttr("srcset sizes alt");
+                    img.removeAttr("srcset sizes alt");
+                    item.append(aTag);
                 });
             }
         }, 100);
