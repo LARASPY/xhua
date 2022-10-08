@@ -145,32 +145,32 @@
     <details>
         <summary>展开</summary>
         <pre style="display: table;">
-        <b><div>不推荐网址: </div></b>
-        <div style="display: flex;flex-wrap: wrap;">
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href="http://www.win4000.com/meitu.html" target="_blank" style="text-decoration: none;"><code>美桌 ˙ᵖᶜ</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.3gbizhi.com/meinv/' target='_blank' style="text-decoration: none;"><code>3G 壁纸 ˙ᵖᶜ</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://madoupan.com/' target='_blank' style="text-decoration: none;"><code>麻豆盘</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.mmm131.com' target='_blank' style="text-decoration: none;"><code>MM131 美女图片</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.photos18.com/' target='_blank' style="text-decoration: none;"><code>色情圖片網 ˙¹⁸⁺</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asianpink.net/' target='_blank' style="text-decoration: none;"><code>Asian Pink</code></a></div>    
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asdcosplay.com/' target='_blank' style="text-decoration: none;"><code>Make Girls(请自行注册使用)</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://yellowfever18.com/' target='_blank' style="text-decoration: none;"><code>Yellow Fever</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asdasfd.net/' target='_blank' style="text-decoration: none;"><code>ASD ASFD</code></a></div>    
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://xartmodel.net/' target='_blank' style="text-decoration: none;"><code>XRTMODEL</code></a></div>  
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://goddess247.com/' target='_blank' style="text-decoration: none;"><code>Goddess247</code></a></div>  
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://nudecosplaygirls.com/' target='_blank' style="text-decoration: none;"><code>NUDECOSPLAY˙¹⁸⁺</code></a></div> 
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://233.fi/' target='_blank' style="text-decoration: none;"><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕</div> 
-        </div>
-        <b><div>已失效网址: </div></b>
-        <div style="display: flex;flex-wrap: wrap;">
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://tw.kissgoddess.com/' target='_blank' style="text-decoration: none;"><code>Goddess</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.dmmtu.com/' target='_blank' style="text-decoration: none;"><code>Dmmtu 美女图</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://allasiangirls.net/' target='_blank' style="text-decoration: none;"><code>Asian Girls</code></a></div>
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://nudebird.biz/' target='_blank' style="text-decoration: none;"><code>NudeBird˙¹⁸⁺</code></a></div>
-        </div>
-        <b><div>未适配网址: </div></b>
-        <div style="display: flex;flex-wrap: wrap;">
-            <div style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='http://chottie.com/blog/zh' target='_blank' style="text-decoration: none;"><code>Chottie</code></a></div>
-        </div>
+        <b>不推荐网址: </b>
+        <ul style="display: flex;flex-wrap: wrap;list-style-type:none;">
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href="http://www.win4000.com/meitu.html" target="_blank" style="text-decoration: none;"><code>美桌 ˙ᵖᶜ</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.3gbizhi.com/meinv/' target='_blank' style="text-decoration: none;"><code>3G 壁纸 ˙ᵖᶜ</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://madoupan.com/' target='_blank' style="text-decoration: none;"><code>麻豆盘</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.mmm131.com' target='_blank' style="text-decoration: none;"><code>MM131 美女图片</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.photos18.com/' target='_blank' style="text-decoration: none;"><code>色情圖片網 ˙¹⁸⁺</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asianpink.net/' target='_blank' style="text-decoration: none;"><code>Asian Pink</code></a></li>    
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asdcosplay.com/' target='_blank' style="text-decoration: none;"><code>Make Girls(请自行注册使用)</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://yellowfever18.com/' target='_blank' style="text-decoration: none;"><code>Yellow Fever</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://asdasfd.net/' target='_blank' style="text-decoration: none;"><code>ASD ASFD</code></a></li>    
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://xartmodel.net/' target='_blank' style="text-decoration: none;"><code>XRTMODEL</code></a></li>  
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://goddess247.com/' target='_blank' style="text-decoration: none;"><code>Goddess247</code></a></li>  
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://nudecosplaygirls.com/' target='_blank' style="text-decoration: none;"><code>NUDECOSPLAY˙¹⁸⁺</code></a></li> 
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://233.fi/' target='_blank' style="text-decoration: none;"><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕</li> 
+        </ul>
+        <b>已失效网址: </b>
+        <ul style="display: flex;flex-wrap: wrap;list-style-type:none;">
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://tw.kissgoddess.com/' target='_blank' style="text-decoration: none;"><code>Goddess</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.dmmtu.com/' target='_blank' style="text-decoration: none;"><code>Dmmtu 美女图</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://allasiangirls.net/' target='_blank' style="text-decoration: none;"><code>Asian Girls</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://nudebird.biz/' target='_blank' style="text-decoration: none;"><code>NudeBird˙¹⁸⁺</code></a></li>
+        </ul>
+        <b>未适配网址: </b>
+        <ul style="display: flex;flex-wrap: wrap;list-style-type:none;">
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='http://chottie.com/blog/zh' target='_blank' style="text-decoration: none;"><code>Chottie</code></a></li>
+        </ul>
         </pre>
     </details>
