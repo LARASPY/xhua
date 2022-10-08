@@ -75,5 +75,5 @@ www.hegrehunter.com##[src*="/memberskam/include_hnw"]
 ||assets.pinterest.com^$domain=xgirlscollection.com
 xgirlscollection.com##.icon-bar
 
-! 2022-10-07 https://www.elitebabes.com elitebabes去广告必要规则
+! 2022-10-07 https://www.elitebabes.com elitebabes-使用必要规则
 ||k5x5n5g8.ssl.hwcdn.net/wp-content/themes/rwd/styles/v28/screen.css$stylesheet,domain=www.elitebabes.com
