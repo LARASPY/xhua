@@ -32,7 +32,7 @@
   > >
   > > **<kbd>Alt</kbd> + <kbd>F8</kbd>：打开各网站链接界面。**
   >
-  > **Ⅳ.** 使用<mark>`免费私房图`、`心动美图`、`elitebabes`</mark>，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。去广告规则如链接：[ublock 其他去广告规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt) 。🆕
+  > **Ⅳ.** 使用`免费私房图`<mark>、</mark>`心动美图`<mark>、</mark>`elitebabes`，前提是需要在 uBlock Origin 的`控制面板`中，添加`静态规则`来去除广告，不然该网站用不了。去广告规则如链接：[ublock 其他去广告规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt) 。🆕
   >
   > **Ⅴ.** <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code> </a>请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
   >
