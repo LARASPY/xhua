@@ -68,7 +68,7 @@
   >     </pre>
   > </details>
   >
-  > > 注意是添加 `mrcong.net` (前面记得加 `,` ),不是 `https:\/\/mrcong.net` ,只要 `https:\/\/` 后面的主机名。
+  > > 注意是添加 `mrcong.net` (前面记得加 `,` ),不是 `https:\/\/mrcong.net` ,只要 `https:\/\/` 后面的 `主机名` 。
   >
   > **Ⅷ.** 新添加了【[自动无缝翻页](https://greasyfork.org/zh-CN/scripts/419215-%E8%87%AA%E5%8A%A8%E6%97%A0%E7%BC%9D%E7%BF%BB%E9%A1%B5)】脚本自定义规则： [AutoPage 无缝翻页规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/autoPager/autoCustomRules.json)。🆕
   >
