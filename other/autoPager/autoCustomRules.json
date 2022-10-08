@@ -700,7 +700,7 @@
   "萌图社": {
     "host": ["www.446m.com"],
     "pager": {
-      "type":3,
+      "type": 3,
       "nextL": ".current+li a",
       "pageE": "#masonry > div",
       "replaceE": ".page-navigator",
@@ -708,6 +708,22 @@
     },
     "function": {
       "bF": "return fun.src_bF(pageE, [0, 'img[data-original]', 'data-original'])"
+    }
+  },
+  "BTULL": {
+    "host": "www.btnull.org",
+    "url":"return (fun.lp() !== '/' && !fun.indexOF(/^\\/(trailers|vipplay|gbook)\\//))",
+    "pager": {
+      "type": 6,
+      "nextL": "js; let url;if(fun.indexOF(/-\\d*\\.html$/)){url=fun.getNextUPN(/\\d+(?=\\.html$)/,/-\\d*\\.html$/,'-','.html');}else{url=location.href+'------2.html'}return url",
+      "pageE": ".content-list>li",
+      "replaceE": ".pages",
+      "loadTime": 1000,
+      "scrollD": 3000
+    },
+    "function": {
+      "aF":"$(document).ready(function(){var trigger=null;$('.cover').hover(function(){var thi_s=this;trigger=setTimeout(function(){if($(thi_s).children('.load-favorite').length==0&&_BT.getcookie('BT_cookietime')){load_favorite(thi_s)}},500)},function(){clearTimeout(trigger)});$('.cover').on('click','.load-favorite',function(){add_favorite(this)})});",
+      "bF": "pageE.forEach(function(one){let mvId=one.querySelector('.cover').getAttribute('data-id').replace(/_\\w*/g,'');let a=one.querySelector('a');a.target='blank';a.href=location.origin+location.pathname.replace(/(?<=\\/\\w*\\/).*/g,'')+mvId+'.html';});return fun.src_bF(pageE, [0,'img[data-src]','data-src'])"
     }
   }
 }
