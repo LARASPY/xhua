@@ -751,5 +751,12 @@
     "function": {
       "bF": "return fun.src_bF(pageE, [0,'img[data-src]','data-src'])"
     }
-  }
+  },
+	"AGE 动漫 - 排行榜": {
+		"host": [
+			"/^www\\.agemys\\..+$/",
+			"www.age.tv"
+		],
+		"url": "return (fun.lp() == '/rank')"
+	}
 }
