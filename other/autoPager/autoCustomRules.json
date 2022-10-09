@@ -782,5 +782,43 @@
     "function": {
       "aF": "let pageEParentChildImgs=document.querySelector('.single-content>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPager/autoPagerFancyBoxAutoStartFalse@v_0.6.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
     }
+  },
+  "H 次元": {
+    "host": "h-ciyuan.com",
+    "url": "return (fun.lp() == '/' ||fun.indexOF('/category/') || fun.indexOF('/tag/'))",
+    "style": "widgetbot-crate{visibility: hidden !important;}",
+    "blank": 3,
+    "pager": {
+      "nextL": "a.next",
+      "pageE": ".gridview-posts",
+      "replaceE": ".nav-links"
+    }
+  },
+  "H 次元_其他": {
+    "host": "h-ciyuan.com",
+    "style": "widgetbot-crate{visibility: hidden !important;}",
+    "hiddenPN": true
+  },
+  "iwara": {
+    "host": "iwara.tv",
+    "url": "/^\\/(videos|images)/",
+    "blank": 3,
+    "pager": {
+      "type": 3,
+      "nextL": ".pager-next>a",
+      "pageE": ".view-content>div>div",
+      "replaceE": ".pager"
+    }
+  },
+  "ThisAV.com": {
+    "host": "www.thisav.com",
+    "url": "/^\\/(videos)/",
+    "blank": 3,
+    "pager": {
+      "type": 3,
+      "nextL": "//a[text()='下頁»']",
+      "pageE": ".video_box",
+      "replaceE": ".pagination"
+    }
   }
 }

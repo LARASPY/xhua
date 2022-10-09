@@ -48,17 +48,19 @@
 
   > > 注意！对于**未适配**的网站中 ✔`适配自动无缝翻页`， - ` 未适配自动无缝翻页...`
   >
-  > | `适配` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`             | `适配` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                |
-  > | -----: | --------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------ |
-  > |      ✔ | <a href='https://xgirlscollection.com' target='_blank'><code>xgirls</code></a> 🆕 | ✔      | <a href='https://www.yuleba.org/b/10-0.html' target='_blank'><code>娱乐吧</code></a> |
-  > |      ✔ | <a href='https://www.99nvshen.com/' target='_blank'><code>爱女神</code></a>       | ✔      | <a href='https://www.kingdom-en.com/' target='_blank'><code>King 爱模网</code></a>   |
-  > |      ✔ | <a href='https://www.24tupian.org' target='_blank'><code>24tupian˙ᵖᶜ</code></a>   | ✔      | <a href='https://wap.2meinv.com/' target='_blank'><code>爱美女</code></a>            |
-  > |      ✔ | <a href='https://www.2avtt.com/' target='_blank'><code>超级美女图库</code></a>    | ✔      | <a href='https://www.97mm.cc/' target='_blank'><code>撸女吧 ˙¹⁸⁺</code></a>          |
-  > |      ✔ | <a href='https://www.taotucc.com/' target='_blank'><code>Taotuxp.com</code></a>   | ✔      | <a href='https://www.6evu.com/' target='_blank'><code>遛无写真</code></a>            |
-  > |      ✔ | <a href='https://hitxhot.com/' target='_blank'><code>Hit-x-Hot˙¹⁸⁺</code></a>     | ✔      | <a href='https://www.nvsheng.cc/' target='_blank'><code>美图网</code></a>            |
-  > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>     | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>              |
-  > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>        | ✔      | <a href='https://www.24cos.org/' target='_blank'><code>Cos 美女图</code></a>         |
-  > |      ✔ | <a href='https://m.xtushe.com/' target='_blank'><code>新老友图社</code></a> 🆕    | ✔      | <a href='https://nhentai.net/' target='_blank'><code>Nhentai 漫画</code></a> 🆕      |
+  > | `适配` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                              | `适配` | `< - - - - - - - - - - - - - - - 网站 - - - - - - - - - - - - - - ->`                |
+  > | -----: | -------------------------------------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------ |
+  > |      ✔ | <a href='https://xgirlscollection.com' target='_blank'><code>Xgirls</code></a> 🆕                  | ✔      | <a href='https://www.yuleba.org/b/10-0.html' target='_blank'><code>娱乐吧</code></a> |
+  > |      ✔ | <a href='https://www.99nvshen.com/' target='_blank'><code>爱女神</code></a>                        | ✔      | <a href='https://www.kingdom-en.com/' target='_blank'><code>King 爱模网</code></a>   |
+  > |      ✔ | <a href='https://www.24tupian.org' target='_blank'><code>24tupian˙ᵖᶜ</code></a>                    | ✔      | <a href='https://wap.2meinv.com/' target='_blank'><code>爱美女</code></a>            |
+  > |      ✔ | <a href='https://www.2avtt.com/' target='_blank'><code>超级美女图库</code></a>                     | ✔      | <a href='https://www.97mm.cc/' target='_blank'><code>撸女吧 ˙¹⁸⁺</code></a>          |
+  > |      ✔ | <a href='https://www.taotucc.com/' target='_blank'><code>Taotuxp.com</code></a>                    | ✔      | <a href='https://www.6evu.com/' target='_blank'><code>遛无写真</code></a>            |
+  > |      ✔ | <a href='https://hitxhot.com/' target='_blank'><code>Hit-x-Hot˙¹⁸⁺</code></a>                      | ✔      | <a href='https://www.nvsheng.cc/' target='_blank'><code>美图网</code></a>            |
+  > |      ✔ | <a href='https://www.mnmulu.com/' target='_blank'><code>美女目录网</code></a>                      | ✔      | <a href='https://www.v2ph.com/' target='_blank'><code>微图坊</code></a>              |
+  > |      ✔ | <a href='https://www.9iktb.com/' target='_blank'><code>爱看图吧</code></a>                         | ✔      | <a href='https://www.24cos.org/' target='_blank'><code>Cos 美女图</code></a>         |
+  > |      ✔ | <a href='https://m.xtushe.com/' target='_blank'><code>新老友图社</code></a> 🆕                     | ✔      | <a href='https://nhentai.net/' target='_blank'><code>Nhentai 漫画</code></a> 🆕      |
+  > |      ✔ | <a href='http://www.xxiav.com/html/category/a/' target='_blank'><code>177 漫画/xxiav</code></a> 🆕 | ✔      | <a href='https://h-ciyuan.com/' target='_blank'><code>H 次元</code></a> 🆕           |
+  > |      ✔ | <a href='http://www.xxiav.com/html/category/a/' target='_blank'><code>18comic 漫画</code></a> 🆕   |        |                                                                                      |
 
 - **其他网址** 🆕
 
@@ -79,7 +81,8 @@
             <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://xartmodel.net/' target='_blank' style="text-decoration: none;"><code>XRTMODEL</code></a></li>  
             <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://goddess247.com/' target='_blank' style="text-decoration: none;"><code>Goddess247</code></a></li>  
             <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://nudecosplaygirls.com/' target='_blank' style="text-decoration: none;"><code>NUDECOSPLAY˙¹⁸⁺</code></a></li> 
-            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://233.fi/' target='_blank' style="text-decoration: none;"><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕</li> 
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://233.fi/' target='_blank' style="text-decoration: none;"><code>LALA の图库 ˙ᴹᵒᵇⁱˡᵉ</code></a> 🆕</li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://www.thisav.com/' target='_blank' style="text-decoration: none;"><code>ThisAV˙¹⁸⁺</code></a></li> 
         </ul>
         <b>已失效网址: </b>
         <ul style="display: flex;flex-wrap: wrap;list-style-type:none;">
@@ -91,6 +94,8 @@
         <b>未适配网址: </b>
         <ul style="display: flex;flex-wrap: wrap;list-style-type:none;">
             <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='http://chottie.com/blog/zh' target='_blank' style="text-decoration: none;"><code>Chottie</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://yande.re/' target='_blank' style="text-decoration: none;"><code>Y 站</code></a></li>
+            <li style="margin: 5px;border-width: 2px;border-style: solid;border-color: transparent transparent rgb(129, 92, 148);"><a href='https://konachan.com/' target='_blank' style="text-decoration: none;"><code>K 站</code></a></li>
         </ul>
         </pre>
     </details>
