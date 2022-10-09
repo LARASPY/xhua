@@ -725,7 +725,7 @@
       "pageE": ".content-list>li,.pic-list>li",
       "replaceE": ".pages",
       "loadTime": 1000,
-      "scrollD": 3000
+      "scrollD": 800
     },
     "function": {
       "aF": "$(document).ready(function(){var trigger=null;$('.cover').hover(function(){var thi_s=this;trigger=setTimeout(function(){if($(thi_s).children('.load-favorite').length==0&&_BT.getcookie('BT_cookietime')){load_favorite(thi_s)}},500)},function(){clearTimeout(trigger)});$('.cover').on('click','.load-favorite',function(){add_favorite(this)})});",
@@ -746,7 +746,7 @@
       "nextL": "js;let one=fun.getOne('.pages>a>.icon-chevron-forward');if(one){return one.parentElement.href;}",
       "pageE": ".pic-list>li",
       "replaceE": ".pages",
-      "scrollD": 3000
+      "scrollD": 800
     },
     "function": {
       "bF": "return fun.src_bF(pageE, [0,'img[data-src]','data-src'])"
