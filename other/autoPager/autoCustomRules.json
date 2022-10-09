@@ -754,6 +754,7 @@
   },
   "AGE 动漫 - 排行榜": {
     "host": ["/^www\\.agemys\\..+$/", "www.age.tv"],
-    "url": "return (fun.lp() == '/rank')"
+    "url": "return (fun.lp() == '/rank')",
+    "hiddenPN": true
   }
 }
