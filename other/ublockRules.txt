@@ -56,15 +56,6 @@ xchina.co##.push-bottom
 x.97mm.cc##div:nth-of-type(1) > [href="https://www.248w.co/mc49.aspx"]
 x.97mm.cc##body > div > [href="https://www.248w.co/mc49.aspx"]
 
-! 2022-10-02 https://www.24fa.link
-||kk.lywdoo.cn
-||m.fzchpos.com
-||news.17173.com
-||tylll.paradisemall.net
-||w82.qat5.top
-/https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/
-/https?\:\/\/api\.\w{6}\.com\/.*/
-
 ! 2022-10-05 https://www.elitebabes.com
 www.elitebabes.com##[src*="/memberskam/include_hnw"]
 www.elitebabes.com##.wide-hide.list-triple
@@ -77,3 +68,12 @@ xgirlscollection.com##.icon-bar
 
 ! 2022-10-07 https://www.elitebabes.com elitebabes-使用必要规则
 ||k5x5n5g8.ssl.hwcdn.net/wp-content/themes/rwd/styles/v28/screen.css$stylesheet,domain=www.elitebabes.com
+
+! 2022-10-10 https://www.24fa.link $badfilter
+||kk.lywdoo.cn
+||m.fzchpos.com
+||news.17173.com
+||tylll.paradisemall.net
+/https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
+/https?\:\/\/api?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
+/https?\:\/\/w82\.\w*/$domain=www.24fa.*|www.117.life|www.166w.cc
