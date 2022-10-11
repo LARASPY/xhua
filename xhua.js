@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.23
+// @version      4.24
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -115,7 +115,7 @@ let imagePluginSwitch = [{
     isFancyBoxAutoStartFalse: false,
     isOpenAutoSlidingPosition: false
 }]
-let curSite = { isReferer: '', isHost: true, isJavaScriptObject: false };
+let curSite = { isReferer: '', isHost: true, isAdjustDomainName: false };
 
 let site = {
     HentaiImage: {
@@ -1468,7 +1468,7 @@ function type(param) {
                     } else {
                         if (!imgSrc.startsWith('blob:')) {
                             let host = window.location.host;
-                            imgSrc = isImgHttpStart(imgSrc, curSite.isJavaScriptObject);
+                            imgSrc = isImgHttpStart(imgSrc, curSite.isAdjustDomainName);
                             log("imgSrc # ", imgSrc);
                             if (type(imgSrc) === 'object') {
                                 host = imgSrc.host[0];
@@ -1579,7 +1579,7 @@ function type(param) {
                         } else {
                             if (!imgSrc.startsWith('blob:')) {
                                 let host = window.location.host;
-                                imgSrc = isImgHttpStart(imgSrc, curSite.isJavaScriptObject);
+                                imgSrc = isImgHttpStart(imgSrc, curSite.isAdjustDomainName);
                                 log("imgSrc # ", imgSrc);
                                 if (type(imgSrc) === 'object') {
                                     host = imgSrc.host[0];
@@ -1851,7 +1851,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
-        curSite.isJavaScriptObject = true;
+        curSite.isAdjustDomainName = true;
         $('#display_image_detail').hide();
         $('#post').hide();
         //android
@@ -2833,7 +2833,7 @@ function type(param) {
         log("skipGeekGoddess: \n", skipGeekGoddess);
         if (isEmpty(skipGeekGoddess)) {
             log("\n-----inject GeekGoddess-----\n");
-            curSite.isJavaScriptObject = true;
+            curSite.isAdjustDomainName = true;
             let match = currentPathname.match(/(\w+)\/(\d+)/im);
             log("match: \n", match);
             let isGirl = /girl|article/g.exec(currentPathname);
@@ -4270,6 +4270,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
+        curSite.isAdjustDomainName = true;
         $('.entry-content img').hide();
     }, function () {
         // $('.entry-content img').show();
@@ -4952,7 +4953,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         activateFancyBox();
-        curSite.isJavaScriptObject = true;
+        curSite.isAdjustDomainName = true;
         $('div pre').hide();
         $('.show_content pre center').hide();
         //android
@@ -5098,7 +5099,7 @@ function type(param) {
     injectBtns().domain(site._446m.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
         activateFancyBox();
-        curSite.isJavaScriptObject = true;
+        curSite.isAdjustDomainName = true;
         $('.post-content p').hide();
         //android
     }, function () {
