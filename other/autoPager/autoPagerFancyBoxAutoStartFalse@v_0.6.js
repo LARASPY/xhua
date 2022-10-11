@@ -119,35 +119,11 @@ function fancyBoxStart(document) {
     }, 100);
   })
     .then(function () {
-      let fancyBoxCssAdditon = `
-      a[data-fancybox] img{cursor:zoom-in}
-      .fancybox__container{--carousel-button-bg:rgb(0 0 0 / 44%);--carousel-button-svg-width:24px;--carousel-button-svg-height:24px;--carousel-button-svg-stroke-width:2.5;--carousel-button-svg-filter:none}
-      .fancybox__nav{--carousel-button-svg-width:22px;--carousel-button-svg-height:22px;--carousel-button-svg-stroke-width:3}
-      .fancybox__nav .carousel__button.is-prev{left:30px}
-      .fancybox__nav .carousel__button.is-next{right:30px}
-      .carousel__button.is-close{top:30px;right:30px}
-      .fancybox__slide{padding:0}
-      .fancybox__thumbs{position:absolute;bottom:0;left:0;right:0;z-index:10}
-      .fancybox__thumbs .carousel__slide{padding:20px 10px;overflow:visible}
-      .fancybox__thumb{border-radius:6px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3),0 2px 4px -1px rgba(0,0,0,0.26)}
-      .is-nav-selected .fancybox__thumb{transform:scale(1.25)}
-      .is-nav-selected .fancybox__thumb::after{display:none}`;
       addStateMent(head, "link", fancyboxCssArrr[0], null, relStyle);
-      if (!isMobile()) {
-        addStateMent(head, "style", null, fancyBoxCssAdditon, typeStyle);
-        return "PC OK";
-      }
       return "Android OK";
     })
     .then(function (value) {
       log(' # ', value);
-      let imagePluginSwitch = [
-        {
-          isViewerOpen: false,
-          isFancyBox: true,
-          isFancyBoxFullScreen: false
-        },
-      ];
       // 观察者 MutationObserver事件
       function type(param) {
         // es6中null的类型为object
@@ -214,32 +190,12 @@ function fancyBoxStart(document) {
           console.error(" # ", "未定位id！");
         }
       }
-      if (imagePluginSwitch[0].isFancyBox) {
-        if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Toolbar: false,
-            animated: false,
-            dragToClose: false,
-            showClass: false,
-            hideClass: false,
-            closeButton: "top",
-            Image: {
-              click: "close",
-              wheel: "slide",
-              zoom: false,
-              fit: "cover",
-            },
-            Thumbs: { minScreenHeight: 0 },
-          });
-        } else {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Thumbs: {
-              autoStart: false,
-              Carousel: { fill: false, center: true },
-            },
-          });
-        }
-      }
+      Fancybox.bind("[data-fancybox='autoPageImages']", {
+        Thumbs: {
+          autoStart: false,
+          Carousel: { fill: false, center: true },
+        },
+      });
     });
 }
 fancyBoxStart(window.document);
