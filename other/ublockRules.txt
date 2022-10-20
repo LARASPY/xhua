@@ -77,3 +77,6 @@ xgirlscollection.com##.icon-bar
 /https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
 /https?\:\/\/api?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
 /https?\:\/\/w82\.\w*/$domain=www.24fa.*|www.117.life|www.166w.cc
+
+! 2022-10-18 http://q.quantuwang1.com
+p.qlogo.cn$domain=q.quantuwang1.com
