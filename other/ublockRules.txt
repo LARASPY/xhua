@@ -78,5 +78,13 @@ xgirlscollection.com##.icon-bar
 /https?\:\/\/api?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
 /https?\:\/\/w82\.\w*/$domain=www.24fa.*|www.117.life|www.166w.cc
 
-! 2022-10-18 http://q.quantuwang1.com
+! 2022-10-20 https://m.xinwenba.net
+m.xinwenba.net##div.web
+
+! 2022-10-20 http://q.quantuwang1.com
 p.qlogo.cn$domain=q.quantuwang1.com
+/https?:\/\/q\.quantuwang1\.com\/miframe\/aaa\/.*/$domain=q.quantuwang1.com
+||d.duotuwang.com/aaa/20211206.png$image
+
+! 2022-10-21 https://www.24fa.link
+||www.24fa.link^$3p

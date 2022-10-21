@@ -820,5 +820,54 @@
       "pageE": ".video_box",
       "replaceE": ".pagination"
     }
+  },
+  "新闻吧 - xinwenba.net": {
+    "host": ["www.xinwenba.net", "m.xinwenba.net"],
+    "url": "/\\/view-/",
+    "pager": {
+      "type": 3,
+      "nextL": "//div[@class='paging']/li/a[text()='下一页']",
+      "pageE": ".picture>p, .view_img>p",
+      "replaceE": ".paging"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.picture>p, .view_img>p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPager/autoPagerFancyBoxAutoStartFalse@v_0.6.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+    }
+  },
+  "全图网_quantuwang_分类": {
+    "host": ["q.quantuwang1.com"],
+    "url": "/^\\/meinv\\/.+/",
+    "pager": {
+      "type": 3,
+      "nextL": ".list_page>span+a,.index_c_page span+a",
+      "pageE": ".index_middle_c li",
+      "replaceE": ".list_page,.index_c_page"
+    }
+  },
+  "全图网_quantuwang_图片": {
+    "host": ["q.quantuwang1.com"],
+    "url": "/^\\/m\\//",
+    "pager": {
+      "type": 3,
+      "nextL": ".index_c_page>span+a",
+      "pageE": "body>.box>.index_c>.index_c_img img",
+      "replaceE": ".index_c_page",
+      "scrollD": 5000
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('body>.box>.index_c>.index_c_img img');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPager/autoPagerFancyBox@v_0.6.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+    }
+  },
+  "套图之家_图片": {
+    "host": ["taotuhome.com"],
+    "url": "/^\\/\\d+\\.html/",
+    "pager": {
+      "nextL": "js;let limitPageNum=fun.getOne('.page-links').innerText.match(/\\d+/img);let endP=Math.max.apply(null,limitPageNum);let url=fun.getNextUPN(/(?<=\\/\\d*\\.html\\/)\\d*/,/(?<=\\/\\d*\\.html)\\/\\d*/,'/','',2,endP);console.log('套图之家:',url);return url;",
+      "pageE": ".single-content p",
+      "replaceE": ".page-links"
+    },
+    "function": {
+      "aF": "let pageEParentChildImgs=document.querySelector('.single-content p');let head=document.getElementsByTagName('head')[0];if(pageEParentChildImgs){let item=pageEParentChildImgs.parentElement.getElementsByTagName('img');let script=document.createElement('script');script.src='https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/autoPager/autoPagerFancyBox@v_0.6.js';head.appendChild(script);for(let index=0;index<item.length;index++){let tag=item[index];if(tag.tagName==='IMG'){tag.setAttribute('data-fancybox','autoPageImages');tag.setAttribute('id','imgLocation'+index)}}}else{console.error(' # parentNotFound!')}function addStateMent(head,textContent,setAttribute){let statement=document.createElement('style');if(textContent)statement.textContent=textContent;for(const[key,value]of Object.entries(setAttribute)){statement.setAttribute(key,value)}head.appendChild(statement)}function alphaPlay(obj){let n=100;let time=setInterval(function(){if(n>0){n-=10;if(window.ActiveXObject){obj.style.cssText='filter:alpha(opacity='+n+')'}else{obj.style.opacity='0.'+n}}else{clearTimeout(time)}},30)}let typeStyle={name:'type',value:'text/css'};let loadingCss='.loading-box{position:fixed;top:50px;left:0;z-index:999999;display:flex;width:100%;height:50px;align-items:center}.loading{margin:0 auto;padding: 0px 34px 0px 5px;height:40px;border-radius:2px;background:url(https://s3.bmp.ovh/imgs/2022/09/25/1f8d1418fe82cbd2.gif) 100% #fff9eb no-repeat;background-size:32px;color:#000;text-align:center;font-size:17px;line-height:40px}';addStateMent(head,loadingCss,typeStyle);let loadingBox=document.createElement('div');let loadingP=document.createElement('p');let parent_=document.querySelector('body');loadingP.setAttribute('class','loading');loadingBox.setAttribute('class','loading-box');loadingP.innerHTML='FancyBox loading...';loadingBox.appendChild(loadingP);if(document.querySelector('.loading-box')){}else{parent_.insertBefore(loadingBox,parent_.children[0]);setTimeout(()=>{alphaPlay(loadingBox);loadingBox.style['z-index']='-1'},2000)}"
+    }
   }
 }

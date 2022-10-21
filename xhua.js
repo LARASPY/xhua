@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.24
+// @version      4.25
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -66,7 +66,7 @@
 // @include      /https?\:\/\/asdcosplay.com/
 // @include      /https?\:\/\/asianpink.net/
 // @include      /https?\:\/\/ryuryu.tw/
-// @include      /https?\:\/\/(www|m).xinwenba.net/
+// @exclude      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
 // @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
 // @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
@@ -1154,7 +1154,7 @@ function popUpMenu() {
     popUpContent.outerHTML = popUpStr;
     popUpContent = document.querySelector("#popUpContent");
     if (!popUpContent) {
-        err("弹窗加载失败！！！");
+        console.error("弹窗加载失败！！！");
         return;
     }
     document.querySelector("#popUpQuit").onclick = function () {
@@ -1231,7 +1231,7 @@ function type(param) {
                     resolve();
                 };
             } catch (error) {
-                log("fancybox4js isn't finished!");
+                console.error("fancybox4js isn't finished!");
             }
         }, 100);
     });
@@ -1240,7 +1240,7 @@ function type(param) {
     currentUrlActivation();
     if (isDebugMain) console.groupEnd('urlActivationGroup');
 
-    priorityLog('未实现：');
+    priorityLog('开始实现：');
 
     function injectBtns() {
         let blobCache = {};
@@ -1286,8 +1286,7 @@ function type(param) {
                 "text-align": "center",
                 "padding": "5px",
                 "clear": "both",
-                "margin": "10px auto",
-                // "width": "85%",
+                "margin": "10px auto"
             });
             $("#injectComponentIn > input").css({
                 "display": "inline-block",
@@ -1299,7 +1298,7 @@ function type(param) {
                 "cursor": "pointer",
                 "border-radius": "3px",
                 "margin-right": "unset",
-                "margin-bottom": "unset",
+                "margin-bottom": "unset"
             });
         };
         let activateSlidingFunc = function () {
@@ -1506,13 +1505,13 @@ function type(param) {
                                             errorNum++;
                                             if (errorNum === imgList.length) {
                                                 isPackageAndDownload = false;
-                                                err('图片全部下载失败,请使用插件下载。');
+                                                console.error('图片全部下载失败,请使用插件下载。');
                                                 alert("图片全部下载失败,请使用插件下载。");
                                             }
                                         }
                                         length--;
                                     } catch (e) {
-                                        err('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
+                                        console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
                                     }
                                 },
                                 onerror: function (response) {
@@ -1526,7 +1525,7 @@ function type(param) {
                                         err('图片全部下载失败,请使用插件下载。');
                                         alert("图片全部下载失败,请使用插件下载。");
                                     }
-                                    err("DownlodeUrl " + index + ": 超时");
+                                    console.error("DownlodeUrl " + index + ": 超时");
                                     log('URL：' + imgSrc, response)
                                     length--;
                                 }
@@ -1615,13 +1614,13 @@ function type(param) {
                                                 errorNum++;
                                                 if (errorNum === imgList.length) {
                                                     isBindBtnDownload = false;
-                                                    err('截图保存失败。');
+                                                    console.error('截图保存失败。');
                                                     alert("截图保存失败。");
                                                 }
                                             }
                                             length--;
                                         } catch (e) {
-                                            err('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
+                                            console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
                                         }
                                     },
                                     onerror: function (response) {
@@ -1632,10 +1631,10 @@ function type(param) {
                                         errorNum++;
                                         if (errorNum === imgList.length) {
                                             isBindBtnDownload = false;
-                                            err('截图保存失败。');
+                                            console.error('截图保存失败。');
                                             alert("截图保存失败。");
                                         }
-                                        err("DownlodeUrl " + index + ": 超时");
+                                        console.error("DownlodeUrl " + index + ": 超时");
                                         log('URL：' + imgSrc, response)
                                         length--;
                                     }
@@ -1674,14 +1673,14 @@ function type(param) {
                                             log("截图保存完成。");
                                             alert("截图保存完成。");
                                         } else {
-                                            err("文件不存在，截图保存失败!");
+                                            console.error("文件不存在，截图保存失败!");
                                             alert("文件不存在，截图保存失败!");
                                         }
                                         isBindBtnDownload = false;
                                     }).catch(function (error) {
                                         if (errorNum !== imgList.length) {
                                             isBindBtnDownload = false;
-                                            err('截图太大不能保存!');
+                                            console.error('截图太大不能保存!');
                                             alert("截图太大不能保存!");
                                         }
                                     });
