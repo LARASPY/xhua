@@ -824,6 +824,7 @@
   "新闻吧 - xinwenba.net": {
     "host": ["www.xinwenba.net", "m.xinwenba.net"],
     "url": "/\\/view-/",
+    "blank": 3,
     "pager": {
       "type": 3,
       "nextL": "//div[@class='paging']/li/a[text()='下一页']",
