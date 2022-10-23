@@ -1,3 +1,8 @@
+! Title: ublockRules
+! Author: lara_ssr
+! Homepage: https://github.com/LARASPY/xhua/blob/master/other/ublockRules.txt
+
+!----------------- rules -----------------!
 ! 2022-08-28 https://www.mfsft.com 免费私房图-使用必要规则
 /https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/([rp]||top)\d*.js)/
 
