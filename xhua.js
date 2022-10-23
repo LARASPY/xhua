@@ -1130,10 +1130,7 @@ function aImgTagPackaging(images) {
         // log("attr src: \n", src);
         src = $(this)[0].src;
         log("array src: \n", src);
-        $(this).css({
-            "width": "100%",
-            "height": "100%"
-        });
+        $(this).css({ "width": "100%" });
         let imageItem = $(this).prop("outerHTML").toString();
         log("New this String: \n", imageItem);
         let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
