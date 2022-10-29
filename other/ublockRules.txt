@@ -95,3 +95,6 @@ p.qlogo.cn$domain=q.quantuwang1.com
 /https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
 /https?\:\/\/(api|p)?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
 *$3p,denyallow=staticfile.org|greasyfork.org|jsdelivr.net,domain=www.24fa.*|www.117.life|www.199w.cc
+
+! 2022-10-22 https://m.gnvshen.com
+@@||bdstatic.com$domain=gnvshen.com

@@ -23,7 +23,7 @@
     }
   },
   "图集岛_03": {
-    "host": ["www.tujidao.com", "www.tujidao03.com"],
+    "host": ["www.tujidao.com", "/www.tujidao\\w*.com/"],
     "pager": {
       "nextL": "//*[@id='pages']//a[contains(text(),'下一页')]",
       "pageE": ".hezi",
@@ -642,8 +642,9 @@
   },
   "新老友图社_catalog": {
     "host": "m.xtushe.com",
-    "url": "return (fun.indexOF(/^\\/catalog\\//))",
+    "url": "return (fun.lp() == '/' || fun.indexOF(/^\\/catalog\\//))",
     "style": ".fr{float:unset}",
+    "blank": 3,
     "pager": {
       "nextL": "//a[text()='下一页']",
       "pageE": "#content-list li",
