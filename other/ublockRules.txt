@@ -98,3 +98,8 @@ p.qlogo.cn$domain=q.quantuwang1.com
 
 ! 2022-10-22 https://m.gnvshen.com
 @@||bdstatic.com$domain=gnvshen.com
+
+! 2022-10-31 https://m.gnvshen.com
+||p1.meituan.net
+||js.zt-uc-baidu.cc
+||res.buuxk.com:85/script/info.mobile.js?v=1.0$script
