@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.25
+// @version      4.27
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -68,7 +68,7 @@
 // @include      /https?\:\/\/ryuryu.tw/
 // @exclude      /https?\:\/\/(www|m).xinwenba.net/
 // @include      /https?\:\/\/(www|m).meitu131.com/
-// @include      /https?\:\/\/dongtidemi\w*.(com|net|org)/
+// @include      /https?\:\/\/dongti(demi)?\w*.(com|net|org)/
 // @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
 // @include      /https?\:\/\/mm.tvv.tw\/archives/
 // @include      /https?\:\/\/www\.f\d+m(n|m)\.com/
@@ -100,7 +100,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
+let isDebugMain = true;
 
 function log() {
     if (isDebugMain) {
@@ -722,7 +722,7 @@ let site = {
             'dongtidemi.com',
             'dongtidemimi.org'
         ],
-        pattern: /https?\:\/\/dongtidemi\w*.(com|net|org)/,
+        pattern: /https?\:\/\/dongti(demi)?\w*.(com|net|org)/,
         iStatus: false,
         _break: false
     },
@@ -916,19 +916,16 @@ async function startMain_(arrs = null) {
         if (param) {
             var param_type = typeof (param);
             if (param_type == 'object') {
-                //要判断的是【对象】或【数组】或【null】等
                 if (typeof (param.length) == 'undefined') {
                     if (JSON.stringify(param) == "{}") {
-                        return true; //空值，空对象
+                        return true;
                     }
                 } else if (param.length == 0) {
-                    return true; //空值，空数组
+                    return true;
                 }
             } else if (param_type == 'string') {
-                //如果要过滤空格等字符
                 var new_param = param.trim();
                 if (new_param.length == 0) {
-                    //空值，例如:带有空格的字符串" "。
                     return true;
                 }
             } else if (param_type == 'boolean') {
@@ -940,13 +937,8 @@ async function startMain_(arrs = null) {
                     return true;
                 }
             }
-            return false; //非空值
+            return false;
         } else {
-            //空值,例如：
-            //(1)null
-            //(2)可能使用了js的内置的名称，例如：var name=[],这个打印类型是字符串类型。
-            //(3)空字符串''、""。
-            //(4)数字0、00等，如果可以只输入0，则需要另外判断。
             return true;
         }
     }
@@ -978,7 +970,7 @@ async function startMain_(arrs = null) {
             try {
                 data = await timeoutPromise(arr[index], Get_(arr[index]));
                 if (data) {
-                    console.log("Data: " + arr[index] + "is finished!\n");
+                    console.log("Data: " + arr[index] + " is finished!\n");
                 }
             } catch (error) {
                 console.log(error);
@@ -2267,13 +2259,11 @@ function type(param) {
     /* --------------------------------------------everia.club------------------------------------------ */
 
     injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
-        debugger
+        // debugger
         $("head").empty();
-        // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js");
         let arrs = [
             'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/everiacss.js',
-            'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/everiacss.js',
-            "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/everiacss.js"
+            'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/everiacss.js'
         ]
         await startMain_(arrs);
         addStyle(everiacss);
@@ -2289,25 +2279,33 @@ function type(param) {
     }, function () {
         $('figure.has-nested-images').show();
         $('.separator').show();
-    }).injectAggregationRef(function (injectComponent, pageUrls) {
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         let ismainPage = /\/(\d+)\//g.exec(currentPathname);
         log("ismainPage: \n", ismainPage);
         if (ismainPage === null) {
             log("ismainPage null!!!!");
         } else if (currentPathname !== null) {
-            {
-                pageUrls.push(currentPathname);
-            }
+            log('push pageUrl:\n', currentPathname);
+            pageUrls.push(currentPathname);
             $('figure.has-nested-images').prev().after(injectComponent);
         }
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".entry-content figure>img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    log("value #", value);
+                    $(value).attr({ 'label': "sl", "data-fancybox": "images", 'id': 'imgLocation' + index });
+                    item.append($(value));
+                });
+            }
+        }, 100);
     }).collectPics(function (doc) {
-        let images = $(doc).find('.entry-content img').clone();
-        let a_imgTag = aImgTagPackaging(images);
-        log("New a_imgTag Object: \n", $(a_imgTag));
-        return $(a_imgTag);
     }, function (imgE) {
-        imgE.style = "width: 100%;height: 100%";
     }).start();
 
     /* --------------------------------------------www.jpxgyw.net & www.jpmn8.com----------------------- */
@@ -2882,6 +2880,7 @@ function type(param) {
             }
         } else {
             log("\n-----inject xsnvshen-----\n");
+            GM_addStyle('#back-to-top{z-index:unset!important}');
             let pageUrl = currentPathname;
             log('push pageUrl:\n', pageUrl);
             pageUrls.push(pageUrl);
@@ -3534,9 +3533,17 @@ function type(param) {
             $('#metadata_qrcode').after(injectComponent);
         }
     }).collectPics(function (doc) {
-        let imgE;
-        imgE = $(doc).find("img.miniaturaImg");
-        return imgE;
+        let imgEs;
+        imgEs = $(doc).find("img.miniaturaImg");
+        $.each(imgEs, function (index, value) {
+            // log("value #", value);
+            let img = $(value);
+            let imgP = img.parent();
+            let src = imgP.attr('data-src');
+            img.attr({ "src": src });
+            img.removeAttr("data-src");
+        });
+        return imgEs;
     }, function (imgE) {
         imgE.style = "width: 100%;";
         $(imgE).attr({
@@ -3641,9 +3648,12 @@ function type(param) {
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-            $('div.article').slice(1, 2).after(injectComponent);
+            let photoCount = $('div[ target="photoCount"]').text().match(/\d*/m)[0];
+            log("photoCount # ", photoCount);
+            if (photoCount <= 100) {
+                $('div.article').slice(1, 2).after(injectComponent);
+            }
         }
-
     }).collectPics(function (doc) {
         let imgE = [];
         let imgEDiv;
@@ -4923,22 +4933,56 @@ function type(param) {
                 pageUrls.push(pageUrl);
                 $('.entry-head').after(injectComponent);
             }
+            GM_addStyle('#c_container img{width: 100%;}');
+            let imgs, len;
+            let id = setInterval(function () {
+                let item = $("#c_container");
+                if (item) {
+                    log("item #", item);
+                    clearInterval(id);
+                    imgs = $(document).find(".entry-content img");
+                    log("imgs #", imgs);
+                    len = imgs.length - 1;
+                    $.each(imgs.clone(), function (index, value) {
+                        // log("value #", value);
+                        let img = $(value);
+                        let src = img.attr('data-original');
+                        log(' # src', src);
+                        img.attr({ 'label': "sl", 'src': src });
+                        $(value).attr({ "data-fancybox": "images", 'id': 'imgLocation' + index });
+                        item.append($(value));
+                    });
+                }
+            }, 100);
+            let ContentContainer = document.querySelector(".entry-content");
+            let configObserver = {
+                childList: true,
+                subtree: true,
+                attributeFilter: ["class"],
+            };
+            // 当观察到突变时执行的回调函数
+            let callbacks = function (mutationsList) {
+                mutationsList.forEach(function (item, index) {
+                    if (item.type == 'childList') {
+                        log(" # ", item);
+                        let tag = item.addedNodes;
+                        if (tag[0].className == 'j-wpcom-lightbox') {
+                            log(" # tag ", tag);
+                            let src = tag[0].href;
+                            let img = $("<img src=" + src + "></img>");
+                            len = len + 1;
+                            img.attr({ "data-fancybox": "images", 'id': 'imgLocation' + len });
+                            $('#c_0').append(img);
+                        }
+                    }
+                });
+            };
+            // 创建一个链接到回调函数的观察者实例
+            let Observer = new MutationObserver(callbacks);
+            ContentContainer && Observer.observe(ContentContainer, configObserver);
         }
     }).collectPics(function (doc) {
-        let imgE = []
-        let item = $(doc).find(".entry-content img");
-        $(item).each(function () {
-            let src = $(this).attr("data-original");
-            if (!isEmpty(src)) {
-                imgE.push($("<img src=" + src + "></img>"));
-            }
-        });
-        return $(imgE);
     }, function (imgE) {
-        imgE.style = "width: 100%;";
-        $(imgE).attr({
-            'data-fancybox': 'images'
-        });
     }).start();
 
     /* --------------------------------------------www.cool18.com-------------------------------------- */
