@@ -35,7 +35,7 @@
 // @include      /https?\:\/\/mrcong\.com/
 // @include      /https?\:\/\/\w+\.(?:xiure)\w+\.\w+/
 // @include      /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}./
-// @include      /https?\:\/\/(www\.)?[0-9]*(m|w|faw|fa)\.(cc|link)/
+// @include      /https?\:\/\/(www\.)?[0-9]{2,3}(m|w|faw|fa|aa)?\.(cc|link|life)/
 // @include      /https?\:\/\/www.117.life/
 // @include      /https?\:\/\/(\w+\.)?tuiimg\.com/
 // @include      /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/
@@ -74,6 +74,7 @@
 // @include      /https?\:\/\/www\.f\d+m(n|m)\.com/
 // @include      /https?\:\/\/www\.446m\.com/
 // @include      /https?\:\/\/www\.elitebabes\.com/
+// @include      /https?\:\/\/m\.kaka234\.cc/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -395,9 +396,10 @@ let site = {
             'www.112w.cc',
             'www.112w.cc\/c49.aspx',
             'www.24fa.link',
-            'www.117.life'
+            'www.117.life',
+            'www.24faa.cc',
         ],
-        pattern: /https?\:\/\/(www\.)?[0-9]*(m|w|faw|fa)\.(cc|link)/,
+        pattern: /https?\:\/\/(www\.)?[0-9]{2,3}(m|w|faw|fa|aa)?\.(cc|link|life)/,
         iStatus: false,
         _break: false
     },
@@ -774,6 +776,16 @@ let site = {
             'www.elitebabes.com'
         ],
         pattern: /https?\:\/\/www\.elitebabes\.com/,
+        iStatus: false,
+        _break: false
+    },
+    kaka234: {
+        id: 59,
+        name: "卡卡美女",
+        hostnames: [
+            'm.kaka234.cc'
+        ],
+        pattern: /https?\:\/\/m\.kaka234\.cc/,
         iStatus: false,
         _break: false
     }
@@ -1447,7 +1459,7 @@ function type(param) {
                 $.each(imgList, function (index, value) {
                     //zip.file
                     let myDate = new Date(); //获取系统当前时间
-                    let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes() + "-" + myDate.getSeconds();
+                    let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes();
                     let img = zip.folder(times);
                     let imgSrc = $(value).attr('src');
                     if (blobCache[imgSrc]) {
@@ -5236,6 +5248,48 @@ function type(param) {
     }).collectPics(function (doc) {
     }, function (imgE) {
     }).start();
+
+    /* --------------------------------------------m.kaka234.cc---------------------------------------- */
+
+    injectBtns().domain(site.kaka234.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.ArticleImageBox').hide();
+    }, function () {
+        $('.ArticleImageBox').show();
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.PsBox').after(injectComponent);
+        }
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".ArticleImageBox img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    let img = $(value);
+                    img.attr({ 'label': "sl", "data-fancybox": "images", 'id': 'imgLocation' + index, 'width': '100%' });
+                    img.removeAttr("height");
+                    item.append(img);
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
 })();
 
 

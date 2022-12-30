@@ -90,11 +90,6 @@ p.qlogo.cn$domain=q.quantuwang1.com
 ||m.fzchpos.com
 ||news.17173.com
 ||tylll.paradisemall.net
-/.*\.\w{6,7}\.cn.*/$domain=www.24fa.*|www.117.life|www.166w.cc
-/https?\:\/\/w\d*\.\w*/$domain=www.24fa.*|www.117.life|www.166w.cc
-/https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
-/https?\:\/\/(api|p)?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc
-*$3p,denyallow=staticfile.org|greasyfork.org|jsdelivr.net,domain=www.24fa.*|www.117.life|www.199w.cc
 
 ! 2022-10-22 https://m.gnvshen.com
 @@||bdstatic.com$domain=gnvshen.com
@@ -103,3 +98,23 @@ p.qlogo.cn$domain=q.quantuwang1.com
 ||p1.meituan.net
 ||js.zt-uc-baidu.cc
 ||res.buuxk.com:85/script/info.mobile.js?v=1.0$script
+
+! 2022-12-28 https://sisterasian.com
+sisterasian.com###vid_overlay
+
+! 2022-12-30 https://m.kaka234.cc
+m.kaka234.cc##div.m_adv
+
+! 2022-12-30 https://www.kaka234.cc
+www.kaka234.cc##.dibu1
+www.kaka234.cc##.dibu2
+
+! 2022-12-30 https://www.24faa.cc $badfilter
+/.*\.\w{6,7}\.cn.*/$domain=www.24fa.*|www.117.life|www.166w.cc|www.24aa.cc
+/https?\:\/\/w\d*\.\w*/$domain=www.24fa.*|www.117.life|www.166w.cc|www.24aa.cc
+/https?\:\/\/[t|d]oo\.\w{4}\.xyz\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc|www.24aa.cc
+/https?\:\/\/(api|p)?\.\w{5,6}\.com\/.*/$domain=www.24fa.*|www.117.life|www.166w.cc|www.24aa.cc
+*$3p,denyallow=staticfile.org|greasyfork.org|jsdelivr.net,domain=www.24fa.*|www.117.life|www.199w.cc|www.24aa.cc
+
+! 2022-12-30 https://www.63mm.cc
+/https?:\/\/www\.\d\dmm\.cc\/A(11|12)\.gif/$domain=www.63mm.cc|www.97mm.cc
