@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.27
+// @version      4.28
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -100,7 +100,7 @@
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = true;
+let isDebugMain = false;
 
 function log() {
     if (isDebugMain) {
@@ -2671,6 +2671,7 @@ function type(param) {
             $(".widget_media_image").remove();
             $(".header").css("position", "unset");
         }, 100);
+        GM_addStyle('.footer-fixed-nav{z-index: unset!important;}');
     }).switchAggregationBtn(function () {
         //FancyBox
         activateFancyBox(1);
