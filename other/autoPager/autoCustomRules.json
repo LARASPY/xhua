@@ -933,5 +933,17 @@
       "pageE": ".zxgx_list>ul>li",
       "replaceE": ".pages"
     }
+  },
+  "松鼠症仓库": {
+    "host": ["ahri8.top"],
+    "url": "/\\/readOnline2.php.*/",
+    "pager": {
+      "type": 6,
+      "nextL": "(//a[text()='下一页'])[last()] | (//a[text()='下一頁'])[last()]",
+      "pageE": "div[id^='read_online_image']",
+      "replaceE": ".btn-group-justified>a,.form-group>label+select,div[id^='page_num'],.btn-group",
+      "loadTime": 1000,
+      "scrollD": 3000
+    }
   }
 }

@@ -2431,7 +2431,6 @@ function type(param) {
             let totalPageCnt = 1;
             let pageId = match[0];
             let suffixUrl = '/';
-            debugger
             let limitPageStr = $('.row h1').text().match(/（\d+\/(\d+)）/im);
             log("limitPageStr: \n", limitPageStr);
             totalPageCnt = limitPageStr[1];
@@ -4292,27 +4291,36 @@ function type(param) {
         curSite.isAdjustDomainName = true;
         $('.entry-content img').hide();
     }, function () {
-        // $('.entry-content img').show();
+        $('.entry-content img').show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
         log("match: \n", match);
-        debugger
         if (!(match[0] === '')) {
             pageUrls.push(currentPathname);
             if ($('.entry-header').length > 1) { } else {
                 $('.entry-header').after(injectComponent);
+                let id = setInterval(function () {
+                    let item = $("#c_container");
+                    if (item) {
+                        log("item #", item);
+                        clearInterval(id);
+                        let imgs = $(document).find(".entry-content img");
+                        log("imgs #", imgs);
+                        $.each(imgs.clone(), function (index, value) {
+                            log("value #", value);
+                            let img = $(value);
+                            img.attr({ 'label': "sl", "data-fancybox": "images", 'id': 'imgLocation' + index, 'width': '100%' });
+                            img.removeAttr("height style");
+                            item.append(img);
+                        });
+                    }
+                }, 100);
             }
         }
     }).collectPics(function (doc) {
-        let item = $(doc).find(".entry-content img");
-        return item;
     }, function (imgE) {
-        $(imgE).attr({
-            'data-fancybox': 'images',
-            'width': '100%'
-        });
     }).start();
 
     /* --------------------------------------------mitaku.net------------------------------------------- */
