@@ -479,7 +479,7 @@
     }
   },
   "娱乐吧": {
-    "host": ["www.yuleba.org", "m.yuleba.org"],
+    "host": ["www.yuleba.org", "m.yuleba.org","www.entba.net","m.entba.net"],
     "url": "/^\\/a\\//",
     "style": ".b_img>.paging {float: left;}",
     "pager": {
@@ -493,7 +493,7 @@
     }
   },
   "娱乐吧_分类": {
-    "host": ["www.yuleba.org", "m.yuleba.org"],
+    "host": ["www.yuleba.org", "m.yuleba.org","www.entba.net","m.entba.net"],
     "url": "/^\\/b\\//",
     "style": ".b_img>.paging {float: left;}",
     "blank": 3,
@@ -620,7 +620,7 @@
   },
   "ScriptCat": {
     "host": "scriptcat.org",
-    "url": "/^\\/search/",
+    "url": "/^\\/search.*/",
     "pager": {
       "nextL": "li[title='Next Page'] a",
       "pageE": ".light-list-items>.mb-3",
