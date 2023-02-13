@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.29
+// @version      4.30
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -75,6 +75,8 @@
 // @include      /https?\:\/\/www\.446m\.com/
 // @include      /https?\:\/\/www\.elitebabes\.com/
 // @include      /https?\:\/\/m\.kaka234\.cc/
+// @include      /https?\:\/\/www\.ikmn\.\w{0,3}/
+// @include      /https?\:\/\/cydmyz.com/
 //
 // @connect      停用/https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -786,6 +788,26 @@ let site = {
             'm.kaka234.cc'
         ],
         pattern: /https?\:\/\/m\.kaka234\.cc/,
+        iStatus: false,
+        _break: false
+    },
+    ikmn: {
+        id: 60,
+        name: "爱看美女网",
+        hostnames: [
+            'www.ikmn.top'
+        ],
+        pattern: /https?\:\/\/www\.ikmn\.\w{0,3}/,
+        iStatus: false,
+        _break: false
+    },
+    cydmyz: {
+        id: 61,
+        name: "ACG资源网",
+        hostnames: [
+            'cydmyz.com'
+        ],
+        pattern: /https?\:\/\/cydmyz.com/,
         iStatus: false,
         _break: false
     }
@@ -5284,6 +5306,103 @@ function type(param) {
                 log("item #", item);
                 clearInterval(id);
                 let imgs = $(document).find(".ArticleImageBox img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    let img = $(value);
+                    img.attr({ 'label': "sl", "data-fancybox": "images", 'id': 'imgLocation' + index, 'width': '100%' });
+                    img.removeAttr("height");
+                    item.append(img);
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.ikmn.top---------------------------------------- */
+
+    injectBtns().domain(site.ikmn.hostnames).removeAD(function () {
+        GM_addStyle(".header{z-index: unset !important;}")
+    }).switchAggregationBtn(function () {
+        activateFancyBox();
+        $('.pagebar').hide();
+        $('.info-imtg-box').hide();
+    }, function () {
+        $('.pagebar').show();
+        $('.info-imtg-box').show();
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/\/(\w+\/)(\d*)(_\d*)?\.html/im);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = $('.pagebar').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+                if (!isEmpty(totalPics)) {
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                }
+                log('totalPageCnt: ', totalPageCnt);
+            }
+            for (let i = 0; i < totalPageCnt; i++) {
+                if (i == 0) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+        }
+        $('.info-title').first().after(injectComponent);
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".info-imtg-box img").clone();
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start();
+    /* --------------------------------------------cydmyz.com------------------------------------------ */
+
+    injectBtns().domain(site.cydmyz.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        activateFancyBox(1);
+        $('.entry-wrapper').hide();
+    }, function () {
+        $('.entry-wrapper').show();
+    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/)\d+\.html/m);
+        log("match: \n", match);
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0];
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.container>.entry-header').after(injectComponent);
+        }
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".entry-content>p img");
                 log("imgs #", imgs);
                 $.each(imgs.clone(), function (index, value) {
                     // log("value #", value);
