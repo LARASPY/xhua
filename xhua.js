@@ -2379,7 +2379,6 @@ function type(param) {
         $('.pagination1').show();
         $('.article-content').show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
-        debugger
         let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
         let match = currentPathname.match(/([a-zA-Z]+(\/[a-zA-Z]+)?)(?:\/)?(\d+)/im);
         log("currentPathname: \n", currentPathname);
@@ -2388,7 +2387,6 @@ function type(param) {
             let totalPageCnt = 1;
             let partPreUrl = match[0];
             let suffixUrl = '_';
-            debugger
             let limitPageStr = $('.pagination > ul a').last().prev().text();
             if (limitPageStr === "") {
                 limitPageStr = $('.pagination1 > ul a').last().prev().text();
@@ -3886,10 +3884,10 @@ function type(param) {
             }
             log("interestline\n", interestline.prop("outerHTML"));
             log("seacher\n", seacher.prop("outerHTML"));
-            $(".h").prev().after(interestline.clone());
-            $(".h").prev().after($("#dtag").clone());
-            $(".h").prev().after($("#bdssy").clone());
-            $(".h").prev().after(seacher.clone());
+            $(".h").prev().after(interestline);
+            $(".h").prev().after($("#dtag"));
+            $(".h").prev().after($("#bdssy"));
+            $(".h").prev().after(seacher);
             $(".h").prev().after($(".pic"));
             // $(".h").prevUntil(".page").remove();
             items.remove();
@@ -3898,7 +3896,8 @@ function type(param) {
         setInterval(function () {
             $("#pic").remove();
             $(".bg-text").remove();
-        }, 100);
+            document.title = document.getElementsByClassName('h')[0].innerText;
+        }, 1000);
         async function asyncFunc() {
             try {
                 var a1 = +new Date();
