@@ -3920,6 +3920,7 @@ function type(param) {
         asyncFunc();
     }).switchAggregationBtn(function () {
         activateFancyBox();
+        curSite.isAdjustDomainName = true;
         $('#picg').prev().nextAll().hide();
         //android
     }, function () {
