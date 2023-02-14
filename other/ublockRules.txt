@@ -3,9 +3,6 @@
 ! Homepage: https://github.com/LARASPY/xhua/blob/master/other/ublockRules.txt
 
 !----------------- rules -----------------!
-! 2022-08-28 https://www.mfsft.com 免费私房图-使用必要规则
-/https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/([rp]|top)\d*.js)/
-
 ! 2022/8/28 https://www.248m.cc
 ||j8.vjksa.com$image
 ||t01.gqvdcek.cn^$script
@@ -118,3 +115,6 @@ www.kaka234.cc##.dibu2
 
 ! 2022-12-30 https://www.63mm.cc
 /https?:\/\/www\.\d\dmm\.cc\/A(11|12)\.gif/$domain=www.63mm.cc|www.97mm.cc
+
+! 2023-02-14 https://www.mfsft.com 免费私房图-使用必要规则
+/https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu)\.com\/(icc|js\/touchb|css|vdn\/([rp]||top)\d*|sa\/.*)\.js/
