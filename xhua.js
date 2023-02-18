@@ -3179,8 +3179,6 @@ function type(param) {
     injectBtns().domain(site.XiurenJi.hostnames.concat(site.Xrmn.hostnames)).removeAD(function () {
         setInterval(function () {
             $("div[class^='ad']").remove();
-            $(".main").nextUntil('#popUpContent').remove();
-            // $("#popUpContent").nextAll().remove();
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
@@ -3235,6 +3233,7 @@ function type(param) {
     }, function (imgE) {
         imgE.style = "width: 100%;height: 100%";
     }).start();
+
     /* --------------------------------------------www.112w.cc------------------------------------------ */
 
     injectBtns().domain(site._24fa.hostnames).removeAD(function () {
