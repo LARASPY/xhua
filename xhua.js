@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.30
+// @version      4.31
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -20,7 +20,7 @@
 // @include      /https?\:\/\/www\.xiuren\.org/
 // @include      /https?\:\/\/\w+\.micmicidol\.com/
 // @include      /https?\:\/\/everia\.club/
-// @include      /https?\:\/\/www\.[a-z]*xg\w{0,4}\.(top|vip|net|com|cc)/
+// @include      /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
 // @include      /https?\:\/\/\w+\.95mm\.\w+/
 // @include      /https?\:\/\/\w+\.3gbizhi\.\w+\/\w/
@@ -246,7 +246,7 @@ let site = {
             'www.xgmn09.com',
             'www.jpxgyw.cc'
         ],
-        pattern: /https?\:\/\/www\.[a-z]*xg\w{0,4}\.(top|vip|net|com|cc)/,
+        pattern: /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/,
         iStatus: false,
         _break: false
     },
@@ -375,9 +375,10 @@ let site = {
         name: '秀人集',
         hostnames: [
             'www.xiurenb.net',
-            'www.xiurenb.com'
+            'www.xiurenb.com',
+            'www.xiuren01.xyz'
         ],
-        pattern: /https?\:\/\/\w+\.(xiure)[A-Za-z]{2,}\.[A-Za-z]{2,}/,
+        pattern: /https?\:\/\/www\.xiuren\w{0,2}\.[A-Za-z]{0,3}/,
         iStatus: false,
         _break: false
     },
@@ -3222,9 +3223,7 @@ function type(param) {
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-            if (os.isPc) {
-                $('.item_title').last().after(injectComponent);
-            }
+            $('.item_title').last().after(injectComponent);
         }
     }).collectPics(function (doc) {
         let images;
@@ -3889,23 +3888,17 @@ function type(param) {
             $(".h").prev().after($("#bdssy"));
             $(".h").prev().after(seacher);
             $(".h").prev().after($(".pic"));
-            // $(".h").prevUntil(".page").remove();
-            items.remove();
         };
         $("head").empty();
         setInterval(function () {
-            $("#pic").remove();
-            $(".bg-text").remove();
             document.title = document.getElementsByClassName('h')[0].innerText;
         }, 1000);
         async function asyncFunc() {
             try {
                 var a1 = +new Date();
-                // await addScript_(null, "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js");
                 let arrs = [
                     'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/mslasscss.js',
-                    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/mslasscss.js',
-                    "https://larassr.coding.net/p/fancybox4.0/d/fancybox4/git/raw/master/mslasscss.js"
+                    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/mslasscss.js'
                 ]
                 await startMain_(arrs);
                 addStyle(MSLASS_CSS);
