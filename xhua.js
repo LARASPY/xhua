@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.31
+// @version      4.32
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -3927,7 +3927,7 @@ function type(param) {
             let partPreUrl = match[1];
             let pageId = match[2];
             let suffixUrl = '.html';
-            let limitPageMatch = $('.pagelist b').prop("outerHTML");
+            let limitPageMatch = $('.pagelist').prop("outerHTML");
             log("limitPageMatch: \n" + limitPageMatch);
             let pageUrl;
             if (limitPageMatch != null) {
@@ -3947,14 +3947,29 @@ function type(param) {
             $('.page').prepend(injectComponent);
         }
     }).collectPics(function (doc) {
+        //数组去重
+        Array.prototype.clearRepeat = function () {
+            var res = [];
+            var json = {};
+            log("This :",this);
+            $.each(this, function (i, item) {
+                //this 表示当前待处理数据，this可能是一个集合或是一个单独字段
+                if (!json[item[0].getAttribute("src")]) {
+                    res.push(item);
+                    json[item[0].getAttribute("src")] = 1;
+                }
+            });
+            log("Json :", json);
+            return res;
+        };
         let imgE = [];
         let item = $(doc).find(".page img");
         $(item).each(function () {
             let src = $(this).attr("src");
             imgE.push($(`<img src=${src}>`));
         });
-        log("imgE: \n" + imgE);
-        return $(imgE);
+        let imgEclear = imgE.clearRepeat();
+        return $(imgEclear);
     }, function (imgE) {
         $(imgE).attr({
             'data-fancybox': 'images'
