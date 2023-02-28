@@ -945,5 +945,15 @@
       "loadTime": 1000,
       "scrollD": 3000
     }
+  },
+  "repack-games": {
+    "host": "repack-games.com",
+    "url": "return (fun.getCSS('.wp-pagenavi') && !fun.indexOF(/\\/(updated-games)\\//))",
+    "pager": {
+      "type": 3,
+      "nextL": "a.nextpostslink",
+      "pageE": ".modern-articles>li",
+      "replaceE": ".wp-pagenavi"
+    }
   }
 }
