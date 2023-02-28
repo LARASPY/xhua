@@ -117,7 +117,7 @@ www.kaka234.cc##.dibu2
 /https?:\/\/www\.\d\dmm\.cc\/A(11|12)\.gif/$domain=www.63mm.cc|www.97mm.cc
 
 ! 2023-02-14 https://www.mfsft.com 免费私房图-使用必要规则
-/https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|.*nmt)\.com\/(icc|js\/touchb|css|vdn\/([rp]|top)\d*|sa\/.*)\.js/
+/https?:\/\/js\.(.*mnt|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|.*nmt|jp.*t|.*flt)\.com\/(icc|js\/touchb|css|vdn\/([rp]|top)\d*|sa\/.*)\.js/
 
 ! 2023-02-18 https://dongti2023.com
 ||img.solomon89.xyz
