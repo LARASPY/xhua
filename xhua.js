@@ -18,7 +18,7 @@
 // @include      /https?\:\/\/\w+\.win4000\.com/
 // @include      /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/
 // @include      /https?\:\/\/www\.xiuren\.org/
-// @include      /https?\:\/\/\w+\.micmicidol\.com/
+// @include      /https?\:\/\/\w+\.micmicidol\.\w{0,4}/
 // @include      /https?\:\/\/everia\.club/
 // @include      /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/
 // @include      /https?\:\/\/\w+\.jpmn\w+\.\w+/
@@ -224,7 +224,7 @@ let site = {
         hostnames: [
             'www.micmicidol.com'
         ],
-        pattern: /https?\:\/\/\w+\.micmicidol\.com/,
+        pattern: /https?\:\/\/\w+\.micmicidol\.\w{0,4}/,
         iStatus: false,
         _break: false
     },
