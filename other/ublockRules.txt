@@ -8,8 +8,18 @@
 !-------JS----------
 !-------------------
 !
+!#if env_firefox
+
+! 2023/3/1 https://www.micmicidol.club
+www.micmicidol.club##^script:has-text(WARNING! Adult Language)
+
+!#endif
+!#if !env_firefox
+
 ! 2023/3/1 https://www.micmicidol.club
 www.micmicidol.club##+js(abort-current-inline-script,window.alert,/WARNING! Adult Language/)
+
+!#endif
 !-------------------
 !-------CSS---------
 !-------------------
