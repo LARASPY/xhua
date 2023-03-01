@@ -3,6 +3,17 @@
 ! Homepage: https://github.com/LARASPY/xhua/blob/master/other/ublockRules.txt
 
 !----------------- rules -----------------!
+!
+!-------------------
+!-------JS----------
+!-------------------
+!
+! 2023/3/1 https://www.micmicidol.club
+www.micmicidol.club##+js(abort-current-inline-script,window.alert,/WARNING! Adult Language/)
+!-------------------
+!-------CSS---------
+!-------------------
+!
 ! 2022/8/28 https://www.248m.cc
 ||j8.vjksa.com$image
 ||t01.gqvdcek.cn^$script
