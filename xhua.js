@@ -78,7 +78,7 @@
 // @include      /https?\:\/\/www\.ikmn\.\w{0,3}/
 // @include      /https?\:\/\/cydmyz.com/
 //
-// @connect      停用/https?\:\/\/www\.youtube\.com/
+// @exclude      /https?\:\/\/www\.youtube\.com/
 // @connect      *
 // @license      MIT License
 // @require      https://cdn.staticfile.org/jquery/3.6.0/jquery.min.js
@@ -95,738 +95,595 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
+// @grant        GM_setValue
+// @grant        GM_getValue
 // @grant        unsafeWindow
 // ==/UserScript==
-
 
 // https://tool.lu/markdown/
 // Alt+F8显示各网站列表 Esc退出
 GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
 
-let isDebugMain = false;
-
-function log() {
-    if (isDebugMain) {
-        console.log.apply(this, arguments);
-    }
-};
-
-let imagePluginSwitch = [{
-    isViewerOpen: false,
-    isFancyBox: true,
-    isFancyBoxFullScreen: false,
-    isFancyBoxAutoStartFalse: false,
-    isOpenAutoSlidingPosition: false
-}]
-let curSite = { isReferer: '', isHost: true, isAdjustDomainName: false };
-
-let site = {
+let isDebugMain = true, curSite = {
+    isReferer: "", isHost: true, isAdjustDomainName: false
+}, site = {
     HentaiImage: {
         id: -1,
-        name: 'Hentai Image',
-        hostnames: [
-            'hentai-img.com'
-        ],
+        name: "Hentai Image",
+        hostnames: ["hentai-img.com"],
         iStatus: false,
         _break: false,
     },
-    Hentai: { //支持中文https://zh.hentai-cosplays.com/
+    Hentai: {
+        //支持中文https://zh.hentai-cosplays.com/
         id: 0,
-        name: 'Hentai Cosplay',
-        hostnames: [
-            'hentai-cosplays.com'
-        ],
+        name: "Hentai Cosplay",
+        hostnames: ["hentai-cosplays.com"],
         iStatus: false,
         _break: false,
     },
-    Pron: { //支持中文https://zh.porn-images-xxx.com/
+    Pron: {
+        //支持中文https://zh.porn-images-xxx.com/
         id: 1,
-        name: 'Porn Image',
-        hostnames: [
-            'porn-images-xxx.com'
-        ],
+        name: "Porn Image",
+        hostnames: ["porn-images-xxx.com"],
         pattern: /https?\:\/\/(\w+\.)?porn-image\w+-xxx\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Umei: {
         id: 2,
-        name: '优美图库(不)',
-        hostnames: [
-            'umei.fun',
-            'www.umei.cc',
-            'www.umeitu.com'
-        ],
+        name: "优美图库(不)",
+        hostnames: ["umei.fun", "www.umei.cc", "www.umeitu.com"],
         pattern: /https?\:\/\/www\.umei(\w+)?\.\w+/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     Wndfx: {
         id: 3,
-        name: 'Wndfx 妹子图(不)',
-        hostnames: [
-            'www.wndfx.com'
-        ],
+        name: "Wndfx 妹子图(不)",
+        hostnames: ["www.wndfx.com"],
         pattern: /https?\:\/\/www.wndfx\.com/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     Lesmao: {
         id: 4,
-        name: '蕾丝猫(不)',
+        name: "蕾丝猫(不)",
         hostnames: [
-            'www.lsm.me',
-            'www.lesmao.pro',
-            'www.lesmao.co',
-            'www.lsmpx.com',
-            'www.lesmao.org',
+            "www.lsm.me",
+            "www.lesmao.pro",
+            "www.lesmao.co",
+            "www.lsmpx.com",
+            "www.lesmao.org",
         ],
         pattern: /https?\:\/\/w+.(?:les|ls)m(\w+)?.\w*/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     Win4000: {
         id: 5,
-        name: '美桌(不)',
-        hostnames: [
-            'www.win4000.com'
-        ],
+        name: "美桌(不)",
+        hostnames: ["www.win4000.com"],
         pattern: /https?\:\/\/\w+\.win4000\.com/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     _192tp: {
         id: 6,
-        name: '192 美女图',
+        name: "192 美女图",
         hostnames: [
-            'www.192tt.top',
-            'www.192tb.com',
-            'www.192tp.com',
-            'www.taotu8.xyz'
+            "www.192tt.top",
+            "www.192tb.com",
+            "www.192tp.com",
+            "www.taotu8.xyz",
         ],
         pattern: /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Xiuren: {
         id: 7,
-        name: 'Xiuren 秀人网',
-        hostnames: [
-            'www.xiuren.org'
-        ],
+        name: "Xiuren 秀人网",
+        hostnames: ["www.xiuren.org"],
         pattern: /https?\:\/\/www\.xiuren\.org/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Micmicidol: {
         id: 8,
-        name: 'Mic Mic Idol',
-        hostnames: [
-            'www.micmicidol.com'
-        ],
+        name: "Mic Mic Idol",
+        hostnames: ["www.micmicidol.com"],
         pattern: /https?\:\/\/\w+\.micmicidol\.\w{0,4}/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Everia: {
         id: 9,
-        name: 'Everia.club',
-        hostnames: [
-            'everia.club'
-        ],
+        name: "Everia.club",
+        hostnames: ["everia.club"],
         pattern: /https?\:\/\/everia\.club/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Jpxgyw: {
         id: 10,
-        name: 'Jpxgyw 美女网',
-        hostnames: [
-            'www.jpxgyw.net',
-            'www.xgmn09.com',
-            'www.jpxgyw.cc'
-        ],
+        name: "Jpxgyw 美女网",
+        hostnames: ["www.jpxgyw.net", "www.xgmn09.com", "www.jpxgyw.cc"],
         pattern: /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     _95mm: {
         id: 11,
-        name: 'MM 范',
-        hostnames: [
-            'www.95mm.org'
-        ],
+        name: "MM 范",
+        hostnames: ["www.95mm.org"],
         pattern: /https?\:\/\/\w+\.95mm\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     _3gbizhi: {
         id: 12,
-        name: '3G 壁纸(不)',
-        hostnames: [
-            'www.3gbizhi.com'
-        ],
+        name: "3G 壁纸(不)",
+        hostnames: ["www.3gbizhi.com"],
         pattern: /https?\:\/\/\w+\.3gbizhi\.\w+/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     Jpmn8: {
         id: 13,
-        name: 'Jpmn8 精品美女吧',
-        hostnames: [
-            'www.jpmn8.com'
-        ],
+        name: "Jpmn8 精品美女吧",
+        hostnames: ["www.jpmn8.com"],
         pattern: /https?\:\/\/\w+\.jpmn\w+\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Goddess: {
         id: 14,
-        name: 'Goddess',
-        hostnames: [
-            'tw.kissgoddesssite.com'
-        ],
+        name: "Goddess",
+        hostnames: ["tw.kissgoddesssite.com"],
         pattern: /https?\:\/\/tw.\w*goddess\w+\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Meinv: {
         id: 15,
-        name: '美女百科',
-        hostnames: [
-            'meinv.page'
-        ],
+        name: "美女百科",
+        hostnames: ["meinv.page"],
         pattern: /https?\:\/\/(\w+\.)?meinv\.page/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Asiansister: {
         id: 16,
-        name: 'Asiansister',
-        hostnames: [
-            'asiansister.com'
-        ],
+        name: "Asiansister",
+        hostnames: ["asiansister.com"],
         pattern: /https?\:\/\/asiansister\.com/,
         iStatus: false,
-        _break: true
+        _break: true,
     },
     Yskhd: {
         id: 17,
-        name: '优丝库 HD',
-        hostnames: [
-            'yskhd.com'
-        ],
+        name: "优丝库 HD",
+        hostnames: ["yskhd.com"],
         pattern: /https?\:\/\/yskhd\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Dmmtu: {
         id: 18,
-        name: 'Dmmtu 美女图',
-        hostnames: [
-            'www.dmmtu.com'
-        ],
+        name: "Dmmtu 美女图",
+        hostnames: ["www.dmmtu.com"],
         pattern: /https?\:\/\/\w+\.dmmtu\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Fnvshen: {
         id: 19,
-        name: '宅男宅女 HD',
-        hostnames: [
-            'www.fnvshen.com'
-        ],
+        name: "宅男宅女 HD",
+        hostnames: ["www.fnvshen.com"],
         pattern: /https?\:\/\/\w+\.\w+shen(\w+)?\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Ikanins: {
         id: 19,
-        name: '爱看 INS',
-        hostnames: [
-            'www.ikanins.com'
-        ],
+        name: "爱看 INS",
+        hostnames: ["www.ikanins.com"],
         pattern: /https?\:\/\/(www\.)?ikanins\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Madoupan: {
         id: 19,
-        name: '麻豆盘',
-        hostnames: [
-            'madoupan.com'
-        ],
+        name: "麻豆盘",
+        hostnames: ["madoupan.com"],
         pattern: /https?\:\/\/madoupan\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Mrcong: {
         id: 20,
-        name: 'Mrcong',
-        hostnames: [
-            'mrcong.com'
-        ],
+        name: "Mrcong",
+        hostnames: ["mrcong.com"],
         pattern: /https?\:\/\/mrcong\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     XiurenJi: {
         id: 21,
-        name: '秀人集',
-        hostnames: [
-            'www.xiurenb.net',
-            'www.xiurenb.com',
-            'www.xiuren01.xyz'
-        ],
+        name: "秀人集",
+        hostnames: ["www.xiurenb.net", "www.xiurenb.com", "www.xiuren01.xyz"],
         pattern: /https?\:\/\/www\.xiuren\w{0,2}\.[A-Za-z]{0,3}/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     Xrmn: {
         id: 22,
-        name: '秀人美女网',
-        hostnames: [
-            'www.xrmn5.cc'
-        ],
+        name: "秀人美女网",
+        hostnames: ["www.xrmn5.cc"],
         pattern: /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     _24fa: {
         id: 23,
-        name: '24Fa',
+        name: "24Fa",
         hostnames: [
-            'www.112w.cc',
-            'www.112w.cc\/c49.aspx',
-            'www.24fa.link',
-            'www.117.life',
-            'www.24faa.cc',
+            "www.112w.cc",
+            "www.112w.cc\/c49.aspx",
+            "www.24fa.link",
+            "www.117.life",
+            "www.24faa.cc",
         ],
         pattern: /https?\:\/\/(www\.)?[0-9]{2,3}(m|w|faw|fa|aa)?\.(cc|link|life)/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     tuiimg: {
         id: 24,
-        name: '推图网',
-        hostnames: [
-            'www.tuiimg.com'
-        ],
+        name: "推图网",
+        hostnames: ["www.tuiimg.com"],
         pattern: /https?:\/\/(\w+\.)?tuiimg\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     nsfwp: {
         id: 25,
-        name: 'Nsfwp',
+        name: "Nsfwp",
         hostnames: [
-            'nsfwp.buzz',
-            'picxx.icu',
-            'picxx.xyz',
-            'nsfwx.pics',
-            'nsfwpicx.com'
+            "nsfwp.buzz",
+            "picxx.icu",
+            "picxx.xyz",
+            "nsfwx.pics",
+            "nsfwpicx.com",
         ],
         pattern: /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     mmm131: {
         id: 26,
-        name: 'MM131美女图片',
-        hostnames: [
-            'mmm131.com'
-        ],
+        name: "MM131美女图片",
+        hostnames: ["mmm131.com"],
         pattern: /https?:\/\/\w+\.(mmm131|mm1\d+)\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     asiantolick: {
         id: 27,
-        name: 'Asian to lick',
-        hostnames: [
-            'asiantolick.com'
-        ],
+        name: "Asian to lick",
+        hostnames: ["asiantolick.com"],
         pattern: /https?:\/\/(\w+\.)?asiantolick\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     imn5: {
         id: 28,
-        name: '爱美女网',
-        hostnames: [
-            'www.imn5.net'
-        ],
+        name: "爱美女网",
+        hostnames: ["www.imn5.net"],
         pattern: /https?:\/\/(\w+\.)?imn5.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     xchina: {
         id: 29,
-        name: '小黄书',
-        hostnames: [
-            'xchina.co'
-        ],
+        name: "小黄书",
+        hostnames: ["xchina.co"],
         pattern: /https?:\/\/xchina.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     jjgirls: {
         id: 30,
-        name: 'Heyzo',
-        hostnames: [
-            'jjgirls.com'
-        ],
+        name: "Heyzo",
+        hostnames: ["jjgirls.com"],
         pattern: /https?:\/\/jjgirls\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     photos18: {
         id: 31,
-        name: '色情圖片網',
-        hostnames: [
-            'www.photos18.com'
-        ],
+        name: "色情圖片網",
+        hostnames: ["www.photos18.com"],
         pattern: /https?:\/\/(\w+\.)?photos18\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     pornpics: {
         id: 32,
-        name: 'Porn Pics',
-        hostnames: [
-            'www.pornpics.com'
-        ],
+        name: "Porn Pics",
+        hostnames: ["www.pornpics.com"],
         pattern: /https?:\/\/(\w+\.)?pornpics\.\w+/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     mfsft: {
         id: 33,
-        name: '免费私房图',
-        hostnames: [
-            'www.mfsft.com'
-        ],
-        pattern: /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst|yhflt)\.com/,
+        name: "免费私房图",
+        hostnames: ["www.mfsft.com"],
+        pattern:
+            /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst|yhflt)\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     xartmodel: {
         id: 34,
-        name: 'XRTMODEL',
-        hostnames: [
-            'xartmodel.net'
-        ],
+        name: "XRTMODEL",
+        hostnames: ["xartmodel.net"],
         pattern: /https?\:\/\/xartmodel.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     hotgirl: {
         id: 35,
-        name: 'HOTGIRL.asia',
-        hostnames: [
-            'hotgirl.asia'
-        ],
+        name: "HOTGIRL.asia",
+        hostnames: ["hotgirl.asia"],
         pattern: /https?\:\/\/hotgirl.asia/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     hotgirlchina: {
         id: 36,
-        name: 'HOTGIRLchina',
-        hostnames: [
-            'hotgirlchina.com'
-        ],
+        name: "HOTGIRLchina",
+        hostnames: ["hotgirlchina.com"],
         pattern: /https?\:\/\/hotgirlchina.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     baobua: {
         id: 37,
-        name: 'BAOBUA.COM',
-        hostnames: [
-            'blog.baobua.com'
-        ],
+        name: "BAOBUA.COM",
+        hostnames: ["blog.baobua.com"],
         pattern: /https?\:\/\/blog.baobua.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     buondua: {
         id: 38,
-        name: 'Buon Dua',
-        hostnames: [
-            'buondua.com'
-        ],
+        name: "Buon Dua",
+        hostnames: ["buondua.com"],
         pattern: /https?\:\/\/buondua.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     _4kup: {
         id: 39,
-        name: '4KUP',
-        hostnames: [
-            'www.4kup.net'
-        ],
+        name: "4KUP",
+        hostnames: ["www.4kup.net"],
         pattern: /https?\:\/\/www.4kup.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     goddess247: {
         id: 40,
-        name: 'Goddess247',
-        hostnames: [
-            'goddess247.com'
-        ],
+        name: "Goddess247",
+        hostnames: ["goddess247.com"],
         pattern: /https?\:\/\/goddess247.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     ilovexs: {
         id: 41,
-        name: 'NongMo.Zone',
-        hostnames: [
-            'www.ilovexs.com'
-        ],
+        name: "NongMo.Zone",
+        hostnames: ["www.ilovexs.com"],
         pattern: /https?\:\/\/www.ilovexs.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     mitaku: {
         id: 42,
-        name: 'Mitaku',
-        hostnames: [
-            'mitaku.net'
-        ],
+        name: "Mitaku",
+        hostnames: ["mitaku.net"],
         pattern: /https?\:\/\/mitaku.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     nlegs: {
         id: 43,
-        name: 'Nlegs',
-        hostnames: [
-            'www.nlegs.com'
-        ],
+        name: "Nlegs",
+        hostnames: ["www.nlegs.com"],
         pattern: /https?\:\/\/www.nlegs.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     nudecosplaygirls: {
         id: 44,
-        name: 'NUDECOSPLAY',
-        hostnames: [
-            'nudecosplaygirls.com'
-        ],
+        name: "NUDECOSPLAY",
+        hostnames: ["nudecosplaygirls.com"],
         pattern: /https?\:\/\/nudecosplaygirls.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     nudebird: {
         id: 45,
-        name: 'NudeBird',
-        hostnames: [
-            'nudebird.biz'
-        ],
+        name: "NudeBird",
+        hostnames: ["nudebird.biz"],
         pattern: /https?\:\/\/nudebird.biz/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     gravureprincess: {
         id: 46,
-        name: 'Idol.gravureprincess',
-        hostnames: [
-            'idol.gravureprincess.date'
-        ],
+        name: "Idol.gravureprincess",
+        hostnames: ["idol.gravureprincess.date"],
         pattern: /https?\:\/\/idol.gravureprincess.date/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     asdasfd: {
         id: 47,
-        name: 'ASD ASFD',
-        hostnames: [
-            'asdasfd.net'
-        ],
+        name: "ASD ASFD",
+        hostnames: ["asdasfd.net"],
         pattern: /https?\:\/\/asdasfd.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     yellowfever18: {
         id: 48,
-        name: 'Yellow Fever',
-        hostnames: [
-            'yellowfever18.com'
-        ],
+        name: "Yellow Fever",
+        hostnames: ["yellowfever18.com"],
         pattern: /https?\:\/\/yellowfever18.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     allasiangirls: {
         id: 49,
-        name: 'Asian Girls',
-        hostnames: [
-            'allasiangirls.net'
-        ],
+        name: "Asian Girls",
+        hostnames: ["allasiangirls.net"],
         pattern: /https?\:\/\/allasiangirls.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     asdcosplay: {
         id: 50,
-        name: 'Make Girls',
-        hostnames: [
-            'asdcosplay.com'
-        ],
+        name: "Make Girls",
+        hostnames: ["asdcosplay.com"],
         pattern: /https?\:\/\/asdcosplay.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     asianpink: {
         id: 51,
-        name: 'Asian Pink',
-        hostnames: [
-            'asianpink.net'
-        ],
+        name: "Asian Pink",
+        hostnames: ["asianpink.net"],
         pattern: /https?\:\/\/asianpink.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     ryuryu: {
         id: 52,
         name: "Cypher's ghost",
-        hostnames: [
-            'ryuryu.tw'
-        ],
+        hostnames: ["ryuryu.tw"],
         pattern: /https?\:\/\/ryuryu.tw/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     xinwenba: {
         id: 53,
         name: "新闻吧",
-        hostnames: [
-            'www.xinwenba.net'
-        ],
+        hostnames: ["www.xinwenba.net"],
         pattern: /https?\:\/\/(www|m).xinwenba.net/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     meitu131: {
         id: 54,
         name: "MEITU131",
-        hostnames: [
-            'www.meitu131.com'
-        ],
+        hostnames: ["www.meitu131.com"],
         pattern: /https?\:\/\/(www|m).meitu131.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     dongtidemi: {
         id: 55,
         name: "胴体的秘密",
-        hostnames: [
-            'dongtidemi.com',
-            'dongtidemimi.org'
-        ],
+        hostnames: ["dongtidemi.com", "dongtidemimi.org"],
         pattern: /https?\:\/\/dongti(demi)?\w*.(com|net|org)/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     cool18: {
         id: 56,
         name: "留园酷18",
-        hostnames: [
-            'cool18.com',
-            'wap.cool18.com'
-        ],
+        hostnames: ["cool18.com", "wap.cool18.com"],
         pattern: /https?\:\/\/(www|wap).cool18.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     tvvtw: {
         id: 57,
         name: "妹妹图",
-        hostnames: [
-            'mm.tvv.tw'
-        ],
+        hostnames: ["mm.tvv.tw"],
         pattern: /https?\:\/\/mm.tvv.tw/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     f4mm: {
         id: 58,
         name: "F4MM爱骚",
-        hostnames: [
-            'www.f4mn.com'
-        ],
+        hostnames: ["www.f4mn.com"],
         pattern: /https?\:\/\/www\.f\d+m(n|m)\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     _446m: {
         id: 58,
         name: "萌图社",
-        hostnames: [
-            'www.446m.com'
-        ],
+        hostnames: ["www.446m.com"],
         pattern: /https?\:\/\/www\.446m\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     elitebabes: {
         id: 58,
         name: "Elite Babes",
-        hostnames: [
-            'www.elitebabes.com'
-        ],
+        hostnames: ["www.elitebabes.com"],
         pattern: /https?\:\/\/www\.elitebabes\.com/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     kaka234: {
         id: 59,
         name: "卡卡美女",
-        hostnames: [
-            'm.kaka234.cc'
-        ],
+        hostnames: ["m.kaka234.cc"],
         pattern: /https?\:\/\/m\.kaka234\.cc/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     ikmn: {
         id: 60,
         name: "爱看美女网",
-        hostnames: [
-            'www.ikmn.top'
-        ],
+        hostnames: ["www.ikmn.top"],
         pattern: /https?\:\/\/www\.ikmn\.\w{0,3}/,
         iStatus: false,
-        _break: false
+        _break: false,
     },
     cydmyz: {
         id: 61,
         name: "ACG资源网",
-        hostnames: [
-            'cydmyz.com'
-        ],
+        hostnames: ["cydmyz.com"],
         pattern: /https?\:\/\/cydmyz.com/,
         iStatus: false,
-        _break: false
-    }
-};
-let mainArr = [
-    'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js',
-    'https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js',
-    'https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681'
-];
-let fancyboxyArr = [
-    'https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js',
-    'https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js'
-];
-let gridzoneCss = [
-    'https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js',
-    'https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js'
-]
-let Alpha_Script = {
+        _break: false,
+    },
+}, imagePluginSwitch = [{
+    isViewerOpen: false,
+    isFancyBox: true,
+    isFancyBoxFullScreen: false,
+    isFancyBoxAutoStartFalse: false,
+    isOpenAutoSlidingPosition: false,
+}], mainArr = [
+    "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js",
+    "https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js",
+    "https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681",
+], fancyboxyArr = [
+    "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js",
+    "https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js",
+], gridzoneCss = [
+    "https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js",
+    "https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js",
+], Alpha_Script = {
     obtainHtml: function (options) {
         options = options || {};
         if (!options.url || !options.method) {
@@ -836,8 +693,8 @@ let Alpha_Script = {
     },
     parseHeaders: function (headStr, isDebug = true) {
         let o = {};
-        let myregexp = /^([^:]+):(.*)$/img;
-        let match = /^([^:]+):(.*)$/img.exec(headStr);
+        let myregexp = /^([^:]+):(.*)$/gim;
+        let match = /^([^:]+):(.*)$/gim.exec(headStr);
         while (match != null) {
             o[match[1].trim()] = match[2].trim();
             match = myregexp.exec(headStr);
@@ -853,107 +710,53 @@ let Alpha_Script = {
         return null;
     },
     isArray: function (value) {
-        return Object.prototype.toString.apply(value) === '[object Array]';
-    }
+        return Object.prototype.toString.apply(value) === "[object Array]";
+    },
 };
-function priorityLog() {
-    console.log.apply(this, arguments);
-}
-function currentUrlActivation() {
-    let origin = window.location.origin;
-    let hostName = window.location.hostname;
-    let hostnameArry = null;
-    let isEmpty = function (param) {
-        if (param) {
-            var param_type = typeof (param);
-            if (param_type == 'object') {
-                if (typeof (param.source) == 'undefined' | '') {
-                    return true; //空值，空对象
-                }
-            }
-            return false; //非空值
-        } else {
-            //空值,例如：
-            //(1)null
-            //(2)可能使用了js的内置的名称，例如：var name=[],这个打印类型是字符串类型。
-            //(3)空字符串''、""。
-            //(4)数字0、00等，如果可以只输入0，则需要另外判断。
-            return true;
-        }
-    }
-    let meet = function (domain) {
-        let matchDomain = false;
-        if (Alpha_Script.isArray(domain)) {
-            for (let i = 0; i < domain.length; i++) {
-                if (domain[i] === hostName) {
-                    matchDomain = true;
-                    break;
-                }
-            }
-        } else {
-            matchDomain = domain === hostName;
-        }
-        return matchDomain;
-    };
-    for (let key in site) {
-        let isPattern = isEmpty(site[key].pattern);
-        if (!isPattern) {
-            hostnameArry = site[key].pattern.exec(origin);
-            if (hostnameArry != null) {
-                let urlHostName = hostnameArry[0].replace(/https?:\/\//i, "");
-                site[key].hostnames.push(urlHostName);
-                log(site[key].name, " : ", "add new hostName: ", urlHostName);
-            }
-        } else {
-            log(site[key].name, " : ", 'pattern is empty, never add new hostName.');
-        }
-        site[key].iStatus = meet(site[key].hostnames);
-        if (site[key].iStatus) {
-            log(site[key].name, ":\n", site[key].hostnames);
-        }
-    }
-    // log("合并数组: \n", site.Hentai.hostnames.concat(site.Pron.hostnames));
-}
-function addScriptCss() {
-    // let fancyboxLink = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css";
-    // let fancyboxData = await Get(fancyboxLink);
-    addStyle(fancyBoxCss);
-    if (os.isPc) {
-        addStyle(fancyBoxCssAdditon);
-    }
-}
-function addScript_(statement = null, src = null, isModule = false) {
-    let mountElement = document.getElementsByTagName('head')[0];
-    if (mountElement) {
-        let script = document.createElement("script");
-        if (src !== null) {
-            script.src = src;
-        } else if (statement !== null) {
-            script.textContent = statement;
-            if (isModule) script.type = "module";
-        }
-        return new Promise((resolve, reject) => {
+
+(async function () {
+    'use strict';
+    //清屏
+    console.clear();
+    // let fancyboxJs = "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.esm.js"
+    if (isDebugMain) console.groupCollapsed('StartMain');
+    await startMain_();
+    if (isDebugMain) console.groupEnd('StartMain');
+    await new Promise(function (resolve) {
+        let id = setInterval(function () {
             try {
-                mountElement.appendChild(script);
-                script.onerror = (e) => reject(e);
-                script.onload = () => {
+                //打印开关
+                if (isDebug && Fancybox4) {
+                    log("Fancybox4js finished!\n");
+                    clearInterval(id);
                     resolve();
-                }
+                };
             } catch (error) {
-                reject(error);
+                console.error("Fancybox4js isn't finished!");
             }
-        });
+        }, 100);
+    });
+
+    if (isDebugMain) console.groupCollapsed('urlActivationGroup');
+    currentUrlActivation();
+    if (isDebugMain) console.groupEnd('urlActivationGroup');
+
+    priorityLog('开始实现：');
+    function priorityLog() {
+        console.log.apply(this, arguments);
     }
-    return null;
-}
-async function startMain_(arrs = null) {
+    function log() {
+        if (isDebugMain) {
+            console.log.apply(this, arguments);
+        }
+    };
     function isEmpty(param) {
         if (param) {
             var param_type = typeof (param);
             if (param_type == 'object') {
                 if (typeof (param.length) == 'undefined') {
-                    if (JSON.stringify(param) == "{}") {
-                        return true;
+                    if (typeof (param.source) == 'undefined' | '') {
+                        return true; //空值，空对象
                     }
                 } else if (param.length == 0) {
                     return true;
@@ -977,295 +780,116 @@ async function startMain_(arrs = null) {
             return true;
         }
     }
+    async function startMain_(arrs = null) {
 
-    function Get_(link) {
-        return new Promise(function (resolve) {
-            $.get(link, data => {
-                resolve(data);
+        function Get_(link) {
+            return new Promise(function (resolve) {
+                $.get(link, data => {
+                    resolve(data);
+                });
             });
-        });
-    }
+        }
 
-    function delayPromise(ms) {
-        return new Promise(function (resolve) {
-            setTimeout(resolve, ms);
-        });
-    }
+        function delayPromise(ms) {
+            return new Promise(function (resolve) {
+                setTimeout(resolve, ms);
+            });
+        }
 
-    function timeoutPromise(name, promise, ms = 1000) {
-        let timeout = delayPromise(ms).then(function () {
-            throw new Error(name + ': Operation timed out after ' + ms + ' ms');
-        });
-        return Promise.race([promise, timeout]);
-    }
+        function timeoutPromise(name, promise, ms = 1000) {
+            let timeout = delayPromise(ms).then(function () {
+                throw new Error(name + ': Operation timed out after ' + ms + ' ms');
+            });
+            return Promise.race([promise, timeout]);
+        }
 
-    let initialArrFunction = async function (arr) {
-        for (let index in arr) {
-            let data;
-            try {
-                data = await timeoutPromise(arr[index], Get_(arr[index]));
-                if (data) {
-                    console.log("Data: " + arr[index] + " is finished!\n");
+        let initialArrFunction = async function (arr) {
+            for (let index in arr) {
+                let data;
+                try {
+                    data = await timeoutPromise(arr[index], Get_(arr[index]));
+                    if (data) {
+                        console.log("Data: " + arr[index] + " is finished!\n");
+                    }
+                } catch (error) {
+                    console.log(error);
+                    timeoutPromise(arr[index], addScript_(null, arr[index]));
                 }
-            } catch (error) {
-                console.log(error);
-                timeoutPromise(arr[index], addScript_(null, arr[index]));
-            }
-            if (!isEmpty(data)) {
-                addScript_(data);
-                break;
-            }
-        }
-    };
-
-    if (!isEmpty(arrs)) {
-        await initialArrFunction(arrs);
-    } else {
-        await initialArrFunction(mainArr);
-        await initialArrFunction(fancyboxyArr);
-    }
-}
-function startFancyBoxScript() {
-    addScriptCss();
-    // 观察者 MutationObserver事件
-    function type(param) {
-        // es6中null的类型为object
-        if (param === null) {
-            return param + "";
-        }
-        if (typeof param === "object") {
-            let val = Object.prototype.toString.call(param).split(" ")[1];
-            let type = val.substr(0, val.length - 1).toLowerCase();
-            return type;
-        } else {
-            return typeof param;
-        }
-    }
-    let slideIndex = null;
-    const ContentContainer = document.querySelector("body");
-    const configObserver = {
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class"],
-    };
-    // 当观察到突变时执行的回调函数
-    const Callbacks = function (mutationsList) {
-        mutationsList.forEach(function (item, index) {
-            if ("attributes" === item.type) {
-                // log(item);
-                if (
-                    item.target.className ===
-                    "fancybox__carousel is-draggable"
-                ) {
-                    log(' # ', item);
-                    openEvent(item);
-                } else if (
-                    item.target.className ===
-                    "fancybox__container is-animated is-closing"
-                ) {
-                    log(' # ', item);
-                    closeEvent();
+                if (!isEmpty(data)) {
+                    addScript_(data);
+                    break;
                 }
             }
-        });
-    };
-    // 创建一个链接到回调函数的观察者实例
-    const Observer = new MutationObserver(Callbacks);
-    ContentContainer && Observer.observe(ContentContainer, configObserver);
-    function openEvent(item) {
-        slideIndex =
-            item.target.offsetParent.childNodes[1].firstChild.firstChild
-                .childNodes[0].innerText - 1;
-        if (slideIndex) {
-            log("open - # " + slideIndex + " slide is open!");
-        }
-    }
-    function closeEvent() {
-        log("close - # " + slideIndex + " slide is closed!");
-        let elementById = document.getElementById("imgLocation" + slideIndex);
-        if (elementById) {
-            let behavior_ = "smooth";
-            if (imagePluginSwitch[0].isOpenAutoSlidingPosition) behavior_ = "auto";
-            elementById.scrollIntoView({
-                block: "center",
-                behavior: behavior_,
-                inline: "center",
-            });
+        };
+
+        if (!isEmpty(arrs)) {
+            await initialArrFunction(arrs);
         } else {
-            console.error(" # ", "未定位id！");
+            await initialArrFunction(mainArr);
+            await initialArrFunction(fancyboxyArr);
         }
     }
-    if (imagePluginSwitch[0].isFancyBox) {
-        if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-            Fancybox4.bind("[data-fancybox='images']", {
-                Toolbar: false,
-                animated: false,
-                dragToClose: false,
-                showClass: false,
-                hideClass: false,
-                closeButton: "top",
-                Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
-                Thumbs: { minScreenHeight: 0 }
-            });
-        } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
-            Fancybox4.bind("[data-fancybox='images']", {
-                Thumbs: { autoStart: false, Carousel: { fill: false, center: true } }
-            });
-        } else {
-            Fancybox4.bind("[data-fancybox='images']", {
-                Thumbs: { Carousel: { fill: false, center: true } }
-            });
-        }
-    }
-}
-function activateFancyBox(isBoxAutoControl = null) {
-    //激活fancybox
-    if (!isEmpty(isBoxAutoControl)) {
-        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
-    }
-    imagePluginSwitch[0].isViewerOpen = false;
-    imagePluginSwitch[0].isFancyBox = true;
-}
-function aImgTagPackaging(images) {
-    let id = setInterval(function () {
-        if ($('.sl-c-pic').length > 0) {
-            $('.sl-c-pic').css({
-                'margin-top': '6px'
-            });
-            $('a[data-fancybox="images"]').css({
-                'color': '#000',
-                'box-shadow': '0 1px 0 #999'
-            });
-            clearInterval(id);
-        }
-    }, 100);
-    let imgObj = [];
-    $(images).each(function () {
-        let src = $(this).attr("src");
-        imgObj.push($("<img src=" + src + "></img>"));
-    });
-    let a_imgTag = [];
-    if (isDebugMain) {
-        console.groupCollapsed("imageSGroupIn");
-    }
-    $(imgObj).each(function (index) {
-        log("start this Object: \n", $(this));
-        let src;
-        // debugger
-        $(this).attr('label', 'sl');
-        // src = $(this).attr('src');
-        // log("attr src: \n", src);
-        src = $(this)[0].src;
-        log("array src: \n", src);
-        $(this).css({ "width": "100%" });
-        let imageItem = $(this).prop("outerHTML").toString();
-        log("New this String: \n", imageItem);
-        let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
-        construct_aTag.append(imageItem);
-        log("New construct_Tag Html: \n", construct_aTag.prop("outerHTML"));
-        a_imgTag.push(construct_aTag);
-    });
-    if (isDebugMain) {
-        console.groupEnd("imageSGroupIn");
-    }
-    return $(a_imgTag);
-}
-function popUpMenu() {
-    let popUpStr = '<div id="popUpContent" style="display: none;"><div style="height:100%; width:100%; position:fixed; _position:absolute; top:0; z-index:99999; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div><div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;"><div id="popUpLinks" style="position:absolute;left:20px;top:20px;height:260px;width:260px;overflow:auto;word-wrap:break-word;"></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="popUpQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;"/></div></div>';
-    let siteListHtml;
-    let popUpContent = document.createElement("div");
-    document.body.appendChild(popUpContent);
-    popUpContent.outerHTML = popUpStr;
-    popUpContent = document.querySelector("#popUpContent");
-    if (!popUpContent) {
-        console.error("弹窗加载失败！！！");
-        return;
-    }
-    document.querySelector("#popUpQuit").onclick = function () {
-        popUpContent.style.display = "none";
-    };
-    document.querySelector("#popUpContent>div").onclick = function () {
-        popUpContent.style.display = "none";
-    };
-    document.addEventListener("keydown", function (e) {
-        if (e.keyCode == 27) {
-            popUpContent.style.display = "none";
-        }
-    });
-    document.addEventListener("keydown", function (e) {
-        if (e.keyCode == 119) { //F8键
-            if (e.altKey) {
-                popUpContent.style.display = "block";
-                let popUpLinks = document.querySelector("div#popUpLinks");
-                if (!siteListHtml) {
-                    siteListHtml = "";
-                    let index = 0;
-                    for (let key in site) {
-                        if (site[key]._break === false) {
-                            index++;
-                            siteListHtml += "<span style='font-weight:bold;color:red;'>" + index + ":\t</span>" + "<a href=https://" + site[key].hostnames.pop() + ">" + site[key].name + "</a><br/>";
-                        }
-                        // log("弹窗加载失败！！！\n");
-                        log("弹窗加载成功！\n");
+    function currentUrlActivation() {
+        let origin = window.location.origin;
+        let hostName = window.location.hostname;
+        let hostnameArry = null;
+        let meet = function (domain) {
+            let matchDomain = false;
+            if (Alpha_Script.isArray(domain)) {
+                for (let i = 0; i < domain.length; i++) {
+                    if (domain[i] === hostName) {
+                        matchDomain = true;
+                        break;
                     }
                 }
-                popUpLinks.innerHTML = siteListHtml;
+            } else {
+                matchDomain = domain === hostName;
+            }
+            return matchDomain;
+        };
+        for (let key in site) {
+            let isPattern = isEmpty(site[key].pattern);
+            if (!isPattern) {
+                hostnameArry = site[key].pattern.exec(origin);
+                if (hostnameArry != null) {
+                    let urlHostName = hostnameArry[0].replace(/https?:\/\//i, "");
+                    site[key].hostnames.push(urlHostName);
+                    log(site[key].name, " : ", "add new hostName: ", urlHostName);
+                }
+            } else {
+                log(site[key].name, " : ", 'pattern is empty, never add new hostName.');
+            }
+            site[key].iStatus = meet(site[key].hostnames);
+            if (site[key].iStatus) {
+                log(site[key].name, ":\n", site[key].hostnames);
             }
         }
-    });
-}
-function adoptAutoPage() {
-    let id = setInterval(function () {
-        if ($('#Autopage_number').length > 0) {
-            $('#Autopage_number').click();
-            let cssText = $('#Autopage_number').attr('style');
-            $('#Autopage_number').css("cssText", "z-index: 1000 !important;" + cssText);
-            clearInterval(id);
-        }
-    }, 100);
-}
-function type(param) {
-    // es6中null的类型为object
-    if (param === null) {
-        return param + "";
+        // log("合并数组: \n", site.Hentai.hostnames.concat(site.Pron.hostnames));
     }
-    if (typeof param === "object") {
-        let val = Object.prototype.toString.call(param).split(" ")[1];
-        let type = val.substr(0, val.length - 1).toLowerCase();
-        return type;
-    } else {
-        return typeof param;
-    }
-}
-(async function () {
-    'use strict';
-    //清屏
-    console.clear();
-    // let fancyboxJs = "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.esm.js"
-    if (isDebugMain) console.groupCollapsed('StartMain');
-    await startMain_();
-    if (isDebugMain) console.groupEnd('StartMain');
-    await new Promise(function (resolve) {
-        let id = setInterval(function () {
-            try {
-                //打印开关
-                if (isDebug && Fancybox4) {
-                    log("fancybox4js finished!\n");
-                    clearInterval(id);
-                    resolve();
-                };
-            } catch (error) {
-                console.error("fancybox4js isn't finished!");
+    function addScript_(statement = null, src = null, isModule = false) {
+        let mountElement = document.getElementsByTagName('head')[0];
+        if (mountElement) {
+            let script = document.createElement("script");
+            if (src !== null) {
+                script.src = src;
+            } else if (statement !== null) {
+                script.textContent = statement;
+                if (isModule) script.type = "module";
             }
-        }, 100);
-    });
-
-    if (isDebugMain) console.groupCollapsed('urlActivationGroup');
-    currentUrlActivation();
-    if (isDebugMain) console.groupEnd('urlActivationGroup');
-
-    priorityLog('开始实现：');
-
+            return new Promise((resolve, reject) => {
+                try {
+                    mountElement.appendChild(script);
+                    script.onerror = (e) => reject(e);
+                    script.onload = () => {
+                        resolve();
+                    }
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        }
+        return null;
+    }
     function injectBtns() {
         let blobCache = {};
         let blobUrlCache = {};
@@ -1325,27 +949,6 @@ function type(param) {
                 "margin-bottom": "unset"
             });
         };
-        let activateSlidingFunc = function () {
-            let id = setInterval(function () {
-                let dynamicTimeStamp = new Date().getTime();
-                let misTiming = dynamicTimeStamp - newTimeStamp;
-                // log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
-                if (misTiming > 2000) {
-                    isActivateSlidingFuncNum++;
-                    newTimeStamp = dynamicTimeStamp;
-                    let slcPicNums = $("img[label='sl']");
-                    if (slcPicNums) {
-                        // log("TotalNumberImages: ", slcPicNums.length);
-                        for (let i = 0; i < slcPicNums.length; i++) {
-                            $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
-                        }
-                    }
-                    if (isActivateSlidingFuncNum === -1) {
-                        clearInterval(id);
-                    }
-                }
-            }, 100);
-        };
         let collectPicsTemplateFunc = function (parseImgsFunc, imgStyleFunc) {
             let id = setInterval(function () {
                 if ($) {
@@ -1385,7 +988,7 @@ function type(param) {
                                             // log('html==>', html);
                                             let parser = new DOMParser();
                                             let doc = parser.parseFromString(html, "text/html");
-                                            let imgObj = parseImgsFunc(doc);
+                                            let imgObj = parseImgsFunc(doc, aImgTagPackaging);
                                             let imgContainerCssSelector = '#c_' + _i;
                                             log(imgContainerCssSelector);
                                             $(imgObj).each(function (index) {
@@ -1452,24 +1055,6 @@ function type(param) {
             }
             return matchDomain;
         };
-
-        function isImgHttpStart(imgSrc, isJavaScriptObject = false) {
-            if (!imgSrc.startsWith('http')) {
-                let re = /^\/.*/g;
-                let isNoSlash = re.test(imgSrc);
-                if (isNoSlash) {
-                    imgSrc = protocol + '//' + hostName + imgSrc;
-                } else {
-                    imgSrc = startUrl + imgSrc;
-                }
-            }
-            if (isJavaScriptObject) {
-                let re = /(?<=:\/\/).*?(?=\/)/g;
-                let urlHost = imgSrc.match(re);
-                return { "imgSrc": imgSrc, "host": urlHost }
-            }
-            return imgSrc;
-        }
         function packageAndDownload() {
             if (isPackageAndDownload) {
                 alert('下载中, 请耐心等待...\n点击确认继续下载');
@@ -1729,6 +1314,253 @@ function type(param) {
                 }
             });
         }
+
+        let activateSlidingFunc = function () {
+            let id = setInterval(function () {
+                let dynamicTimeStamp = new Date().getTime();
+                let misTiming = dynamicTimeStamp - newTimeStamp;
+                // log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
+                if (misTiming > 2000) {
+                    isActivateSlidingFuncNum++;
+                    newTimeStamp = dynamicTimeStamp;
+                    let slcPicNums = $("img[label='sl']");
+                    if (slcPicNums) {
+                        // log("TotalNumberImages: ", slcPicNums.length);
+                        for (let i = 0; i < slcPicNums.length; i++) {
+                            $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
+                        }
+                    }
+                    if (isActivateSlidingFuncNum === -1) {
+                        clearInterval(id);
+                    }
+                }
+            }, 100);
+        };
+        function isImgHttpStart(imgSrc, isJavaScriptObject = false) {
+            if (!imgSrc.startsWith('http')) {
+                let re = /^\/.*/g;
+                let isNoSlash = re.test(imgSrc);
+                if (isNoSlash) {
+                    imgSrc = protocol + '//' + hostName + imgSrc;
+                } else {
+                    imgSrc = startUrl + imgSrc;
+                }
+            }
+            if (isJavaScriptObject) {
+                let re = /(?<=:\/\/).*?(?=\/)/g;
+                let urlHost = imgSrc.match(re);
+                return { "imgSrc": imgSrc, "host": urlHost }
+            }
+            return imgSrc;
+        }
+        function addScriptCss() {
+            // let fancyboxLink = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css";
+            // let fancyboxData = await Get(fancyboxLink);
+            addStyle(fancyBoxCss);
+            if (os.isPc) {
+                addStyle(fancyBoxCssAdditon);
+            }
+        }
+        function startFancyBoxScript() {
+            addScriptCss();
+            // 观察者 MutationObserver事件
+            let slideIndex = null;
+            const ContentContainer = document.querySelector("body");
+            const configObserver = {
+                childList: true,
+                subtree: true,
+                attributeFilter: ["class"],
+            };
+            // 当观察到突变时执行的回调函数
+            const Callbacks = function (mutationsList) {
+                mutationsList.forEach(function (item, index) {
+                    if ("attributes" === item.type) {
+                        // log(item);
+                        if (
+                            item.target.className ===
+                            "fancybox__carousel is-draggable"
+                        ) {
+                            log(' # ', item);
+                            openEvent(item);
+                        } else if (
+                            item.target.className ===
+                            "fancybox__container is-animated is-closing"
+                        ) {
+                            log(' # ', item);
+                            closeEvent();
+                        }
+                    }
+                });
+            };
+            // 创建一个链接到回调函数的观察者实例
+            const Observer = new MutationObserver(Callbacks);
+            ContentContainer && Observer.observe(ContentContainer, configObserver);
+            function openEvent(item) {
+                slideIndex =
+                    item.target.offsetParent.childNodes[1].firstChild.firstChild
+                        .childNodes[0].innerText - 1;
+                if (slideIndex) {
+                    log("open - # " + slideIndex + " slide is open!");
+                }
+            }
+            function closeEvent() {
+                log("close - # " + slideIndex + " slide is closed!");
+                let elementById = document.getElementById("imgLocation" + slideIndex);
+                if (elementById) {
+                    let behavior_ = "smooth";
+                    if (imagePluginSwitch[0].isOpenAutoSlidingPosition) behavior_ = "auto";
+                    elementById.scrollIntoView({
+                        block: "center",
+                        behavior: behavior_,
+                        inline: "center",
+                    });
+                } else {
+                    console.error(" # ", "未定位id！");
+                }
+            }
+            if (imagePluginSwitch[0].isFancyBox) {
+                if (imagePluginSwitch[0].isFancyBoxFullScreen) {
+                    Fancybox4.bind("[data-fancybox='images']", {
+                        Toolbar: false,
+                        animated: false,
+                        dragToClose: false,
+                        showClass: false,
+                        hideClass: false,
+                        closeButton: "top",
+                        Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
+                        Thumbs: { minScreenHeight: 0 }
+                    });
+                } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
+                    Fancybox4.bind("[data-fancybox='images']", {
+                        Thumbs: { autoStart: false, Carousel: { fill: false, center: true } }
+                    });
+                } else {
+                    Fancybox4.bind("[data-fancybox='images']", {
+                        Thumbs: { Carousel: { fill: false, center: true } }
+                    });
+                }
+            }
+        }
+        let activateFancyBox = function (isBoxAutoControl = null) {
+            //激活fancybox
+            if (!isEmpty(isBoxAutoControl)) {
+                imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
+            }
+            imagePluginSwitch[0].isViewerOpen = false;
+            imagePluginSwitch[0].isFancyBox = true;
+        }
+        let aImgTagPackaging = function (images) {
+            let id = setInterval(function () {
+                if ($('.sl-c-pic').length > 0) {
+                    $('.sl-c-pic').css({
+                        'margin-top': '6px'
+                    });
+                    $('a[data-fancybox="images"]').css({
+                        'color': '#000',
+                        'box-shadow': '0 1px 0 #999'
+                    });
+                    clearInterval(id);
+                }
+            }, 100);
+            let imgObj = [];
+            $(images).each(function () {
+                let src = $(this).attr("src");
+                imgObj.push($("<img src=" + src + "></img>"));
+            });
+            let a_imgTag = [];
+            if (isDebugMain) {
+                console.groupCollapsed("imageSGroupIn");
+            }
+            $(imgObj).each(function (index) {
+                log("start this Object: \n", $(this));
+                let src;
+                // debugger
+                $(this).attr('label', 'sl');
+                // src = $(this).attr('src');
+                // log("attr src: \n", src);
+                src = $(this)[0].src;
+                log("array src: \n", src);
+                $(this).css({ "width": "100%" });
+                let imageItem = $(this).prop("outerHTML").toString();
+                log("New this String: \n", imageItem);
+                let construct_aTag = $(`<a data-fancybox="images" href="${src}"></a>`);
+                construct_aTag.append(imageItem);
+                log("New construct_Tag Html: \n", construct_aTag.prop("outerHTML"));
+                a_imgTag.push(construct_aTag);
+            });
+            if (isDebugMain) {
+                console.groupEnd("imageSGroupIn");
+            }
+            return $(a_imgTag);
+        }
+        function popUpMenu() {
+            let popUpStr = '<div id="popUpContent" style="display: none;"><div style="height:100%; width:100%; position:fixed; _position:absolute; top:0; z-index:99999; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div><div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;"><div id="popUpLinks" style="position:absolute;left:20px;top:20px;height:260px;width:260px;overflow:auto;word-wrap:break-word;"></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="popUpQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;"/></div></div>';
+            let siteListHtml;
+            let popUpContent = document.createElement("div");
+            document.body.appendChild(popUpContent);
+            popUpContent.outerHTML = popUpStr;
+            popUpContent = document.querySelector("#popUpContent");
+            if (!popUpContent) {
+                console.error("弹窗加载失败！！！");
+                return;
+            }
+            document.querySelector("#popUpQuit").onclick = function () {
+                popUpContent.style.display = "none";
+            };
+            document.querySelector("#popUpContent>div").onclick = function () {
+                popUpContent.style.display = "none";
+            };
+            document.addEventListener("keydown", function (e) {
+                if (e.keyCode == 27) {
+                    popUpContent.style.display = "none";
+                }
+            });
+            document.addEventListener("keydown", function (e) {
+                if (e.keyCode == 119) { //F8键
+                    if (e.altKey) {
+                        popUpContent.style.display = "block";
+                        let popUpLinks = document.querySelector("div#popUpLinks");
+                        if (!siteListHtml) {
+                            siteListHtml = "";
+                            let index = 0;
+                            for (let key in site) {
+                                if (site[key]._break === false) {
+                                    index++;
+                                    siteListHtml += "<span style='font-weight:bold;color:red;'>" + index + ":\t</span>" + "<a href=https://" + site[key].hostnames.pop() + ">" + site[key].name + "</a><br/>";
+                                }
+                                // log("弹窗加载失败！！！\n");
+                                log("弹窗加载成功！\n");
+                            }
+                        }
+                        popUpLinks.innerHTML = siteListHtml;
+                    }
+                }
+            });
+        }
+        function adoptAutoPage() {
+            let id = setInterval(function () {
+                if ($('#Autopage_number').length > 0) {
+                    $('#Autopage_number').click();
+                    let cssText = $('#Autopage_number').attr('style');
+                    $('#Autopage_number').css("cssText", "z-index: 1000 !important;" + cssText);
+                    clearInterval(id);
+                }
+            }, 100);
+        }
+        function type(param) {
+            // es6中null的类型为object
+            if (param === null) {
+                return param + "";
+            }
+            if (typeof param === "object") {
+                let val = Object.prototype.toString.call(param).split(" ")[1];
+                let type = val.substr(0, val.length - 1).toLowerCase();
+                return type;
+            } else {
+                return typeof param;
+            }
+        }
+
         return {
             injectComponent: function (i) {
                 if (i) injectComponent = i;
@@ -1764,6 +1596,11 @@ function type(param) {
                 collectPics = function () {
                     collectPicsTemplateFunc(parseImgsFunc, imgStyleFunc);
                 }
+                return this;
+            },
+            fancyBoxActivated: function (data) {
+                if (data) activateFancyBox(data);
+                activateFancyBox();
                 return this;
             },
             start: function () {
@@ -1813,7 +1650,7 @@ function type(param) {
         $('div.atc_new_head').remove(); //移除广告等无必要元素
         $('div.keywords').remove(); //移除广告等无必要元素
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div .article-content').hide();
         $('div.nav-links').hide();
         $('div.article-wechats').hide();
@@ -1873,7 +1710,7 @@ function type(param) {
             $("#header .right-menu").nextAll().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         curSite.isAdjustDomainName = true;
         $('#display_image_detail').hide();
         $('#post').hide();
@@ -1967,7 +1804,7 @@ function type(param) {
         $('#thread-down').remove(); //移除广告等无必要元素
         $("div .wp").remove();
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.adw').hide();
         $('#thread-page').hide();
         $("#pic").hide();
@@ -1980,7 +1817,6 @@ function type(param) {
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let match = window.location.pathname.match(/^\/(thread-\d+-)(\d+)(-\d+\.html)$/im);
         log("match: \n", match);
-        debugger
         if (match !== null) {
             {
                 let totalPageCnt = 5;
@@ -2012,7 +1848,7 @@ function type(param) {
     injectBtns().domain(site.Umei.hostnames).removeAD(function () {
         $('union').remove(); //移除广告等无必要元素
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         // $('.ImageBody').hide();
         // $('.NewPages').hide();
         $('.img-content').hide();
@@ -2075,7 +1911,7 @@ function type(param) {
             $('iframe').remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div.pic-meinv').hide();
     }, function () {
         $('div.pic-meinv').show();
@@ -2128,7 +1964,7 @@ function type(param) {
             $("div.infoline span:first-of-type").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#p').hide();
         $("#back-to-top").hide();
         //android
@@ -2178,7 +2014,6 @@ function type(param) {
             }
         }
     }).collectPics(function (doc) {
-        debugger
         if (os.isAndroid) {
             //去除最后两个空白广告图片
             $(doc).find('.piclist li:last-child').remove();
@@ -2209,7 +2044,7 @@ function type(param) {
             $("div[id^=an]").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div.post').hide();
     }, function () {
         $('div.post').show();
@@ -2254,7 +2089,7 @@ function type(param) {
         });
     }).switchAggregationBtn(function () {
 
-        activateFancyBox();
+
         // imagePluginSwitch[0].isFancyBoxFullScreen = true;
         // if (os.isAndroid || os.isPhone) {
         //     imagePluginSwitch[0].isFancyBoxFullScreen = false;
@@ -2293,7 +2128,7 @@ function type(param) {
 
     /* --------------------------------------------everia.club------------------------------------------ */
 
-    injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
+    injectBtns().domain(site.Everia.hostnames).fancyBoxActivated(1).removeAD(async function () {
         // debugger
         $("head").empty();
         let arrs = [
@@ -2307,7 +2142,6 @@ function type(param) {
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox(1);
         $('figure.has-nested-images').hide();
         $('.separator').hide();
         $('.entry-content p').css('margin-bottom', 'unset');
@@ -2367,7 +2201,7 @@ function type(param) {
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $('.pagination').hide();
         $('.article-content').hide();
         //android
@@ -2409,7 +2243,7 @@ function type(param) {
             }
             $('.article-header').after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         if (site.Jpxgyw.iStatus) {
             images = $(doc).find('.article-content > p img');
@@ -2434,7 +2268,7 @@ function type(param) {
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
         // FancyBox
-        activateFancyBox();
+
         imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
         $('.text-xs b').hide();
         $(".post-data").hide();
@@ -2468,7 +2302,7 @@ function type(param) {
 
             $('.post').prepend(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images = $(doc).find('.nc-light-gallery img').clone();
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
@@ -2487,7 +2321,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         // FancyBox
-        activateFancyBox();
+
         $(".showcontw").hide();
     }, function () {
         $(".showcontw").show();
@@ -2522,7 +2356,7 @@ function type(param) {
             }
             $('.showtitle').after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images = $(doc).find('#showimg>a[title] img').clone();
         let a_imgTag = aImgTagPackaging(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
@@ -2544,7 +2378,7 @@ function type(param) {
         });
     }).switchAggregationBtn(function () {
         // FancyBox
-        activateFancyBox();
+
         $("#pages").hide();
         $(".td-gallery-content").hide();
     }, function () {
@@ -2576,7 +2410,7 @@ function type(param) {
             }
             $('.td-post-header').after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images = $(doc).find('.td-gallery-content > img');
         $(images).each(function () {
             let src = $(this).attr('data-original');
@@ -2605,7 +2439,7 @@ function type(param) {
             'max-height': '50%'
         });
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.entry-content figure').hide();
         $("#comments").hide();
         $(".widget_text").hide();
@@ -2655,7 +2489,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $(".rootContant[style]").first().hide();
         $(".rootContant[style]").first().next().next().hide();
         $(".rootContant[style]").first().next().next().next().hide();
@@ -2675,7 +2509,7 @@ function type(param) {
             pageUrls.push(pageUrl);
             $('.rootContant[style]').slice(0, 1).after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images = $(doc).find('.rootContant > img');
         log("images \n", $(images));
         $(images).each(function (index) {
@@ -2696,7 +2530,7 @@ function type(param) {
 
     /* --------------------------------------------yskhd.com-------------------------------------------- */
 
-    injectBtns().domain(site.Yskhd.hostnames).removeAD(function () {
+    injectBtns().domain(site.Yskhd.hostnames).fancyBoxActivated(1).removeAD(function () {
         setInterval(function () {
             $(".banner-slider").remove();
             $(".nav-vip").remove();
@@ -2706,7 +2540,6 @@ function type(param) {
         GM_addStyle('.footer-fixed-nav{z-index: unset!important;}');
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox(1);
         curSite.isReferer = true;
         $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
@@ -2777,7 +2610,7 @@ function type(param) {
         });
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $(".main-body").hide();
         $(".link_pages").hide();
     }, function () {
@@ -2810,7 +2643,7 @@ function type(param) {
             }
             $('.main-header').after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find('.main-body img');
         let a_imgTag = aImgTagPackaging(images);
@@ -2833,7 +2666,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         curSite.isReferer = true;
         $("#hgallery img[mark!='true']").hide();
         $("#pages").hide();
@@ -2927,7 +2760,7 @@ function type(param) {
                 }
             }
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
 
         let currentHref = window.location.href;
         log("currentHref: \n", currentHref);
@@ -3002,7 +2835,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         let len = $("div[id^=attachment]").length;
         if (len > 0) {
             $("div[id^=attachment]").css({
@@ -3032,7 +2865,7 @@ function type(param) {
                 $('.entry-content .entry').prepend(injectComponent);
             }
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find('.entry-content p img');
         let a_imgTag = aImgTagPackaging(images);
@@ -3052,7 +2885,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $("div[class^=article]").nextAll().hide();
     }, function () {
         $("div[class^=article]").nextAll().show();
@@ -3071,7 +2904,7 @@ function type(param) {
             pageUrls.push(partPreUrl);
             $('.article-header').after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find('div.article-content img');
 
@@ -3111,7 +2944,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $(".page-link").hide();
         $(".page-link").last().prev().hide();
     }, function () {
@@ -3163,7 +2996,7 @@ function type(param) {
                 $(".page-link").last().prev().prev().after(injectComponent);
             }
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find('.entry img');
         let a_imgTag = aImgTagPackaging(images);
@@ -3182,7 +3015,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $(".content").hide();
     }, function () {
         $(".content").show();
@@ -3223,7 +3056,7 @@ function type(param) {
             }
             $('.item_title').last().after(injectComponent);
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find('.content img');
         log("images: \n", images);
@@ -3249,7 +3082,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-        activateFancyBox();
+
         $("div#content>div[style^=text]").hide();
         $("#content>div>img").hide();
         $("table[align]").hide();
@@ -3314,7 +3147,7 @@ function type(param) {
     /* --------------------------------------------www.tuiimg.com--------------------------------------- */
 
     injectBtns().domain(site.tuiimg.hostnames).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.content').hide();
         $('.page').hide();
         $('.tips').hide();
@@ -3392,7 +3225,7 @@ function type(param) {
         await startMain_(gridzoneCss);
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.wp-block-image').hide();
         $('.rebeccalite-post-author').hide();
         $('.wrapper').hide();
@@ -3439,7 +3272,7 @@ function type(param) {
                 }
             }
         }
-    }).collectPics(function (doc) {
+    }).collectPics(function (doc, aImgTagPackaging) {
         let images;
         images = $(doc).find(".entry-content img");
         let a_imgTag = aImgTagPackaging(images);
@@ -3468,7 +3301,7 @@ function type(param) {
             $("div[class^=banner]").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#page').nextAll().hide();
         $('.content-tips').hide();
         $('.content-pic').hide();
@@ -3544,7 +3377,7 @@ function type(param) {
     /* --------------------------------------------asiantolick.com-------------------------------------- */
 
     injectBtns().domain(site.asiantolick.hostnames).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div.spotlight-group').hide();
         //android
     }, function () {
@@ -3584,7 +3417,7 @@ function type(param) {
     /* --------------------------------------------www.imn5.net-格式------------------------------------ */
 
     injectBtns().domain(site.imn5.hostnames).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div.imgwebp').hide();
         $('div.page').hide();
         //android
@@ -3641,7 +3474,7 @@ function type(param) {
             $("body").css("overflow", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div.photos').hide();
         $('div.pager').hide();
         //android
@@ -3725,7 +3558,7 @@ function type(param) {
             }, 100);
         }
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('div[class^=p] a').hide();
         $('#player').hide();
         //android
@@ -3786,7 +3619,7 @@ function type(param) {
             $("body script").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#app').hide();
         $('#content').hide();
         $('#links').hide();
@@ -3834,7 +3667,7 @@ function type(param) {
             $(".rel-link h2").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#main').hide();
         //android
     }, function () {
@@ -3910,7 +3743,7 @@ function type(param) {
         }
         asyncFunc();
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         curSite.isAdjustDomainName = true;
         $('#picg').prev().nextAll().hide();
         //android
@@ -3951,7 +3784,7 @@ function type(param) {
         Array.prototype.clearRepeat = function () {
             var res = [];
             var json = {};
-            log("This :",this);
+            log("This :", this);
             $.each(this, function (i, item) {
                 //this 表示当前待处理数据，this可能是一个集合或是一个单独字段
                 if (!json[item[0].getAttribute("src")]) {
@@ -3986,7 +3819,7 @@ function type(param) {
         }, 100);
     }).switchAggregationBtn(function () {
         // debugger
-        activateFancyBox();
+
         $('.wp-block-media-text').next().nextAll().hide();
         //android
     }, function () {
@@ -4018,7 +3851,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#myimg').hide();
         $('#pagination').hide();
         //android
@@ -4079,7 +3912,7 @@ function type(param) {
             $("header#header").css("position", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.entry-inner').hide();
         $('.pagination').hide();
         //android
@@ -4139,7 +3972,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.article-body').hide();
         //android
     }, function () {
@@ -4174,7 +4007,7 @@ function type(param) {
             $("#popUpLinks a").css("color", "black");
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.article-fulltext').hide();
         $('.pagination').hide();
         //android
@@ -4235,7 +4068,7 @@ function type(param) {
             $("#top-menu").css("position", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#gallery').hide();
         //android
     }, function () {
@@ -4275,7 +4108,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.elementor-widget-container img').parent().hide();
         $('.ihc-locker-wrap').hide();
         //android
@@ -4316,7 +4149,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         curSite.isAdjustDomainName = true;
         $('.entry-content img').hide();
     }, function () {
@@ -4359,7 +4192,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.msacwl-slider-wrap').hide();
     }, function () {
         $('.msacwl-slider-wrap').show();
@@ -4389,7 +4222,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".thumbnail").parent().hide();
     }, function () {
         $(".thumbnail").parent().show();
@@ -4500,7 +4333,7 @@ function type(param) {
             $("#popUpLinks a").css("color", "black");
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.g1-content-narrow').hide();
     }, function () {
         // $('.g1-content-narrow').show();
@@ -4531,7 +4364,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.entry-content').hide();
     }, function () {
         //$('.entry-content').show();
@@ -4570,7 +4403,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".separator img").slice(1).hide();
     }, function () {
         // $('.g1-content-narrow').show();
@@ -4600,7 +4433,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $("figure").hide();
         $(".kt-tabs-title-list").hide();
     }, function () {
@@ -4641,7 +4474,7 @@ function type(param) {
             $(".jnews-cookie-law-policy").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".default-view").hide();
         $("div[id^=ngg-image]").hide();
     }, function () {
@@ -4680,7 +4513,7 @@ function type(param) {
             $(".row.align-equal.align-center").hide();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".aligncenter").hide();
         $("#comments").hide();
     }, function () {
@@ -4725,7 +4558,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".entry-content").hide();
     }, function () {
         $('.entry-content').show();
@@ -4761,7 +4594,7 @@ function type(param) {
             $(".elementor-grid").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $(".e-gallery-item").parent().hide();
     }, function () {
         $(".e-gallery-item").parent().show();
@@ -4797,7 +4630,7 @@ function type(param) {
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $("article>section").hide();
         $("#ghost-portal-root").hide();
         $(".article-image").hide();
@@ -4831,8 +4664,7 @@ function type(param) {
 
     /* --------------------------------------------www.xinwenba.net------------------------------------- */
 
-    injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
-        activateFancyBox(1);
+    injectBtns().domain(site.xinwenba.hostnames).fancyBoxActivated(1).switchAggregationBtn(function () {
         imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
         $('.picture').hide();
         $('div.web').hide();
@@ -4888,7 +4720,7 @@ function type(param) {
     /* --------------------------------------------www.meitu131.com------------------------------------- */
 
     injectBtns().domain(site.meitu131.hostnames).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.work-content>p').hide();
         $('div#pages').hide();
         //android
@@ -4956,12 +4788,11 @@ function type(param) {
 
     /* --------------------------------------------dongtidemi.com--------------------------------------- */
 
-    injectBtns().domain(site.dongtidemi.hostnames).removeAD(function () {
+    injectBtns().domain(site.dongtidemi.hostnames).fancyBoxActivated(1).removeAD(function () {
         setInterval(function () {
             $("div[class^=wpcom_myimg]").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox(1);
         $('.entry-content').hide();
         //android
     }, function () {
@@ -5042,7 +4873,7 @@ function type(param) {
             $(".img_ad_list").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         curSite.isAdjustDomainName = true;
         $('div pre').hide();
         $('.show_content pre center').hide();
@@ -5100,7 +4931,7 @@ function type(param) {
 
     injectBtns().domain(site.tvvtw.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.blog-details-text').hide();
         //android
     }, function () {
@@ -5143,7 +4974,7 @@ function type(param) {
 
     injectBtns().domain(site.f4mm.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('#masonry').hide();
         //android
     }, function () {
@@ -5188,7 +5019,7 @@ function type(param) {
 
     injectBtns().domain(site._446m.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         curSite.isAdjustDomainName = true;
         $('.post-content p').hide();
         //android
@@ -5234,7 +5065,7 @@ function type(param) {
 
     injectBtns().domain(site.elitebabes.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.list-gallery.a.css').hide();
 
         //android
@@ -5290,7 +5121,7 @@ function type(param) {
 
     injectBtns().domain(site.kaka234.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.ArticleImageBox').hide();
     }, function () {
         $('.ArticleImageBox').show();
@@ -5332,7 +5163,7 @@ function type(param) {
     injectBtns().domain(site.ikmn.hostnames).removeAD(function () {
         GM_addStyle(".header{z-index: unset !important;}")
     }).switchAggregationBtn(function () {
-        activateFancyBox();
+
         $('.pagebar').hide();
         $('.info-imtg-box').hide();
     }, function () {
@@ -5386,9 +5217,8 @@ function type(param) {
     }).start();
     /* --------------------------------------------cydmyz.com------------------------------------------ */
 
-    injectBtns().domain(site.cydmyz.hostnames).removeAD(function () {
+    injectBtns().domain(site.cydmyz.hostnames).fancyBoxActivated(1).removeAD(function () {
     }).switchAggregationBtn(function () {
-        activateFancyBox(1);
         $('.entry-wrapper').hide();
     }, function () {
         $('.entry-wrapper').show();
