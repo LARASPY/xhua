@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.33
+// @version      4.40
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -95,630 +95,575 @@
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue
 // @grant        unsafeWindow
 // ==/UserScript==
 
-// https://tool.lu/markdown/
 // Alt+F8显示各网站列表 Esc退出
-GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
-
-let isDebugMain = true, curSite = {
-    isReferer: "", isHost: true, isAdjustDomainName: false
-}, site = {
-    HentaiImage: {
-        id: -1,
-        name: "Hentai Image",
-        hostnames: ["hentai-img.com"],
-        iStatus: false,
-        _break: false,
-    },
-    Hentai: {
-        //支持中文https://zh.hentai-cosplays.com/
-        id: 0,
-        name: "Hentai Cosplay",
-        hostnames: ["hentai-cosplays.com"],
-        iStatus: false,
-        _break: false,
-    },
-    Pron: {
-        //支持中文https://zh.porn-images-xxx.com/
-        id: 1,
-        name: "Porn Image",
-        hostnames: ["porn-images-xxx.com"],
-        pattern: /https?\:\/\/(\w+\.)?porn-image\w+-xxx\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    Umei: {
-        id: 2,
-        name: "优美图库(不)",
-        hostnames: ["umei.fun", "www.umei.cc", "www.umeitu.com"],
-        pattern: /https?\:\/\/www\.umei(\w+)?\.\w+/,
-        iStatus: false,
-        _break: true,
-    },
-    Wndfx: {
-        id: 3,
-        name: "Wndfx 妹子图(不)",
-        hostnames: ["www.wndfx.com"],
-        pattern: /https?\:\/\/www.wndfx\.com/,
-        iStatus: false,
-        _break: true,
-    },
-    Lesmao: {
-        id: 4,
-        name: "蕾丝猫(不)",
-        hostnames: [
-            "www.lsm.me",
-            "www.lesmao.pro",
-            "www.lesmao.co",
-            "www.lsmpx.com",
-            "www.lesmao.org",
-        ],
-        pattern: /https?\:\/\/w+.(?:les|ls)m(\w+)?.\w*/,
-        iStatus: false,
-        _break: true,
-    },
-    Win4000: {
-        id: 5,
-        name: "美桌(不)",
-        hostnames: ["www.win4000.com"],
-        pattern: /https?\:\/\/\w+\.win4000\.com/,
-        iStatus: false,
-        _break: true,
-    },
-    _192tp: {
-        id: 6,
-        name: "192 美女图",
-        hostnames: [
-            "www.192tt.top",
-            "www.192tb.com",
-            "www.192tp.com",
-            "www.taotu8.xyz",
-        ],
-        pattern: /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Xiuren: {
-        id: 7,
-        name: "Xiuren 秀人网",
-        hostnames: ["www.xiuren.org"],
-        pattern: /https?\:\/\/www\.xiuren\.org/,
-        iStatus: false,
-        _break: false,
-    },
-    Micmicidol: {
-        id: 8,
-        name: "Mic Mic Idol",
-        hostnames: ["www.micmicidol.com"],
-        pattern: /https?\:\/\/\w+\.micmicidol\.\w{0,4}/,
-        iStatus: false,
-        _break: false,
-    },
-    Everia: {
-        id: 9,
-        name: "Everia.club",
-        hostnames: ["everia.club"],
-        pattern: /https?\:\/\/everia\.club/,
-        iStatus: false,
-        _break: false,
-    },
-    Jpxgyw: {
-        id: 10,
-        name: "Jpxgyw 美女网",
-        hostnames: ["www.jpxgyw.net", "www.xgmn09.com", "www.jpxgyw.cc"],
-        pattern: /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/,
-        iStatus: false,
-        _break: false,
-    },
-    _95mm: {
-        id: 11,
-        name: "MM 范",
-        hostnames: ["www.95mm.org"],
-        pattern: /https?\:\/\/\w+\.95mm\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    _3gbizhi: {
-        id: 12,
-        name: "3G 壁纸(不)",
-        hostnames: ["www.3gbizhi.com"],
-        pattern: /https?\:\/\/\w+\.3gbizhi\.\w+/,
-        iStatus: false,
-        _break: true,
-    },
-    Jpmn8: {
-        id: 13,
-        name: "Jpmn8 精品美女吧",
-        hostnames: ["www.jpmn8.com"],
-        pattern: /https?\:\/\/\w+\.jpmn\w+\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Goddess: {
-        id: 14,
-        name: "Goddess",
-        hostnames: ["tw.kissgoddesssite.com"],
-        pattern: /https?\:\/\/tw.\w*goddess\w+\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Meinv: {
-        id: 15,
-        name: "美女百科",
-        hostnames: ["meinv.page"],
-        pattern: /https?\:\/\/(\w+\.)?meinv\.page/,
-        iStatus: false,
-        _break: false,
-    },
-    Asiansister: {
-        id: 16,
-        name: "Asiansister",
-        hostnames: ["asiansister.com"],
-        pattern: /https?\:\/\/asiansister\.com/,
-        iStatus: false,
-        _break: true,
-    },
-    Yskhd: {
-        id: 17,
-        name: "优丝库 HD",
-        hostnames: ["yskhd.com"],
-        pattern: /https?\:\/\/yskhd\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    Dmmtu: {
-        id: 18,
-        name: "Dmmtu 美女图",
-        hostnames: ["www.dmmtu.com"],
-        pattern: /https?\:\/\/\w+\.dmmtu\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Fnvshen: {
-        id: 19,
-        name: "宅男宅女 HD",
-        hostnames: ["www.fnvshen.com"],
-        pattern: /https?\:\/\/\w+\.\w+shen(\w+)?\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Ikanins: {
-        id: 19,
-        name: "爱看 INS",
-        hostnames: ["www.ikanins.com"],
-        pattern: /https?\:\/\/(www\.)?ikanins\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Madoupan: {
-        id: 19,
-        name: "麻豆盘",
-        hostnames: ["madoupan.com"],
-        pattern: /https?\:\/\/madoupan\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    Mrcong: {
-        id: 20,
-        name: "Mrcong",
-        hostnames: ["mrcong.com"],
-        pattern: /https?\:\/\/mrcong\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    XiurenJi: {
-        id: 21,
-        name: "秀人集",
-        hostnames: ["www.xiurenb.net", "www.xiurenb.com", "www.xiuren01.xyz"],
-        pattern: /https?\:\/\/www\.xiuren\w{0,2}\.[A-Za-z]{0,3}/,
-        iStatus: false,
-        _break: false,
-    },
-    Xrmn: {
-        id: 22,
-        name: "秀人美女网",
-        hostnames: ["www.xrmn5.cc"],
-        pattern: /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}/,
-        iStatus: false,
-        _break: false,
-    },
-    _24fa: {
-        id: 23,
-        name: "24Fa",
-        hostnames: [
-            "www.112w.cc",
-            "www.112w.cc\/c49.aspx",
-            "www.24fa.link",
-            "www.117.life",
-            "www.24faa.cc",
-        ],
-        pattern: /https?\:\/\/(www\.)?[0-9]{2,3}(m|w|faw|fa|aa)?\.(cc|link|life)/,
-        iStatus: false,
-        _break: false,
-    },
-    tuiimg: {
-        id: 24,
-        name: "推图网",
-        hostnames: ["www.tuiimg.com"],
-        pattern: /https?:\/\/(\w+\.)?tuiimg\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    nsfwp: {
-        id: 25,
-        name: "Nsfwp",
-        hostnames: [
-            "nsfwp.buzz",
-            "picxx.icu",
-            "picxx.xyz",
-            "nsfwx.pics",
-            "nsfwpicx.com",
-        ],
-        pattern: /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    mmm131: {
-        id: 26,
-        name: "MM131美女图片",
-        hostnames: ["mmm131.com"],
-        pattern: /https?:\/\/\w+\.(mmm131|mm1\d+)\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    asiantolick: {
-        id: 27,
-        name: "Asian to lick",
-        hostnames: ["asiantolick.com"],
-        pattern: /https?:\/\/(\w+\.)?asiantolick\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    imn5: {
-        id: 28,
-        name: "爱美女网",
-        hostnames: ["www.imn5.net"],
-        pattern: /https?:\/\/(\w+\.)?imn5.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    xchina: {
-        id: 29,
-        name: "小黄书",
-        hostnames: ["xchina.co"],
-        pattern: /https?:\/\/xchina.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    jjgirls: {
-        id: 30,
-        name: "Heyzo",
-        hostnames: ["jjgirls.com"],
-        pattern: /https?:\/\/jjgirls\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    photos18: {
-        id: 31,
-        name: "色情圖片網",
-        hostnames: ["www.photos18.com"],
-        pattern: /https?:\/\/(\w+\.)?photos18\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    pornpics: {
-        id: 32,
-        name: "Porn Pics",
-        hostnames: ["www.pornpics.com"],
-        pattern: /https?:\/\/(\w+\.)?pornpics\.\w+/,
-        iStatus: false,
-        _break: false,
-    },
-    mfsft: {
-        id: 33,
-        name: "免费私房图",
-        hostnames: ["www.mfsft.com"],
-        pattern:
-            /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst|yhflt)\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    xartmodel: {
-        id: 34,
-        name: "XRTMODEL",
-        hostnames: ["xartmodel.net"],
-        pattern: /https?\:\/\/xartmodel.net/,
-        iStatus: false,
-        _break: false,
-    },
-    hotgirl: {
-        id: 35,
-        name: "HOTGIRL.asia",
-        hostnames: ["hotgirl.asia"],
-        pattern: /https?\:\/\/hotgirl.asia/,
-        iStatus: false,
-        _break: false,
-    },
-    hotgirlchina: {
-        id: 36,
-        name: "HOTGIRLchina",
-        hostnames: ["hotgirlchina.com"],
-        pattern: /https?\:\/\/hotgirlchina.com/,
-        iStatus: false,
-        _break: false,
-    },
-    baobua: {
-        id: 37,
-        name: "BAOBUA.COM",
-        hostnames: ["blog.baobua.com"],
-        pattern: /https?\:\/\/blog.baobua.com/,
-        iStatus: false,
-        _break: false,
-    },
-    buondua: {
-        id: 38,
-        name: "Buon Dua",
-        hostnames: ["buondua.com"],
-        pattern: /https?\:\/\/buondua.com/,
-        iStatus: false,
-        _break: false,
-    },
-    _4kup: {
-        id: 39,
-        name: "4KUP",
-        hostnames: ["www.4kup.net"],
-        pattern: /https?\:\/\/www.4kup.net/,
-        iStatus: false,
-        _break: false,
-    },
-    goddess247: {
-        id: 40,
-        name: "Goddess247",
-        hostnames: ["goddess247.com"],
-        pattern: /https?\:\/\/goddess247.com/,
-        iStatus: false,
-        _break: false,
-    },
-    ilovexs: {
-        id: 41,
-        name: "NongMo.Zone",
-        hostnames: ["www.ilovexs.com"],
-        pattern: /https?\:\/\/www.ilovexs.com/,
-        iStatus: false,
-        _break: false,
-    },
-    mitaku: {
-        id: 42,
-        name: "Mitaku",
-        hostnames: ["mitaku.net"],
-        pattern: /https?\:\/\/mitaku.net/,
-        iStatus: false,
-        _break: false,
-    },
-    nlegs: {
-        id: 43,
-        name: "Nlegs",
-        hostnames: ["www.nlegs.com"],
-        pattern: /https?\:\/\/www.nlegs.com/,
-        iStatus: false,
-        _break: false,
-    },
-    nudecosplaygirls: {
-        id: 44,
-        name: "NUDECOSPLAY",
-        hostnames: ["nudecosplaygirls.com"],
-        pattern: /https?\:\/\/nudecosplaygirls.com/,
-        iStatus: false,
-        _break: false,
-    },
-    nudebird: {
-        id: 45,
-        name: "NudeBird",
-        hostnames: ["nudebird.biz"],
-        pattern: /https?\:\/\/nudebird.biz/,
-        iStatus: false,
-        _break: false,
-    },
-    gravureprincess: {
-        id: 46,
-        name: "Idol.gravureprincess",
-        hostnames: ["idol.gravureprincess.date"],
-        pattern: /https?\:\/\/idol.gravureprincess.date/,
-        iStatus: false,
-        _break: false,
-    },
-    asdasfd: {
-        id: 47,
-        name: "ASD ASFD",
-        hostnames: ["asdasfd.net"],
-        pattern: /https?\:\/\/asdasfd.net/,
-        iStatus: false,
-        _break: false,
-    },
-    yellowfever18: {
-        id: 48,
-        name: "Yellow Fever",
-        hostnames: ["yellowfever18.com"],
-        pattern: /https?\:\/\/yellowfever18.com/,
-        iStatus: false,
-        _break: false,
-    },
-    allasiangirls: {
-        id: 49,
-        name: "Asian Girls",
-        hostnames: ["allasiangirls.net"],
-        pattern: /https?\:\/\/allasiangirls.net/,
-        iStatus: false,
-        _break: false,
-    },
-    asdcosplay: {
-        id: 50,
-        name: "Make Girls",
-        hostnames: ["asdcosplay.com"],
-        pattern: /https?\:\/\/asdcosplay.com/,
-        iStatus: false,
-        _break: false,
-    },
-    asianpink: {
-        id: 51,
-        name: "Asian Pink",
-        hostnames: ["asianpink.net"],
-        pattern: /https?\:\/\/asianpink.net/,
-        iStatus: false,
-        _break: false,
-    },
-    ryuryu: {
-        id: 52,
-        name: "Cypher's ghost",
-        hostnames: ["ryuryu.tw"],
-        pattern: /https?\:\/\/ryuryu.tw/,
-        iStatus: false,
-        _break: false,
-    },
-    xinwenba: {
-        id: 53,
-        name: "新闻吧",
-        hostnames: ["www.xinwenba.net"],
-        pattern: /https?\:\/\/(www|m).xinwenba.net/,
-        iStatus: false,
-        _break: false,
-    },
-    meitu131: {
-        id: 54,
-        name: "MEITU131",
-        hostnames: ["www.meitu131.com"],
-        pattern: /https?\:\/\/(www|m).meitu131.com/,
-        iStatus: false,
-        _break: false,
-    },
-    dongtidemi: {
-        id: 55,
-        name: "胴体的秘密",
-        hostnames: ["dongtidemi.com", "dongtidemimi.org"],
-        pattern: /https?\:\/\/dongti(demi)?\w*.(com|net|org)/,
-        iStatus: false,
-        _break: false,
-    },
-    cool18: {
-        id: 56,
-        name: "留园酷18",
-        hostnames: ["cool18.com", "wap.cool18.com"],
-        pattern: /https?\:\/\/(www|wap).cool18.com/,
-        iStatus: false,
-        _break: false,
-    },
-    tvvtw: {
-        id: 57,
-        name: "妹妹图",
-        hostnames: ["mm.tvv.tw"],
-        pattern: /https?\:\/\/mm.tvv.tw/,
-        iStatus: false,
-        _break: false,
-    },
-    f4mm: {
-        id: 58,
-        name: "F4MM爱骚",
-        hostnames: ["www.f4mn.com"],
-        pattern: /https?\:\/\/www\.f\d+m(n|m)\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    _446m: {
-        id: 58,
-        name: "萌图社",
-        hostnames: ["www.446m.com"],
-        pattern: /https?\:\/\/www\.446m\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    elitebabes: {
-        id: 58,
-        name: "Elite Babes",
-        hostnames: ["www.elitebabes.com"],
-        pattern: /https?\:\/\/www\.elitebabes\.com/,
-        iStatus: false,
-        _break: false,
-    },
-    kaka234: {
-        id: 59,
-        name: "卡卡美女",
-        hostnames: ["m.kaka234.cc"],
-        pattern: /https?\:\/\/m\.kaka234\.cc/,
-        iStatus: false,
-        _break: false,
-    },
-    ikmn: {
-        id: 60,
-        name: "爱看美女网",
-        hostnames: ["www.ikmn.top"],
-        pattern: /https?\:\/\/www\.ikmn\.\w{0,3}/,
-        iStatus: false,
-        _break: false,
-    },
-    cydmyz: {
-        id: 61,
-        name: "ACG资源网",
-        hostnames: ["cydmyz.com"],
-        pattern: /https?\:\/\/cydmyz.com/,
-        iStatus: false,
-        _break: false,
-    },
-}, imagePluginSwitch = [{
-    isViewerOpen: false,
-    isFancyBox: true,
-    isFancyBoxFullScreen: false,
-    isFancyBoxAutoStartFalse: false,
-    isOpenAutoSlidingPosition: false,
-}], mainArr = [
-    "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js",
-    "https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js",
-    "https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681",
-], fancyboxyArr = [
-    "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js",
-    "https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js",
-], gridzoneCss = [
-    "https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js",
-    "https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js",
-], Alpha_Script = {
-    obtainHtml: function (options) {
-        options = options || {};
-        if (!options.url || !options.method) {
-            throw new Error("参数不合法");
-        }
-        GM_xmlhttpRequest(options);
-    },
-    parseHeaders: function (headStr, isDebug = true) {
-        let o = {};
-        let myregexp = /^([^:]+):(.*)$/gim;
-        let match = /^([^:]+):(.*)$/gim.exec(headStr);
-        while (match != null) {
-            o[match[1].trim()] = match[2].trim();
-            match = myregexp.exec(headStr);
-        }
-        if (isDebug) log("Header # ", o);
-        return o;
-    },
-    //获取参数
-    getParam: function (dest, name) {
-        let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
-        let r = dest.match(reg);
-        if (r != null) return decodeURI(r[2]);
-        return null;
-    },
-    isArray: function (value) {
-        return Object.prototype.toString.apply(value) === "[object Array]";
-    },
-};
-
+// vscode:ctrl+k,ctrl+2 代码折叠
 (async function () {
     'use strict';
+
+    let curSite = {
+        isReferer: "", isHost: true, isAdjustDomainName: false
+    }, site = {
+        HentaiImage: {
+            id: -1,
+            name: "Hentai Image",
+            hostnames: ["hentai-img.com"],
+            disablepopUpMenu: false,
+        },
+        Hentai: {
+            //支持中文https://zh.hentai-cosplays.com/
+            id: 0,
+            name: "Hentai Cosplay",
+            hostnames: ["hentai-cosplays.com"],
+            disablepopUpMenu: false,
+        },
+        Pron: {
+            //支持中文https://zh.porn-images-xxx.com/
+            id: 1,
+            name: "Porn Image",
+            hostnames: ["porn-images-xxx.com"],
+            pattern: /https?\:\/\/(\w+\.)?porn-image\w+-xxx\.com/,
+            disablepopUpMenu: false,
+        },
+        Umei: {
+            id: 2,
+            name: "优美图库(不)",
+            hostnames: ["umei.fun", "www.umei.cc", "www.umeitu.com"],
+            pattern: /https?\:\/\/www\.umei(\w+)?\.\w+/,
+            disablepopUpMenu: true,
+        },
+        Wndfx: {
+            id: 3,
+            name: "Wndfx 妹子图(不)",
+            hostnames: ["www.wndfx.com"],
+            pattern: /https?\:\/\/www.wndfx\.com/,
+            disablepopUpMenu: true,
+        },
+        Lesmao: {
+            id: 4,
+            name: "蕾丝猫(不)",
+            hostnames: [
+                "www.lsm.me",
+                "www.lesmao.pro",
+                "www.lesmao.co",
+                "www.lsmpx.com",
+                "www.lesmao.org",
+            ],
+            pattern: /https?\:\/\/w+.(?:les|ls)m(\w+)?.\w*/,
+            disablepopUpMenu: true,
+        },
+        Win4000: {
+            id: 5,
+            name: "美桌(不)",
+            hostnames: ["www.win4000.com"],
+            pattern: /https?\:\/\/\w+\.win4000\.com/,
+            disablepopUpMenu: true,
+        },
+        _192tp: {
+            id: 6,
+            name: "192 美女图",
+            hostnames: [
+                "www.192tt.top",
+                "www.192tb.com",
+                "www.192tp.com",
+                "www.taotu8.xyz",
+            ],
+            pattern: /https?\:\/\/(www|m)\.(192t\w+|taotu\d*)\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Xiuren: {
+            id: 7,
+            name: "Xiuren 秀人网",
+            hostnames: ["www.xiuren.org"],
+            pattern: /https?\:\/\/www\.xiuren\.org/,
+            disablepopUpMenu: false,
+        },
+        Micmicidol: {
+            id: 8,
+            name: "Mic Mic Idol",
+            hostnames: ["www.micmicidol.com"],
+            pattern: /https?\:\/\/\w+\.micmicidol\.\w{0,4}/,
+            disablepopUpMenu: false,
+        },
+        Everia: {
+            id: 9,
+            name: "Everia.club",
+            hostnames: ["everia.club"],
+            pattern: /https?\:\/\/everia\.club/,
+            disablepopUpMenu: false,
+        },
+        Jpxgyw: {
+            id: 10,
+            name: "Jpxgyw 美女网",
+            hostnames: ["www.jpxgyw.net", "www.xgmn09.com", "www.jpxgyw.cc"],
+            pattern: /https?\:\/\/www\.(jp)?xg\w{2}\d{2}\.(top|vip|net|com|cc)/,
+            disablepopUpMenu: false
+        },
+        _95mm: {
+            id: 11,
+            name: "MM 范",
+            hostnames: ["www.95mm.org"],
+            pattern: /https?\:\/\/\w+\.95mm\.\w+/,
+            disablepopUpMenu: false,
+        },
+        _3gbizhi: {
+            id: 12,
+            name: "3G 壁纸(不)",
+            hostnames: ["www.3gbizhi.com"],
+            pattern: /https?\:\/\/\w+\.3gbizhi\.\w+/,
+            disablepopUpMenu: true,
+        },
+        Jpmn8: {
+            id: 13,
+            name: "Jpmn8 精品美女吧",
+            hostnames: ["www.jpmn8.com"],
+            pattern: /https?\:\/\/\w+\.jpmn\w+\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Goddess: {
+            id: 14,
+            name: "Goddess",
+            hostnames: ["tw.kissgoddesssite.com"],
+            pattern: /https?\:\/\/tw.\w*goddess\w+\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Meinv: {
+            id: 15,
+            name: "美女百科",
+            hostnames: ["meinv.page"],
+            pattern: /https?\:\/\/(\w+\.)?meinv\.page/,
+            disablepopUpMenu: false,
+        },
+        Asiansister: {
+            id: 16,
+            name: "Asiansister",
+            hostnames: ["asiansister.com"],
+            pattern: /https?\:\/\/asiansister\.com/,
+            disablepopUpMenu: true,
+        },
+        Yskhd: {
+            id: 17,
+            name: "优丝库 HD",
+            hostnames: ["yskhd.com"],
+            pattern: /https?\:\/\/yskhd\.com/,
+            disablepopUpMenu: false,
+        },
+        Dmmtu: {
+            id: 18,
+            name: "Dmmtu 美女图",
+            hostnames: ["www.dmmtu.com"],
+            pattern: /https?\:\/\/\w+\.dmmtu\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Fnvshen: {
+            id: 19,
+            name: "宅男宅女 HD",
+            hostnames: ["www.fnvshen.com"],
+            pattern: /https?\:\/\/\w+\.\w+shen(\w+)?\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Ikanins: {
+            id: 19,
+            name: "爱看 INS",
+            hostnames: ["www.ikanins.com"],
+            pattern: /https?\:\/\/(www\.)?ikanins\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Madoupan: {
+            id: 19,
+            name: "麻豆盘",
+            hostnames: ["madoupan.com"],
+            pattern: /https?\:\/\/madoupan\.\w+/,
+            disablepopUpMenu: false,
+        },
+        Mrcong: {
+            id: 20,
+            name: "Mrcong",
+            hostnames: ["mrcong.com"],
+            pattern: /https?\:\/\/mrcong\.com/,
+            disablepopUpMenu: false,
+        },
+        XiurenJi: {
+            id: 21,
+            name: "秀人集",
+            hostnames: ["www.xiurenb.net", "www.xiurenb.com", "www.xiuren01.xyz"],
+            pattern: /https?\:\/\/www\.xiuren\w{0,2}\.[A-Za-z]{0,3}/,
+            disablepopUpMenu: false,
+        },
+        Xrmn: {
+            id: 22,
+            name: "秀人美女网",
+            hostnames: ["www.xrmn5.cc"],
+            pattern: /https?\:\/\/\w+\.xrmn[0-9w]{0,}.[a-zA-Z]{0,}/,
+            disablepopUpMenu: false,
+        },
+        _24fa: {
+            id: 23,
+            name: "24Fa",
+            hostnames: [
+                "www.112w.cc",
+                "www.112w.cc\/c49.aspx",
+                "www.24fa.link",
+                "www.117.life",
+                "www.24faa.cc",
+            ],
+            pattern: /https?\:\/\/(www\.)?[0-9]{2,3}(m|w|faw|fa|aa)?\.(cc|link|life)/,
+            disablepopUpMenu: false,
+        },
+        tuiimg: {
+            id: 24,
+            name: "推图网",
+            hostnames: ["www.tuiimg.com"],
+            pattern: /https?:\/\/(\w+\.)?tuiimg\.com/,
+            disablepopUpMenu: false,
+        },
+        nsfwp: {
+            id: 25,
+            name: "Nsfwp",
+            hostnames: [
+                "nsfwp.buzz",
+                "picxx.icu",
+                "picxx.xyz",
+                "nsfwx.pics",
+                "nsfwpicx.com",
+            ],
+            pattern: /https?\:\/\/(old\.)?(nsfw[a-z]*|picx[a-z]*).\w+/,
+            disablepopUpMenu: false,
+        },
+        mmm131: {
+            id: 26,
+            name: "MM131美女图片",
+            hostnames: ["mmm131.com"],
+            pattern: /https?:\/\/\w+\.(mmm131|mm1\d+)\.\w+/,
+            disablepopUpMenu: false,
+        },
+        asiantolick: {
+            id: 27,
+            name: "Asian to lick",
+            hostnames: ["asiantolick.com"],
+            pattern: /https?:\/\/(\w+\.)?asiantolick\.\w+/,
+            disablepopUpMenu: false,
+        },
+        imn5: {
+            id: 28,
+            name: "爱美女网",
+            hostnames: ["www.imn5.net"],
+            pattern: /https?:\/\/(\w+\.)?imn5.\w+/,
+            disablepopUpMenu: false,
+        },
+        xchina: {
+            id: 29,
+            name: "小黄书",
+            hostnames: ["xchina.co"],
+            pattern: /https?:\/\/xchina.\w+/,
+            disablepopUpMenu: false,
+            aggregateLimit: true,
+        },
+        jjgirls: {
+            id: 30,
+            name: "Heyzo",
+            hostnames: ["jjgirls.com"],
+            pattern: /https?:\/\/jjgirls\.\w+/,
+            disablepopUpMenu: false,
+        },
+        photos18: {
+            id: 31,
+            name: "色情圖片網",
+            hostnames: ["www.photos18.com"],
+            pattern: /https?:\/\/(\w+\.)?photos18\.\w+/,
+            disablepopUpMenu: false,
+        },
+        pornpics: {
+            id: 32,
+            name: "Porn Pics",
+            hostnames: ["www.pornpics.com"],
+            pattern: /https?:\/\/(\w+\.)?pornpics\.\w+/,
+            disablepopUpMenu: false,
+        },
+        mfsft: {
+            id: 33,
+            name: "免费私房图",
+            hostnames: ["www.mfsft.com"],
+            pattern:
+                /https?\:\/\/www\.(.*(mnt|nmt)|.*ywt|.*sf(\w){0,3}t|.*mzt|.*wht|.*taotu|.*xzt|.*xzw|.*meinv|.*tuku|.*tuk|(?!.*umei).*meitu|.*youwu|jpnst|yhflt)\.com/,
+            disablepopUpMenu: false,
+        },
+        xartmodel: {
+            id: 34,
+            name: "XRTMODEL",
+            hostnames: ["xartmodel.net"],
+            pattern: /https?\:\/\/xartmodel.net/,
+            disablepopUpMenu: false,
+        },
+        hotgirl: {
+            id: 35,
+            name: "HOTGIRL.asia",
+            hostnames: ["hotgirl.asia"],
+            pattern: /https?\:\/\/hotgirl.asia/,
+            disablepopUpMenu: false,
+        },
+        hotgirlchina: {
+            id: 36,
+            name: "HOTGIRLchina",
+            hostnames: ["hotgirlchina.com"],
+            pattern: /https?\:\/\/hotgirlchina.com/,
+            disablepopUpMenu: false,
+        },
+        baobua: {
+            id: 37,
+            name: "BAOBUA.COM",
+            hostnames: ["blog.baobua.com"],
+            pattern: /https?\:\/\/blog.baobua.com/,
+            disablepopUpMenu: false,
+        },
+        buondua: {
+            id: 38,
+            name: "Buon Dua",
+            hostnames: ["buondua.com"],
+            pattern: /https?\:\/\/buondua.com/,
+            disablepopUpMenu: false,
+        },
+        _4kup: {
+            id: 39,
+            name: "4KUP",
+            hostnames: ["www.4kup.net"],
+            pattern: /https?\:\/\/www.4kup.net/,
+            disablepopUpMenu: false,
+        },
+        goddess247: {
+            id: 40,
+            name: "Goddess247",
+            hostnames: ["goddess247.com"],
+            pattern: /https?\:\/\/goddess247.com/,
+            disablepopUpMenu: false,
+        },
+        ilovexs: {
+            id: 41,
+            name: "NongMo.Zone",
+            hostnames: ["www.ilovexs.com"],
+            pattern: /https?\:\/\/www.ilovexs.com/,
+            disablepopUpMenu: false,
+        },
+        mitaku: {
+            id: 42,
+            name: "Mitaku",
+            hostnames: ["mitaku.net"],
+            pattern: /https?\:\/\/mitaku.net/,
+            disablepopUpMenu: false,
+        },
+        nlegs: {
+            id: 43,
+            name: "Nlegs",
+            hostnames: ["www.nlegs.com"],
+            pattern: /https?\:\/\/www.nlegs.com/,
+            disablepopUpMenu: false,
+        },
+        nudecosplaygirls: {
+            id: 44,
+            name: "NUDECOSPLAY",
+            hostnames: ["nudecosplaygirls.com"],
+            pattern: /https?\:\/\/nudecosplaygirls.com/,
+            disablepopUpMenu: false,
+        },
+        nudebird: {
+            id: 45,
+            name: "NudeBird",
+            hostnames: ["nudebird.biz"],
+            pattern: /https?\:\/\/nudebird.biz/,
+            disablepopUpMenu: false,
+        },
+        gravureprincess: {
+            id: 46,
+            name: "Idol.gravureprincess",
+            hostnames: ["idol.gravureprincess.date"],
+            pattern: /https?\:\/\/idol.gravureprincess.date/,
+            disablepopUpMenu: false,
+        },
+        asdasfd: {
+            id: 47,
+            name: "ASD ASFD",
+            hostnames: ["asdasfd.net"],
+            pattern: /https?\:\/\/asdasfd.net/,
+            disablepopUpMenu: false,
+        },
+        yellowfever18: {
+            id: 48,
+            name: "Yellow Fever",
+            hostnames: ["yellowfever18.com"],
+            pattern: /https?\:\/\/yellowfever18.com/,
+            disablepopUpMenu: false,
+        },
+        allasiangirls: {
+            id: 49,
+            name: "Asian Girls",
+            hostnames: ["allasiangirls.net"],
+            pattern: /https?\:\/\/allasiangirls.net/,
+            disablepopUpMenu: false,
+        },
+        asdcosplay: {
+            id: 50,
+            name: "Make Girls",
+            hostnames: ["asdcosplay.com"],
+            pattern: /https?\:\/\/asdcosplay.com/,
+            disablepopUpMenu: false,
+        },
+        asianpink: {
+            id: 51,
+            name: "Asian Pink",
+            hostnames: ["asianpink.net"],
+            pattern: /https?\:\/\/asianpink.net/,
+            disablepopUpMenu: false,
+        },
+        ryuryu: {
+            id: 52,
+            name: "Cypher's ghost",
+            hostnames: ["ryuryu.tw"],
+            pattern: /https?\:\/\/ryuryu.tw/,
+            disablepopUpMenu: false,
+        },
+        xinwenba: {
+            id: 53,
+            name: "新闻吧",
+            hostnames: ["www.xinwenba.net"],
+            pattern: /https?\:\/\/(www|m).xinwenba.net/,
+            disablepopUpMenu: false,
+        },
+        meitu131: {
+            id: 54,
+            name: "MEITU131",
+            hostnames: ["www.meitu131.com"],
+            pattern: /https?\:\/\/(www|m).meitu131.com/,
+            disablepopUpMenu: false,
+        },
+        dongtidemi: {
+            id: 55,
+            name: "胴体的秘密",
+            hostnames: ["dongtidemi.com", "dongtidemimi.org"],
+            pattern: /https?\:\/\/dongti(demi)?\w*.(com|net|org)/,
+            disablepopUpMenu: false,
+        },
+        cool18: {
+            id: 56,
+            name: "留园酷18",
+            hostnames: ["cool18.com", "wap.cool18.com"],
+            pattern: /https?\:\/\/(www|wap).cool18.com/,
+            disablepopUpMenu: false,
+        },
+        tvvtw: {
+            id: 57,
+            name: "妹妹图",
+            hostnames: ["mm.tvv.tw"],
+            pattern: /https?\:\/\/mm.tvv.tw/,
+            disablepopUpMenu: false,
+        },
+        f4mm: {
+            id: 58,
+            name: "F4MM爱骚",
+            hostnames: ["www.f4mn.com"],
+            pattern: /https?\:\/\/www\.f\d+m(n|m)\.com/,
+            disablepopUpMenu: false,
+        },
+        _446m: {
+            id: 58,
+            name: "萌图社",
+            hostnames: ["www.446m.com"],
+            pattern: /https?\:\/\/www\.446m\.com/,
+            disablepopUpMenu: false,
+        },
+        elitebabes: {
+            id: 58,
+            name: "Elite Babes",
+            hostnames: ["www.elitebabes.com"],
+            pattern: /https?\:\/\/www\.elitebabes\.com/,
+            disablepopUpMenu: false,
+        },
+        kaka234: {
+            id: 59,
+            name: "卡卡美女",
+            hostnames: ["m.kaka234.cc"],
+            pattern: /https?\:\/\/m\.kaka234\.cc/,
+            disablepopUpMenu: false,
+        },
+        ikmn: {
+            id: 60,
+            name: "爱看美女网",
+            hostnames: ["www.ikmn.top"],
+            pattern: /https?\:\/\/www\.ikmn\.\w{0,3}/,
+            disablepopUpMenu: false,
+        },
+        cydmyz: {
+            id: 61,
+            name: "ACG资源网",
+            hostnames: ["cydmyz.com"],
+            pattern: /https?\:\/\/cydmyz.com/,
+            disablepopUpMenu: false,
+        },
+    }, imagePluginSwitch = [{
+        isFancyBox: true,
+        isFancyBoxFullScreen: false,
+        isFancyBoxAutoStartFalse: false,
+        isOpenAutoSlidingPosition: false,
+    }], mainArr = [
+        "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/main.js",
+        "https://cdn.staticaly.com/gh/LARASPY/hello@master/main.js",
+        "https://greasyfork.org/scripts/447371-commonlymainfunctions/code/CommonlyMainFunctions.js?version=1066681",
+    ], fancyboxyArr = [
+        "https://cdn.jsdelivr.net/gh/LARASPY/hello@master/fancybox.js",
+        "https://cdn.staticaly.com/gh/LARASPY/hello@master/fancybox.js",
+    ], gridzoneCss = [
+        "https://cdn.jsdelivr.net/gh/LARASPY/xhua@master/other/gridzonecss.js",
+        "https://cdn.staticaly.com/gh/LARASPY/xhua@master/other/gridzonecss.js",
+    ], Alpha_Script = {
+        obtainHtml: function (options) {
+            options = options || {};
+            if (!options.url || !options.method) {
+                throw new Error("参数不合法");
+            }
+            GM_xmlhttpRequest(options);
+        },
+        parseHeaders: function (headStr, isDebug = true) {
+            let o = {};
+            let myregexp = /^([^:]+):(.*)$/gim;
+            let match = /^([^:]+):(.*)$/gim.exec(headStr);
+            while (match != null) {
+                o[match[1].trim()] = match[2].trim();
+                match = myregexp.exec(headStr);
+            }
+            if (isDebug) log("Header # ", o);
+            return o;
+        },
+        //获取参数
+        getParam: function (dest, name) {
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            let r = dest.match(reg);
+            if (r != null) return decodeURI(r[2]);
+            return null;
+        },
+        isArray: function (value) {
+            return Object.prototype.toString.apply(value) === "[object Array]";
+        },
+    }, menuAll = [
+        ['menu_disable', '✅ 已启用聚合 (点击对当前网站禁用)', '❌ 已禁用聚合 (点击对当前网站启用)', []],
+        ['menu_packageDownlode', '图片打包下载', '图片打包下载', null],
+        ['menu_isDebugMain', '控制台输出', '控制台输出', false],
+        ['menu_aggregateLimit', '✅ 聚合未限制', '❌ 聚合已限制 (点击对当前网站取消限制)', { 29: true }]
+    ], isDebugMain, menuId = [], blobCache = {}, blobUrlCache = {}, isPackageAndDownload = false, isBindBtnDownload = false, isActivateSlidingFuncNum = 0, domainId = 0;
+    let newTimeStamp = new Date().getTime(), packageName = packageNameFun(), protocol = window.location.protocol;
+    let session = document.cookie;
+    let hostName = window.location.hostname;
+
+    /* --------------------------------------------Start-------------------------------------------- */
+
+    //FancyboxJs: "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.esm.js"
+    GM_addStyle(".sl-btn { border:1 !important; } .sl-c-pic { margin-top:6px } ");
+    isDebugMain = GM_getValue('menu_isDebugMain');
     //清屏
-    console.clear();
-    // let fancyboxJs = "https://cdn.jsdelivr.net/npm/@fancyapps/ui/dist/fancybox.esm.js"
+    if (isDebugMain) { console.clear(); priorityLog('开始实现：'); }
     if (isDebugMain) console.groupCollapsed('StartMain');
     await startMain_();
     if (isDebugMain) console.groupEnd('StartMain');
@@ -736,12 +681,14 @@ let isDebugMain = true, curSite = {
             }
         }, 100);
     });
-
     if (isDebugMain) console.groupCollapsed('urlActivationGroup');
-    currentUrlActivation();
+    activeCurrentUrl();
     if (isDebugMain) console.groupEnd('urlActivationGroup');
-
-    priorityLog('开始实现：');
+    //写入菜单
+    for (let i = 0; i < menuAll.length; i++) { // 如果读取到的值为 null，且当前数组值不为空，就写入默认值
+        if (GM_getValue(menuAll[i][0]) == null && menuAll[i][3] != null) { GM_setValue(menuAll[i][0], menuAll[i][3]) };
+    }
+    registerMenuCommand();
     function priorityLog() {
         console.log.apply(this, arguments);
     }
@@ -749,7 +696,7 @@ let isDebugMain = true, curSite = {
         if (isDebugMain) {
             console.log.apply(this, arguments);
         }
-    };
+    }
     function isEmpty(param) {
         if (param) {
             var param_type = typeof (param);
@@ -781,7 +728,6 @@ let isDebugMain = true, curSite = {
         }
     }
     async function startMain_(arrs = null) {
-
         function Get_(link) {
             return new Promise(function (resolve) {
                 $.get(link, data => {
@@ -789,30 +735,27 @@ let isDebugMain = true, curSite = {
                 });
             });
         }
-
         function delayPromise(ms) {
             return new Promise(function (resolve) {
                 setTimeout(resolve, ms);
             });
         }
-
         function timeoutPromise(name, promise, ms = 1000) {
             let timeout = delayPromise(ms).then(function () {
                 throw new Error(name + ': Operation timed out after ' + ms + ' ms');
             });
             return Promise.race([promise, timeout]);
         }
-
         let initialArrFunction = async function (arr) {
             for (let index in arr) {
                 let data;
                 try {
                     data = await timeoutPromise(arr[index], Get_(arr[index]));
                     if (data) {
-                        console.log("Data: " + arr[index] + " is finished!\n");
+                        log("Data: " + arr[index] + " is finished!\n");
                     }
                 } catch (error) {
-                    console.log(error);
+                    console.error(error);
                     timeoutPromise(arr[index], addScript_(null, arr[index]));
                 }
                 if (!isEmpty(data)) {
@@ -821,7 +764,6 @@ let isDebugMain = true, curSite = {
                 }
             }
         };
-
         if (!isEmpty(arrs)) {
             await initialArrFunction(arrs);
         } else {
@@ -829,7 +771,8 @@ let isDebugMain = true, curSite = {
             await initialArrFunction(fancyboxyArr);
         }
     }
-    function currentUrlActivation() {
+    //处理site
+    function activeCurrentUrl() {
         let origin = window.location.origin;
         let hostName = window.location.hostname;
         let hostnameArry = null;
@@ -843,13 +786,12 @@ let isDebugMain = true, curSite = {
                     }
                 }
             } else {
-                matchDomain = domain === hostName;
+                matchDomain = (domain === hostName);
             }
             return matchDomain;
         };
         for (let key in site) {
-            let isPattern = isEmpty(site[key].pattern);
-            if (!isPattern) {
+            if (!isEmpty(site[key].pattern)) {
                 hostnameArry = site[key].pattern.exec(origin);
                 if (hostnameArry != null) {
                     let urlHostName = hostnameArry[0].replace(/https?:\/\//i, "");
@@ -859,9 +801,9 @@ let isDebugMain = true, curSite = {
             } else {
                 log(site[key].name, " : ", 'pattern is empty, never add new hostName.');
             }
-            site[key].iStatus = meet(site[key].hostnames);
-            if (site[key].iStatus) {
-                log(site[key].name, ":\n", site[key].hostnames);
+            if (meet(site[key].hostnames)) {
+                domainId = site[key].id;
+                log("webId: ", site[key].id, "\nwebName: ", site[key].name, "\nhostnames: ", site[key].hostnames);
             }
         }
         // log("合并数组: \n", site.Hentai.hostnames.concat(site.Pron.hostnames));
@@ -890,10 +832,555 @@ let isDebugMain = true, curSite = {
         }
         return null;
     }
-    function injectBtns() {
-        let blobCache = {};
-        let blobUrlCache = {};
+    function addScriptCss() {
+        // let fancyboxLink = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css";
+        // let fancyboxData = await Get(fancyboxLink);
+        addStyle(fancyBoxCss);
+        if (os.isPc) {
+            addStyle(fancyBoxCssAdditon);
+        }
+    }
+    function startFancyBoxScript() {
+        addScriptCss();
+        // 观察者 MutationObserver事件
+        let slideIndex = null;
+        const ContentContainer = document.querySelector("body");
+        const configObserver = {
+            childList: true,
+            subtree: true,
+            attributeFilter: ["class"],
+        };
+        // 当观察到突变时执行的回调函数
+        const Callbacks = function (mutationsList) {
+            mutationsList.forEach(function (item, index) {
+                if ("attributes" === item.type) {
+                    // log(item);
+                    if (
+                        item.target.className ===
+                        "fancybox__carousel is-draggable"
+                    ) {
+                        log(' # ', item);
+                        openEvent(item);
+                    } else if (
+                        item.target.className ===
+                        "fancybox__container is-animated is-closing"
+                    ) {
+                        log(' # ', item);
+                        closeEvent();
+                    }
+                }
+            });
+        };
+        // 创建一个链接到回调函数的观察者实例
+        const Observer = new MutationObserver(Callbacks);
+        ContentContainer && Observer.observe(ContentContainer, configObserver);
+        function openEvent(item) {
+            slideIndex =
+                item.target.offsetParent.childNodes[1].firstChild.firstChild
+                    .childNodes[0].innerText - 1;
+            if (slideIndex) {
+                log("open - # " + slideIndex + " slide is open!");
+            }
+        }
+        function closeEvent() {
+            log("close - # " + slideIndex + " slide is closed!");
+            let elementById = document.getElementById("imgLocation" + slideIndex);
+            if (elementById) {
+                let behavior_ = "smooth";
+                if (imagePluginSwitch[0].isOpenAutoSlidingPosition) behavior_ = "auto";
+                elementById.scrollIntoView({
+                    block: "center",
+                    behavior: behavior_,
+                    inline: "center",
+                });
+            } else {
+                console.error(" # ", "未定位id！");
+            }
+        }
+        if (imagePluginSwitch[0].isFancyBox) {
+            if (imagePluginSwitch[0].isFancyBoxFullScreen) {
+                Fancybox4.bind("[data-fancybox='images']", {
+                    Toolbar: false,
+                    animated: false,
+                    dragToClose: false,
+                    showClass: false,
+                    hideClass: false,
+                    closeButton: "top",
+                    Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
+                    Thumbs: { minScreenHeight: 0 }
+                });
+            } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
+                Fancybox4.bind("[data-fancybox='images']", {
+                    Thumbs: { autoStart: false, Carousel: { fill: false, center: true } }
+                });
+            } else {
+                Fancybox4.bind("[data-fancybox='images']", {
+                    Thumbs: { Carousel: { fill: false, center: true } }
+                });
+            }
+        }
+    }
+    function popUpMenu() {
+        let popUpStr = '<div id="popUpContent" style="display: none;"><div style="height:100%; width:100%; position:fixed; _position:absolute; top:0; z-index:99999; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div><div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;"><div id="popUpLinks" style="position:absolute;left:20px;top:20px;height:260px;width:260px;overflow:auto;word-wrap:break-word;"></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="popUpQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;"/></div></div>';
+        let siteListHtml;
+        let popUpContent = document.createElement("div");
+        document.body.appendChild(popUpContent);
+        popUpContent.outerHTML = popUpStr;
+        popUpContent = document.querySelector("#popUpContent");
+        if (!popUpContent) {
+            console.error("弹窗加载失败！！！");
+            return;
+        }
+        document.querySelector("#popUpQuit").onclick = function () {
+            popUpContent.style.display = "none";
+        };
+        document.querySelector("#popUpContent>div").onclick = function () {
+            popUpContent.style.display = "none";
+        };
+        document.addEventListener("keydown", function (e) {
+            if (e.keyCode == 27) {
+                popUpContent.style.display = "none";
+            }
+        });
+        document.addEventListener("keydown", function (e) {
+            if (e.keyCode == 119) { //F8键
+                if (e.altKey) {
+                    popUpContent.style.display = "block";
+                    let popUpLinks = document.querySelector("div#popUpLinks");
+                    if (!siteListHtml) {
+                        siteListHtml = "";
+                        let index = 0;
+                        for (let key in site) {
+                            if (site[key].disablepopUpMenu === false) {
+                                index++;
+                                siteListHtml += "<span style='font-weight:bold;color:red;'>" + index + ":\t</span>" + "<a href=https://" + site[key].hostnames.pop() + ">" + site[key].name + "</a><br/>";
+                            }
+                            // log("弹窗加载失败！！！\n");
+                            log("弹窗加载成功！\n");
+                        }
+                    }
+                    popUpLinks.innerHTML = siteListHtml;
+                }
+            }
+        });
+    }
+    function adoptAutoPage() {
+        let id = setInterval(function () {
+            if ($('#Autopage_number').length > 0) {
+                $('#Autopage_number').click();
+                let cssText = $('#Autopage_number').attr('style');
+                $('#Autopage_number').css("cssText", "z-index: 1000 !important;" + cssText);
+                clearInterval(id);
+            }
+        }, 100);
+    }
+    function type(param) {
+        // es6中null的类型为object
+        if (param === null) {
+            return param + "";
+        }
+        if (typeof param === "object") {
+            let val = Object.prototype.toString.call(param).split(" ")[1];
+            let type = val.substr(0, val.length - 1).toLowerCase();
+            return type;
+        } else {
+            return typeof param;
+        }
+    }
+    function packageNameFun(name = null) {
+        // log("type ###", type(name), name);
+        if (type(name) === 'object') {
+            return $(name).first().text();
+        } else {
+            if (isEmpty(name)) {
+                return document.title;
+            } else if (isEmpty(name)) {
+                return $(".title").first().text();
+            } else if (isEmpty(name)) {
+                return $("#title").first().text();
+            } else {
+                return "PackageSL";
+            }
+        }
+    };
+    function packagedDownloadFun() {
+        if (isPackageAndDownload) {
+            alert('下载中, 请耐心等待...\n点击确认继续下载');
+        } else {
+            isPackageAndDownload = true;
+            let zip = new JSZip();
+            let imgList = $('img[label="sl"]');
+            let length = imgList.length;
+            let errorNum = 0;
+            $.each(imgList, function (index, value) {
+                //zip.file
+                let img = zip.folder(packageName);
+                let imgSrc = $(value).attr('src');
+                if (blobCache[imgSrc]) {
+                    img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
+                    length--;
+                } else {
+                    if (!imgSrc.startsWith('blob:')) {
+                        let host = window.location.host;
+                        imgSrc = domainChangeFun(imgSrc, curSite.isAdjustDomainName);
+                        log("imgSrc # ", imgSrc);
+                        if (type(imgSrc) === 'object') {
+                            host = imgSrc.host[0];
+                            imgSrc = imgSrc.imgSrc;
+                        }
+                        Alpha_Script.obtainHtml({
+                            url: imgSrc,
+                            method: 'GET',
+                            headers: Alpha_Script.parseHeaders(
+                                "Accept:" + "*/*\n" +
+                                "User-Agent:" + navigator.userAgent + "\n" +
+                                "Host:" + ((curSite.isHost === true) ? host : '') + "\n" +
+                                "Referer:" + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
+                                "cookie:" + session + "\n"
+                            ),
+                            timeout: 30000,
+                            responseType: 'blob',
+                            onload: function (response) {
+                                try {
+                                    //下载
+                                    // log('URL：' + imgSrc, '\n最终 URL：' + response.finalUrl, '\n返回内容：' + response.responseText)
+                                    if (response && response.status && response.status >= 200 && response.status < 300) {
+                                        let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
+                                        let contentType = responseHeaders['Content-Type'];
+                                        if (!contentType) {
+                                            contentType = "image/png";
+                                        }
+                                        let blob = new Blob([response.response], {
+                                            type: contentType
+                                        });
+                                        blobCache[imgSrc] = blob;
+                                        img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
+                                        // if (length == 1) debugger
+                                    } else {
+                                        errorNum++;
+                                        if (errorNum === imgList.length) {
+                                            isPackageAndDownload = false;
+                                            console.error('图片全部下载失败,请使用插件下载。');
+                                            alert("图片全部下载失败,请使用插件下载。");
+                                        }
+                                    }
+                                    length--;
+                                } catch (e) {
+                                    console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
+                                }
+                            },
+                            onerror: function (response) {
+                                log('URL：' + imgSrc, response)
+                                length--;
+                            },
+                            ontimeout: function (response) {
+                                errorNum++;
+                                if (errorNum === imgList.length) {
+                                    isPackageAndDownload = false;
+                                    err('图片全部下载失败,请使用插件下载。');
+                                    alert("图片全部下载失败,请使用插件下载。");
+                                }
+                                console.error("DownlodeUrl " + index + ": 超时");
+                                log('URL：' + imgSrc, response)
+                                length--;
+                            }
+                        });
+                    } else {
+                        img.file(1 + index + ".jpg", blobCache[blobUrlCache[imgSrc]], { base64: false });
+                        length--;
+                    }
+                }
+            });
+            let id = setInterval(function () {
+                if (length === 0) {
+                    clearInterval(id);
+                    zip.generateAsync({
+                        type: "blob"
+                    }).then(function (content) {
+                        if (errorNum !== imgList.length) {
+                            saveAs(content, packageName + ".zip");
+                            isPackageAndDownload = false;
+                            log("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
+                            alert("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
+                        }
+                    });
+                }
+            }, 100);
+        }
+    }
+    function bindBtnFun(callback) {
+        $('#injectaggregatBtn').bind('click', callback);
+        $('#captureBtn').bind('click', function (e) {
+            if (isBindBtnDownload) {
+                alert('截图中, 请耐心等待...\n点击确认继续截图');
+            } else {
+                isBindBtnDownload = true;
+                let imgList = $('img[label="sl"]');
+                let length = imgList.length;
+                let errorNum = 0;
+                $.each(imgList, function (index, value) {
+                    let imgSrc = $(value).attr('src');
+                    if (blobCache[imgSrc]) {
+                        length--;
+                    } else {
+                        if (!imgSrc.startsWith('blob:')) {
+                            let host = window.location.host;
+                            imgSrc = domainChangeFun(imgSrc, curSite.isAdjustDomainName);
+                            log("imgSrc # ", imgSrc);
+                            if (type(imgSrc) === 'object') {
+                                host = imgSrc.host[0];
+                                imgSrc = imgSrc.imgSrc;
+                            }
+                            Alpha_Script.obtainHtml({
+                                url: imgSrc,
+                                method: 'GET',
+                                headers: Alpha_Script.parseHeaders(
+                                    "Accept:" + "*/*\n" +
+                                    'User-Agent:' + navigator.userAgent + "\n" +
+                                    'Host:' + ((curSite.isHost === true) ? host : '') + "\n" +
+                                    'Referer:' + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
+                                    "cookie:" + session + "\n"
+                                ),
+                                timeout: 30000,
+                                responseType: 'blob',
+                                onload: function (response) {
+                                    try {
+                                        //截图
+                                        // console.log('URL：' + url, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
+                                        if (response && response.status && response.status >= 200 && response.status < 300) {
+                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
+                                            let contentType = responseHeaders['Content-Type'];
+                                            if (!contentType) {
+                                                contentType = "image/png";
+                                            }
+                                            let blob = new Blob([response.response], {
+                                                type: contentType
+                                            });
+                                            blobCache[imgSrc] = blob;
+                                        } else {
+                                            errorNum++;
+                                            if (errorNum === imgList.length) {
+                                                isBindBtnDownload = false;
+                                                console.error('截图保存失败。');
+                                                alert("截图保存失败。");
+                                            }
+                                        }
+                                        length--;
+                                    } catch (e) {
+                                        console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
+                                    }
+                                },
+                                onerror: function (response) {
+                                    log('URL：' + imgSrc, response)
+                                    length--;
+                                },
+                                ontimeout: function (response) {
+                                    errorNum++;
+                                    if (errorNum === imgList.length) {
+                                        isBindBtnDownload = false;
+                                        console.error('截图保存失败。');
+                                        alert("截图保存失败。");
+                                    }
+                                    console.error("DownlodeUrl " + index + ": 超时");
+                                    log('URL：' + imgSrc, response)
+                                    length--;
+                                }
+                            });
+                        }
+                    }
+                });
+                let id = setInterval(function () {
+                    if (length === 0) {
+                        clearInterval(id);
+                        let length2 = imgList.length;
+                        $.each(imgList, function (index, value) {
+                            let imgSrc = $(value).attr('src'); {
+                                if (!imgSrc.startsWith('blob:')) {
+                                    imgSrc = domainChangeFun(imgSrc);
+                                    if (blobCache[imgSrc]) {
+                                        let objectURL = URL.createObjectURL(blobCache[imgSrc]);
+                                        //objectURL = blob:https://mrcong.com/28c4ef23-b1ce-471a-84a1-c750d642b52c
+                                        //imgSrc(原链接)
+                                        blobUrlCache[objectURL] = imgSrc;
+                                        //将内存blob:new url替换src
+                                        $(value).attr('src', objectURL);
+                                        log(imgSrc + "\n---> " + objectURL);
+                                    }
+                                }
+                                length2--;
+                            }
+                        });
+                        let id2 = setInterval(function () {
+                            if (length2 === 0) {
+                                clearInterval(id2);
+                                let cContainner = $('#c_container').get(0);
+                                domtoimage.toBlob(cContainner).then(function (blob) {
+                                    if (blob) {
+                                        saveAs(blob, "captureSL.png");
+                                        log("截图保存完成。");
+                                        alert("截图保存完成。");
+                                    } else {
+                                        console.error("文件不存在，截图保存失败!");
+                                        alert("文件不存在，截图保存失败!");
+                                    }
+                                    isBindBtnDownload = false;
+                                }).catch(function (error) {
+                                    if (errorNum !== imgList.length) {
+                                        isBindBtnDownload = false;
+                                        console.error('截图太大不能保存!');
+                                        alert("截图太大不能保存!");
+                                    }
+                                });
+                            }
+                        }, 100);
+                    }
+                }, 100);
+            }
+        });
+        $('#packageBtn').bind('click', function (e) {
+            packagedDownloadFun();
+        });
+    };
+    function activeSlidingFun() {
+        let id = setInterval(function () {
+            let dynamicTimeStamp = new Date().getTime();
+            let misTiming = dynamicTimeStamp - newTimeStamp;
+            // log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
+            if (misTiming > 2000) {
+                isActivateSlidingFuncNum++;
+                newTimeStamp = dynamicTimeStamp;
+                let slcPicNums = $("img[label='sl']");
+                if (slcPicNums) {
+                    // log("TotalNumberImages: ", slcPicNums.length);
+                    for (let i = 0; i < slcPicNums.length; i++) {
+                        $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
+                    }
+                }
+                if (isActivateSlidingFuncNum === -1) {
+                    clearInterval(id);
+                }
+            }
+        }, 100);
+    }
+    function domainChangeFun(imgSrc, isJsonObject = false) {
+        if (!imgSrc.startsWith('http')) {
+            let re = /^\/.*/g;
+            let isNoSlash = re.test(imgSrc);
+            if (isNoSlash) {
+                imgSrc = protocol + '//' + hostName + imgSrc;
+            } else {
+                imgSrc = startUrl + imgSrc;
+            }
+        }
+        if (isJsonObject) {
+            let re = /(?<=:\/\/).*?(?=\/)/g;
+            let urlHost = imgSrc.match(re);
+            return { "imgSrc": imgSrc, "host": urlHost }
+        }
+        return imgSrc;
+    }
+    // 注册脚本菜单
+    function registerMenuCommand() {
+        if (menuId.length != []) {
+            for (let i = 0; i < menuId.length; i++) {
+                GM_unregisterMenuCommand(menuId[i]);
+            }
+        }
+        for (let i = 0; i < menuAll.length; i++) { // 循环注册脚本菜单
+            menuAll[i][3] = GM_getValue(menuAll[i][0]);
+            if (menuAll[i][0] === 'menu_disable') { // 启用/禁用
+                if (menu_disable('check')) { // 当前网站在禁用列表中
+                    menuId[i] = GM_registerMenuCommand(`${menuAll[i][2]}`, function () { menu_disable('del') });
+                    return 0;
+                } else { // 不在禁用列表中
+                    menuId[i] = GM_registerMenuCommand(`${menuAll[i][1]}`, function () { menu_disable('add') });
+                }
+            } else if (menuAll[i][0] === 'menu_packageDownlode') {
+                menuId[i] = GM_registerMenuCommand(`#️⃣ ${menuAll[i][1]}`, function () { packagedDownloadFun() });
+            } else if (menuAll[i][0] === 'menu_aggregateLimit') {
+                let isLimit = menu_disable('checkJson', "menu_aggregateLimit") && menu_disable('getJsonValue', "menu_aggregateLimit");
+                if (isLimit) {// 当前网站在聚合限制列表中
+                    menuId[i] = GM_registerMenuCommand(`${menuAll[i][2]}`, function () { menu_disable('delJson', 'menu_aggregateLimit') });
+                } else {// 不在聚合限制列表中
+                    menuId[i] = GM_registerMenuCommand(`${menuAll[i][1]}`, function () { menu_disable('addJson', 'menu_aggregateLimit') });
+                }
+            } else {
+                menuId[i] = GM_registerMenuCommand(`${menuAll[i][3] ? '✅' : '❌'} ${menuAll[i][1]}`, function () { menu_switch(menuAll[i][3], menuAll[i][0], menuAll[i][2]) });
+            }
+        }
+        menuId[menuId.length] = GM_registerMenuCommand('💬 反馈失效 / 申请支持', function () { window.GM_openInTab('https://sleazyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua/feedback', { active: true, insert: true, setParent: true }); });
+    }
+    // 启用/禁用 (当前网站)
+    function menu_disable(type, key = "menu_disable") {
+        switch (type) {
+            case 'check':
+                return check();
+            case 'add':
+                add(); break;
+            case 'del':
+                del(); break;
+            case 'checkJson':
+                return checkJson();
+            case 'addJson':
+                addJson(); break;
+            case 'delJson':
+                delJson(); break;
+            case 'getJsonValue':
+                return getJsonValue();
+        }
+        function check() { // 存在返回真，不存在返回假
+            if (GM_getValue(key).indexOf(location.hostname) == -1) return false; // 不存在返回假
+            return true;
+        }
+        function add() {
+            if (check()) return 0;
+            let list = GM_getValue(key); // 读取网站列表
+            list.push(location.hostname); // 追加网站域名
+            GM_setValue(key, list); // 写入配置
+            location.reload(); // 刷新网页
+        }
+        function del() {
+            if (!check()) return 0;
+            let list = GM_getValue(key), // 读取网站列表
+                index = list.indexOf(location.hostname);
+            list.splice(index, 1); // 删除网站域名
+            GM_setValue(key, list); // 写入配置
+            location.reload(); // 刷新网页
+        }
 
+        function checkJson() { // 存在 网站域名id 返回真，不存在返回假
+            let _Json = GM_getValue(key);
+            if (domainId in _Json) return true;
+            return false;
+        }
+        function getJsonValue() {
+            if (!checkJson()) { console.error('网站域名id不存在！'); return }
+            return GM_getValue(key)[domainId];
+        }
+        function addJson() {
+            if (!checkJson()) { console.error('网站域名id不存在！'); return }
+            let _Json = GM_getValue(key); // 读取网站列表
+            _Json[domainId] = true;// 设置网站域名id
+            GM_setValue(key, _Json); // 写入配置
+            location.reload(); // 刷新网页
+        }
+        function delJson() {
+            if (!checkJson()) { console.error('网站域名id不存在！'); return }
+            let _Json = GM_getValue(key); // 读取网站列表
+            _Json[domainId] = false;// 设置网站域名id
+            GM_setValue(key, _Json); // 写入配置
+            location.reload(); // 刷新网页
+        }
+    }
+    function menu_switch(menu_status, Name, Tips) {
+        if (menu_status === true) {
+            GM_setValue(Name, false);
+        } else {
+            GM_setValue(Name, true);
+        }
+        location.reload();
+    };
+    function injectBtns() {
         let pageUrls = [];
         let injectComponent =
             "<div id='injectComponent'>" +
@@ -906,18 +1393,11 @@ let isDebugMain = true, curSite = {
             '</div>' +
             '</div>';
         let domain = '';
-        let hostName = window.location.hostname;
-        let protocol = window.location.protocol;
         let startUrl = protocol + '//' + hostName + '/';
         let injectAggregationRef = null;
         let switchAggregationBtn = null;
         let collectPics = null;
         let removeAD = null;
-        let session = document.cookie;
-        let isPackageAndDownload = false;
-        let isBindBtnDownload = false;
-        let newTimeStamp = new Date().getTime();
-        let isActivateSlidingFuncNum = 0;
 
         let switchAggregationBtnTemplateFunc = function (aggregationDispayFunc, aggregationDispayNoneFunc) {
             if ($('#injectaggregatBtn').val() === '聚合显示') {
@@ -954,7 +1434,7 @@ let isDebugMain = true, curSite = {
                 if ($) {
                     clearInterval(id);
                     // 启动滑动监听
-                    activateSlidingFunc();
+                    activeSlidingFun();
                     let breakPageLoop = false;
                     for (let i = 0, len = pageUrls.length; i < len; i++) {
                         //创建div去装各自
@@ -988,7 +1468,7 @@ let isDebugMain = true, curSite = {
                                             // log('html==>', html);
                                             let parser = new DOMParser();
                                             let doc = parser.parseFromString(html, "text/html");
-                                            let imgObj = parseImgsFunc(doc, aImgTagPackaging);
+                                            let imgObj = parseImgsFunc(doc, packageLabel);
                                             let imgContainerCssSelector = '#c_' + _i;
                                             log(imgContainerCssSelector);
                                             $(imgObj).each(function (index) {
@@ -1055,401 +1535,7 @@ let isDebugMain = true, curSite = {
             }
             return matchDomain;
         };
-        function packageAndDownload() {
-            if (isPackageAndDownload) {
-                alert('下载中, 请耐心等待...\n点击确认继续下载');
-            } else {
-                isPackageAndDownload = true;
-                let zip = new JSZip();
-                let imgList = $('img[label="sl"]');
-                let length = imgList.length;
-                let errorNum = 0;
-                $.each(imgList, function (index, value) {
-                    //zip.file
-                    let myDate = new Date(); //获取系统当前时间
-                    let times = myDate.getFullYear() + "-" + myDate.getMonth() + "-" + myDate.getDate() + "-" + myDate.getHours() + "-" + myDate.getMinutes();
-                    let img = zip.folder(times);
-                    let imgSrc = $(value).attr('src');
-                    if (blobCache[imgSrc]) {
-                        img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
-                        length--;
-                    } else {
-                        if (!imgSrc.startsWith('blob:')) {
-                            let host = window.location.host;
-                            imgSrc = isImgHttpStart(imgSrc, curSite.isAdjustDomainName);
-                            log("imgSrc # ", imgSrc);
-                            if (type(imgSrc) === 'object') {
-                                host = imgSrc.host[0];
-                                imgSrc = imgSrc.imgSrc;
-                            }
-                            Alpha_Script.obtainHtml({
-                                url: imgSrc,
-                                method: 'GET',
-                                headers: Alpha_Script.parseHeaders(
-                                    "Accept:" + "*/*\n" +
-                                    "User-Agent:" + navigator.userAgent + "\n" +
-                                    "Host:" + ((curSite.isHost === true) ? host : '') + "\n" +
-                                    "Referer:" + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
-                                    "cookie:" + session + "\n"
-                                ),
-                                timeout: 30000,
-                                responseType: 'blob',
-                                onload: function (response) {
-                                    try {
-                                        //下载
-                                        // log('URL：' + imgSrc, '\n最终 URL：' + response.finalUrl, '\n返回内容：' + response.responseText)
-                                        if (response && response.status && response.status >= 200 && response.status < 300) {
-                                            let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
-                                            let contentType = responseHeaders['Content-Type'];
-                                            if (!contentType) {
-                                                contentType = "image/png";
-                                            }
-                                            let blob = new Blob([response.response], {
-                                                type: contentType
-                                            });
-                                            blobCache[imgSrc] = blob;
-                                            img.file(1 + index + ".jpg", blobCache[imgSrc], { base64: false });
-                                            // if (length == 1) debugger
-                                        } else {
-                                            errorNum++;
-                                            if (errorNum === imgList.length) {
-                                                isPackageAndDownload = false;
-                                                console.error('图片全部下载失败,请使用插件下载。');
-                                                alert("图片全部下载失败,请使用插件下载。");
-                                            }
-                                        }
-                                        length--;
-                                    } catch (e) {
-                                        console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
-                                    }
-                                },
-                                onerror: function (response) {
-                                    log('URL：' + imgSrc, response)
-                                    length--;
-                                },
-                                ontimeout: function (response) {
-                                    errorNum++;
-                                    if (errorNum === imgList.length) {
-                                        isPackageAndDownload = false;
-                                        err('图片全部下载失败,请使用插件下载。');
-                                        alert("图片全部下载失败,请使用插件下载。");
-                                    }
-                                    console.error("DownlodeUrl " + index + ": 超时");
-                                    log('URL：' + imgSrc, response)
-                                    length--;
-                                }
-                            });
-                        } else {
-                            img.file(1 + index + ".jpg", blobCache[blobUrlCache[imgSrc]], { base64: false });
-                            length--;
-                        }
-                    }
-                });
-                let packagName = document.title;
-                if (!packagName) {
-                    packagName = $(".title").first().text();
-                    if (!packagName) {
-                        packagName = $("#title").first().text();
-                        if (!packagName) packagName = "PackageSL";
-                    }
-                }
-                let id = setInterval(function () {
-                    if (length === 0) {
-                        clearInterval(id);
-                        zip.generateAsync({
-                            type: "blob"
-                        }).then(function (content) {
-                            if (errorNum !== imgList.length) {
-                                saveAs(content, packagName + ".zip");
-                                isPackageAndDownload = false;
-                                log("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
-                                alert("图片下载完成 " + (imgList.length - errorNum) + "张，失败 " + errorNum + "张，总共" + imgList.length + "张。");
-                            }
-                        });
-                    }
-                }, 100);
-            }
-        }
-        function bindBtn(callback) {
-            $('#injectaggregatBtn').bind('click', callback);
-            $('#captureBtn').bind('click', function (e) {
-                if (isBindBtnDownload) {
-                    alert('截图中, 请耐心等待...\n点击确认继续截图');
-                } else {
-                    isBindBtnDownload = true;
-                    let imgList = $('img[label="sl"]');
-                    let length = imgList.length;
-                    let errorNum = 0;
-                    $.each(imgList, function (index, value) {
-                        let imgSrc = $(value).attr('src');
-                        if (blobCache[imgSrc]) {
-                            length--;
-                        } else {
-                            if (!imgSrc.startsWith('blob:')) {
-                                let host = window.location.host;
-                                imgSrc = isImgHttpStart(imgSrc, curSite.isAdjustDomainName);
-                                log("imgSrc # ", imgSrc);
-                                if (type(imgSrc) === 'object') {
-                                    host = imgSrc.host[0];
-                                    imgSrc = imgSrc.imgSrc;
-                                }
-                                Alpha_Script.obtainHtml({
-                                    url: imgSrc,
-                                    method: 'GET',
-                                    headers: Alpha_Script.parseHeaders(
-                                        "Accept:" + "*/*\n" +
-                                        'User-Agent:' + navigator.userAgent + "\n" +
-                                        'Host:' + ((curSite.isHost === true) ? host : '') + "\n" +
-                                        'Referer:' + ((curSite.isReferer === true) ? window.location.href : '') + "\n" +
-                                        "cookie:" + session + "\n"
-                                    ),
-                                    timeout: 30000,
-                                    responseType: 'blob',
-                                    onload: function (response) {
-                                        try {
-                                            //截图
-                                            // console.log('URL：' + url, '最终 URL：' + response.finalUrl, '返回内容：' + response.responseText)
-                                            if (response && response.status && response.status >= 200 && response.status < 300) {
-                                                let responseHeaders = Alpha_Script.parseHeaders(response.responseHeaders, false);
-                                                let contentType = responseHeaders['Content-Type'];
-                                                if (!contentType) {
-                                                    contentType = "image/png";
-                                                }
-                                                let blob = new Blob([response.response], {
-                                                    type: contentType
-                                                });
-                                                blobCache[imgSrc] = blob;
-                                            } else {
-                                                errorNum++;
-                                                if (errorNum === imgList.length) {
-                                                    isBindBtnDownload = false;
-                                                    console.error('截图保存失败。');
-                                                    alert("截图保存失败。");
-                                                }
-                                            }
-                                            length--;
-                                        } catch (e) {
-                                            console.error('处理获取到的图片内容时出现问题，请检查！', e, response.responseText);
-                                        }
-                                    },
-                                    onerror: function (response) {
-                                        log('URL：' + imgSrc, response)
-                                        length--;
-                                    },
-                                    ontimeout: function (response) {
-                                        errorNum++;
-                                        if (errorNum === imgList.length) {
-                                            isBindBtnDownload = false;
-                                            console.error('截图保存失败。');
-                                            alert("截图保存失败。");
-                                        }
-                                        console.error("DownlodeUrl " + index + ": 超时");
-                                        log('URL：' + imgSrc, response)
-                                        length--;
-                                    }
-                                });
-                            }
-                        }
-                    });
-                    let id = setInterval(function () {
-                        if (length === 0) {
-                            clearInterval(id);
-                            let length2 = imgList.length;
-                            $.each(imgList, function (index, value) {
-                                let imgSrc = $(value).attr('src'); {
-                                    if (!imgSrc.startsWith('blob:')) {
-                                        imgSrc = isImgHttpStart(imgSrc);
-                                        if (blobCache[imgSrc]) {
-                                            let objectURL = URL.createObjectURL(blobCache[imgSrc]);
-                                            //objectURL = blob:https://mrcong.com/28c4ef23-b1ce-471a-84a1-c750d642b52c
-                                            //imgSrc(原链接)
-                                            blobUrlCache[objectURL] = imgSrc;
-                                            //将内存blob:new url替换src
-                                            $(value).attr('src', objectURL);
-                                            log(imgSrc + "\n---> " + objectURL);
-                                        }
-                                    }
-                                    length2--;
-                                }
-                            });
-                            let id2 = setInterval(function () {
-                                if (length2 === 0) {
-                                    clearInterval(id2);
-                                    let cContainner = $('#c_container').get(0);
-                                    domtoimage.toBlob(cContainner).then(function (blob) {
-                                        if (blob) {
-                                            saveAs(blob, "captureSL.png");
-                                            log("截图保存完成。");
-                                            alert("截图保存完成。");
-                                        } else {
-                                            console.error("文件不存在，截图保存失败!");
-                                            alert("文件不存在，截图保存失败!");
-                                        }
-                                        isBindBtnDownload = false;
-                                    }).catch(function (error) {
-                                        if (errorNum !== imgList.length) {
-                                            isBindBtnDownload = false;
-                                            console.error('截图太大不能保存!');
-                                            alert("截图太大不能保存!");
-                                        }
-                                    });
-                                }
-                            }, 100);
-                        }
-                    }, 100);
-                }
-            });
-            $('#packageBtn').bind('click', function (e) {
-                packageAndDownload();
-            });
-        };
-        // 热键
-        function hotkeys() {
-            GM_registerMenuCommand("图片打包下载", packageAndDownload, "d");
-            $(document).keydown(function (e) {
-                if (e.altKey && e.shiftKey) {
-                    if (e.which == 76) { //L
-                        log("触发快捷键");
-                    }
-                }
-            });
-        }
-
-        let activateSlidingFunc = function () {
-            let id = setInterval(function () {
-                let dynamicTimeStamp = new Date().getTime();
-                let misTiming = dynamicTimeStamp - newTimeStamp;
-                // log("MutationRecord MisTiming ", isActivateSlidingFuncNum, " : ", misTiming);
-                if (misTiming > 2000) {
-                    isActivateSlidingFuncNum++;
-                    newTimeStamp = dynamicTimeStamp;
-                    let slcPicNums = $("img[label='sl']");
-                    if (slcPicNums) {
-                        // log("TotalNumberImages: ", slcPicNums.length);
-                        for (let i = 0; i < slcPicNums.length; i++) {
-                            $(slcPicNums[i]).attr({ "tabindex": "-1", "id": "imgLocation" + i });
-                        }
-                    }
-                    if (isActivateSlidingFuncNum === -1) {
-                        clearInterval(id);
-                    }
-                }
-            }, 100);
-        };
-        function isImgHttpStart(imgSrc, isJavaScriptObject = false) {
-            if (!imgSrc.startsWith('http')) {
-                let re = /^\/.*/g;
-                let isNoSlash = re.test(imgSrc);
-                if (isNoSlash) {
-                    imgSrc = protocol + '//' + hostName + imgSrc;
-                } else {
-                    imgSrc = startUrl + imgSrc;
-                }
-            }
-            if (isJavaScriptObject) {
-                let re = /(?<=:\/\/).*?(?=\/)/g;
-                let urlHost = imgSrc.match(re);
-                return { "imgSrc": imgSrc, "host": urlHost }
-            }
-            return imgSrc;
-        }
-        function addScriptCss() {
-            // let fancyboxLink = "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css";
-            // let fancyboxData = await Get(fancyboxLink);
-            addStyle(fancyBoxCss);
-            if (os.isPc) {
-                addStyle(fancyBoxCssAdditon);
-            }
-        }
-        function startFancyBoxScript() {
-            addScriptCss();
-            // 观察者 MutationObserver事件
-            let slideIndex = null;
-            const ContentContainer = document.querySelector("body");
-            const configObserver = {
-                childList: true,
-                subtree: true,
-                attributeFilter: ["class"],
-            };
-            // 当观察到突变时执行的回调函数
-            const Callbacks = function (mutationsList) {
-                mutationsList.forEach(function (item, index) {
-                    if ("attributes" === item.type) {
-                        // log(item);
-                        if (
-                            item.target.className ===
-                            "fancybox__carousel is-draggable"
-                        ) {
-                            log(' # ', item);
-                            openEvent(item);
-                        } else if (
-                            item.target.className ===
-                            "fancybox__container is-animated is-closing"
-                        ) {
-                            log(' # ', item);
-                            closeEvent();
-                        }
-                    }
-                });
-            };
-            // 创建一个链接到回调函数的观察者实例
-            const Observer = new MutationObserver(Callbacks);
-            ContentContainer && Observer.observe(ContentContainer, configObserver);
-            function openEvent(item) {
-                slideIndex =
-                    item.target.offsetParent.childNodes[1].firstChild.firstChild
-                        .childNodes[0].innerText - 1;
-                if (slideIndex) {
-                    log("open - # " + slideIndex + " slide is open!");
-                }
-            }
-            function closeEvent() {
-                log("close - # " + slideIndex + " slide is closed!");
-                let elementById = document.getElementById("imgLocation" + slideIndex);
-                if (elementById) {
-                    let behavior_ = "smooth";
-                    if (imagePluginSwitch[0].isOpenAutoSlidingPosition) behavior_ = "auto";
-                    elementById.scrollIntoView({
-                        block: "center",
-                        behavior: behavior_,
-                        inline: "center",
-                    });
-                } else {
-                    console.error(" # ", "未定位id！");
-                }
-            }
-            if (imagePluginSwitch[0].isFancyBox) {
-                if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-                    Fancybox4.bind("[data-fancybox='images']", {
-                        Toolbar: false,
-                        animated: false,
-                        dragToClose: false,
-                        showClass: false,
-                        hideClass: false,
-                        closeButton: "top",
-                        Image: { click: "close", wheel: "slide", zoom: false, fit: "cover" },
-                        Thumbs: { minScreenHeight: 0 }
-                    });
-                } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
-                    Fancybox4.bind("[data-fancybox='images']", {
-                        Thumbs: { autoStart: false, Carousel: { fill: false, center: true } }
-                    });
-                } else {
-                    Fancybox4.bind("[data-fancybox='images']", {
-                        Thumbs: { Carousel: { fill: false, center: true } }
-                    });
-                }
-            }
-        }
-        let activateFancyBox = function (isBoxAutoControl = null) {
-            //激活fancybox
-            if (!isEmpty(isBoxAutoControl)) {
-                imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
-            }
-            imagePluginSwitch[0].isViewerOpen = false;
-            imagePluginSwitch[0].isFancyBox = true;
-        }
-        let aImgTagPackaging = function (images) {
+        let packageLabel = function (images) {
             let id = setInterval(function () {
                 if ($('.sl-c-pic').length > 0) {
                     $('.sl-c-pic').css({
@@ -1474,7 +1560,6 @@ let isDebugMain = true, curSite = {
             $(imgObj).each(function (index) {
                 log("start this Object: \n", $(this));
                 let src;
-                // debugger
                 $(this).attr('label', 'sl');
                 // src = $(this).attr('src');
                 // log("attr src: \n", src);
@@ -1493,74 +1578,6 @@ let isDebugMain = true, curSite = {
             }
             return $(a_imgTag);
         }
-        function popUpMenu() {
-            let popUpStr = '<div id="popUpContent" style="display: none;"><div style="height:100%; width:100%; position:fixed; _position:absolute; top:0; z-index:99999; opacity:0.3; filter: alpha(opacity=30); background-color:#000"></div><div style="width:300px;height:300px;position:fixed;left:50%;top:50%;margin-top:-150px;margin-left:-150px;z-index:100000;background-color:#ffffff;border:1px solid #afb3b6;border-radius:10px;opacity:0.95;filter:alpha(opacity=95);box-shadow:5px 5px 20px 0px #000;"><div id="popUpLinks" style="position:absolute;left:20px;top:20px;height:260px;width:260px;overflow:auto;word-wrap:break-word;"></div><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAA5FBMVEUAAAD+/v7////9/f7////////+/v7+/v7////+/v7+/v7////+/v7+/v7////+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7+/v7////////////+/v7+/v7+/v7+/v7+/v4uje3///82ke7s9P3N5PtQoPDI4fqCu/Tu9v5Im+/6/P+VxfZgqPFNnvDp8/3f7fq42Pmnz/d1tPNvsfNkq/JCmO/4+/7X6fz19/rn8PqYx/aNwfV8uPRqrvJZpfFUovAzkO3Q5vu92/mr0fieyva92fWx0vQ6lO5pygFTAAAAJHRSTlMAmfD+RMGwgj2mknlIKR/36+XGnIyHfnJfVDk2My8S4E1CJBvTatKDAAABY0lEQVQoz4WSZ1fCMBRA05ahLPfemkspBUFwgGz3+P//x/hK6ZBzvB/ak96+kZeoGCtFK5eziitqCSfWOnM2CuWUrOyQYPc0bjM2htHXh+/ffQ4lQ6zEPoZ6TwdUp10M56EtAe5MR7y0HGAeX7Ghe6MTzIZwFtTfBrepUzw4UFSGY8CUTTMGLo3eglv58By21pRnB7aNBqTwPfWq/OVey9sH22wZXiWo6Yr3GtRl/f0IRyoPYy14v97YWjVY12BPrcK9XvhaZPUdWCoLbR35yOoW5P7R8eQ3JrmbSp6HVmSrXuTrmNYyUAs2JkL6D6YjG1PgNGXK87F4nWAsUxmL2gyH6oVD7cuhdqFg9CE4T/oPE6CsgvBOP21715AP7ugaDFK+3YD1KyUcAG47bn0TSylxFd8WDTwMMByoBSUHw+jd9/3JbQODnVExygUS7FRUksPVtdDZW8dqCZm8lc1auxcq4gc02GVGTUchmgAAAABJRU5ErkJggg==" id="popUpQuit" style="position:absolute;right:0px;top:0px;cursor: pointer;"/></div></div>';
-            let siteListHtml;
-            let popUpContent = document.createElement("div");
-            document.body.appendChild(popUpContent);
-            popUpContent.outerHTML = popUpStr;
-            popUpContent = document.querySelector("#popUpContent");
-            if (!popUpContent) {
-                console.error("弹窗加载失败！！！");
-                return;
-            }
-            document.querySelector("#popUpQuit").onclick = function () {
-                popUpContent.style.display = "none";
-            };
-            document.querySelector("#popUpContent>div").onclick = function () {
-                popUpContent.style.display = "none";
-            };
-            document.addEventListener("keydown", function (e) {
-                if (e.keyCode == 27) {
-                    popUpContent.style.display = "none";
-                }
-            });
-            document.addEventListener("keydown", function (e) {
-                if (e.keyCode == 119) { //F8键
-                    if (e.altKey) {
-                        popUpContent.style.display = "block";
-                        let popUpLinks = document.querySelector("div#popUpLinks");
-                        if (!siteListHtml) {
-                            siteListHtml = "";
-                            let index = 0;
-                            for (let key in site) {
-                                if (site[key]._break === false) {
-                                    index++;
-                                    siteListHtml += "<span style='font-weight:bold;color:red;'>" + index + ":\t</span>" + "<a href=https://" + site[key].hostnames.pop() + ">" + site[key].name + "</a><br/>";
-                                }
-                                // log("弹窗加载失败！！！\n");
-                                log("弹窗加载成功！\n");
-                            }
-                        }
-                        popUpLinks.innerHTML = siteListHtml;
-                    }
-                }
-            });
-        }
-        function adoptAutoPage() {
-            let id = setInterval(function () {
-                if ($('#Autopage_number').length > 0) {
-                    $('#Autopage_number').click();
-                    let cssText = $('#Autopage_number').attr('style');
-                    $('#Autopage_number').css("cssText", "z-index: 1000 !important;" + cssText);
-                    clearInterval(id);
-                }
-            }, 100);
-        }
-        function type(param) {
-            // es6中null的类型为object
-            if (param === null) {
-                return param + "";
-            }
-            if (typeof param === "object") {
-                let val = Object.prototype.toString.call(param).split(" ")[1];
-                let type = val.substr(0, val.length - 1).toLowerCase();
-                return type;
-            } else {
-                return typeof param;
-            }
-        }
-
         return {
             injectComponent: function (i) {
                 if (i) injectComponent = i;
@@ -1598,27 +1615,18 @@ let isDebugMain = true, curSite = {
                 }
                 return this;
             },
-            fancyBoxActivated: function (data) {
-                if (data) activateFancyBox(data);
-                activateFancyBox();
-                return this;
-            },
             start: function () {
                 //1、匹配当前hostName
                 //2、注入操作界面
                 //3、聚合多页图片
                 //4、显示
-
                 let matchDomain = meet();
                 if (matchDomain) {
                     log('sessionCookie: ', session);
-                    if (os.isPc) {
-                        popUpMenu();
-                    }
-                    if (removeAD) {
-                        removeAD();
-                    }
+                    if (os.isPc) popUpMenu();
+                    if (removeAD) removeAD();
                     if (injectAggregationRef) {
+                        if (menu_disable('check')) return 0;
                         injectAggregationRef.apply(this, [injectComponent, pageUrls]);
                         if ($('#injectComponentIn').length > 0) {
                             $('#injectComponentIn').after('<div id="c_container"></div>');
@@ -1626,17 +1634,11 @@ let isDebugMain = true, curSite = {
                                 switchAggregationBtn();
                                 if (collectPics) {
                                     collectPics();
-                                    hotkeys();
-                                    // debugger
                                     adoptAutoPage();
                                     startFancyBoxScript();
                                 }
                             }
-                            bindBtn(function () {
-                                if (switchAggregationBtn) {
-                                    switchAggregationBtn();
-                                }
-                            });
+                            bindBtnFun(() => { if (switchAggregationBtn) switchAggregationBtn(); });
                         }
                     }
                 }
@@ -1735,7 +1737,6 @@ let isDebugMain = true, curSite = {
             limitPageStr = $('#main_contents').prop('outerHTML');
         }
         // log("limitPageStr: ", limitPageStr);
-        debugger
         if (!isEmpty(limitPageStr)) {
             limitPageMatchList = limitPageStr.match(/(?<=page\/)\d+/g);
         }
@@ -1746,7 +1747,6 @@ let isDebugMain = true, curSite = {
         // let maxpage = limitPageMatchList.length;
         log("limitPageMatch: ", limitPageMatchList);
         log("maxpage: ", maxpage);
-        debugger
         if (limitPageMatchList !== null) {
             {
                 let totalPageCnt = maxpage;
@@ -2118,7 +2118,6 @@ let isDebugMain = true, curSite = {
         $(imgE).attr({
             'data-fancybox': 'images'
         });
-        debugger
         log("src: \n", src);
         $(imgE).find('img').attr('src', src);
         $(imgE).find('img').attr('label', 'sl');
@@ -2128,7 +2127,7 @@ let isDebugMain = true, curSite = {
 
     /* --------------------------------------------everia.club------------------------------------------ */
 
-    injectBtns().domain(site.Everia.hostnames).fancyBoxActivated(1).removeAD(async function () {
+    injectBtns().domain(site.Everia.hostnames).removeAD(async function () {
         // debugger
         $("head").empty();
         let arrs = [
@@ -2141,7 +2140,6 @@ let isDebugMain = true, curSite = {
         await startMain_(gridzoneCss);
         addStyle(gridzone);
     }).switchAggregationBtn(function () {
-        //FancyBox
         $('figure.has-nested-images').hide();
         $('.separator').hide();
         $('.entry-content p').css('margin-bottom', 'unset');
@@ -2149,6 +2147,8 @@ let isDebugMain = true, curSite = {
         $('figure.has-nested-images').show();
         $('.separator').show();
     }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        //关闭FancyBox缩略图
+        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
         let currentPathname = window.location.pathname;
         let ismainPage = /\/(\d+)\//g.exec(currentPathname);
         log("ismainPage: \n", ismainPage);
@@ -2243,14 +2243,14 @@ let isDebugMain = true, curSite = {
             }
             $('.article-header').after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         if (site.Jpxgyw.iStatus) {
             images = $(doc).find('.article-content > p img');
         } else {
             images = $(doc).find('p img');
         }
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2302,9 +2302,9 @@ let isDebugMain = true, curSite = {
 
             $('.post').prepend(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images = $(doc).find('.nc-light-gallery img').clone();
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2335,7 +2335,6 @@ let isDebugMain = true, curSite = {
             let suffixUrl = '_';
             let partPreUrl;
             let pageId = null;
-            debugger
             let limitPageStr = $('.showtitle h2').text().match(/(\d+\/(\d+))/im);
             log("limitPageStr: \n", limitPageStr);
             if (os.isAndroid) {
@@ -2356,9 +2355,9 @@ let isDebugMain = true, curSite = {
             }
             $('.showtitle').after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images = $(doc).find('#showimg>a[title] img').clone();
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2393,7 +2392,6 @@ let isDebugMain = true, curSite = {
             let totalPageCnt = 1;
             let suffixUrl = '_';
             let partPreUrl = '';
-            debugger
             let limitPageStr = $('#pages > span[class]').prop("outerHTML").match(/\d+(?=\<\/span\>)/g);
             log("limitPageStr: \n", limitPageStr);
             partPreUrl = match[0];
@@ -2410,7 +2408,7 @@ let isDebugMain = true, curSite = {
             }
             $('.td-post-header').after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images = $(doc).find('.td-gallery-content > img');
         $(images).each(function () {
             let src = $(this).attr('data-original');
@@ -2419,7 +2417,7 @@ let isDebugMain = true, curSite = {
                 $(this).attr('src', src);
             }
         });
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2504,12 +2502,11 @@ let isDebugMain = true, curSite = {
         log("match: \n", match);
         let pageUrl;
         if (match !== null) {
-            debugger
             pageUrl = match[0];
             pageUrls.push(pageUrl);
             $('.rootContant[style]').slice(0, 1).after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images = $(doc).find('.rootContant > img');
         log("images \n", $(images));
         $(images).each(function (index) {
@@ -2521,7 +2518,7 @@ let isDebugMain = true, curSite = {
                 $(this).attr('src', src);
             }
         });
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2530,7 +2527,7 @@ let isDebugMain = true, curSite = {
 
     /* --------------------------------------------yskhd.com-------------------------------------------- */
 
-    injectBtns().domain(site.Yskhd.hostnames).fancyBoxActivated(1).removeAD(function () {
+    injectBtns().domain(site.Yskhd.hostnames).removeAD(function () {
         setInterval(function () {
             $(".banner-slider").remove();
             $(".nav-vip").remove();
@@ -2539,7 +2536,7 @@ let isDebugMain = true, curSite = {
         }, 100);
         GM_addStyle('.footer-fixed-nav{z-index: unset!important;}');
     }).switchAggregationBtn(function () {
-        //FancyBox
+
         curSite.isReferer = true;
         $("div[class^=article]").slice(1,).hide();
         // $("div.article-content > p").next().nextAll().hide();
@@ -2549,6 +2546,8 @@ let isDebugMain = true, curSite = {
         // $("div.article-content > p").next().nextAll().show();
         $(".single-comment").show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
+        //关闭FancyBox缩略图
+        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
         //https://youpai.netzijin.cn/2022/03/20220329141134503-scaled.jpg
         let currentPathname = window.location.pathname; // /Xiuren/Xiuren21393.html
         let match = currentPathname.match(/(?<=\/).*/g);
@@ -2625,7 +2624,6 @@ let isDebugMain = true, curSite = {
             let totalPageCnt = 1;
             let suffixUrl = '_';
             let partPreUrl = '';
-            debugger
             let limitPageStr = $('.page-numbers > b').prop("outerHTML");
             let limitPageTotal = limitPageStr.match(/(?<=共)(\d+)/g);
             log("limitPageStr: \n", limitPageStr);
@@ -2643,10 +2641,10 @@ let isDebugMain = true, curSite = {
             }
             $('.main-header').after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find('.main-body img');
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2701,7 +2699,6 @@ let isDebugMain = true, curSite = {
             if (!isEmpty(isGirl)) {
                 match = null;
             } else {
-                debugger
                 let isMobileDomain = false;
                 let mobileDomain = /(?<=https?\:\/\/)(m\.)/.exec(window.location);
                 if (mobileDomain != null) {
@@ -2712,7 +2709,6 @@ let isDebugMain = true, curSite = {
                 if (match !== null) {
                     let suffixUrl = '/';
                     let partPreUrl = '';
-                    debugger
                     if (os.isAndroid || isMobileDomain) {
                         limitPageStr = $('span.page').prop("outerHTML");
                         log("limitpag: ", limitPageStr);
@@ -2760,7 +2756,7 @@ let isDebugMain = true, curSite = {
                 }
             }
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
 
         let currentHref = window.location.href;
         log("currentHref: \n", currentHref);
@@ -2776,11 +2772,10 @@ let isDebugMain = true, curSite = {
                 images = $(doc).find('#hgallery img');
             }
             $(images).attr("mark", "ture");
-            let a_imgTag = aImgTagPackaging(images);
+            let a_imgTag = packageLabel(images);
             log("New a_imgTag Object: \n", $(a_imgTag));
             return $(a_imgTag);
         } else {
-            debugger
             log("\n-----collectPics xsnvshen-----\n");
             let imgE = [];
             let currentImgSrc;
@@ -2818,7 +2813,7 @@ let isDebugMain = true, curSite = {
                     imgE.push($(img));
                 }
             }
-            let a_imgTag = aImgTagPackaging($(imgE));
+            let a_imgTag = packageLabel($(imgE));
             log("New a_imgTag Object: \n", $(a_imgTag));
             return $(a_imgTag);
         }
@@ -2829,7 +2824,6 @@ let isDebugMain = true, curSite = {
     /* --------------------------------------------www.ikanins.com-------------------------------------- */
 
     injectBtns().domain(site.Ikanins.hostnames).removeAD(function () {
-        debugger
         setInterval(function () {
             $(".widget_custom_html").remove();
         }, 100);
@@ -2852,10 +2846,8 @@ let isDebugMain = true, curSite = {
         let match = currentPathname.match(/\w+.*/im);
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
-        debugger
         if (match !== null) {
             let partPreUrl = '';
-            debugger
             partPreUrl = match[0];
             log('push pageUrl:\n', partPreUrl);
             pageUrls.push(partPreUrl);
@@ -2865,10 +2857,10 @@ let isDebugMain = true, curSite = {
                 $('.entry-content .entry').prepend(injectComponent);
             }
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find('.entry-content p img');
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2878,7 +2870,6 @@ let isDebugMain = true, curSite = {
     /* --------------------------------------------madoupan.com----------------------------------------- */
 
     injectBtns().domain(site.Madoupan.hostnames).removeAD(function () {
-        debugger
         setInterval(function () {
             $(".single-comment").remove();
             $(".header").css("position", "unset");
@@ -2895,20 +2886,18 @@ let isDebugMain = true, curSite = {
         let match = currentPathname.match(/\w+.*/im);
         log("currentPathname: \n", currentPathname);
         log("match: \n", match);
-        debugger
         if (match !== null) {
             let partPreUrl = '';
-            debugger
             partPreUrl = match[0];
             log('push pageUrl:\n', partPreUrl);
             pageUrls.push(partPreUrl);
             $('.article-header').after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find('div.article-content img');
 
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -2996,10 +2985,10 @@ let isDebugMain = true, curSite = {
                 $(".page-link").last().prev().prev().after(injectComponent);
             }
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find('.entry img');
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -3056,11 +3045,11 @@ let isDebugMain = true, curSite = {
             }
             $('.item_title').last().after(injectComponent);
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find('.content img');
         log("images: \n", images);
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -3171,7 +3160,6 @@ let isDebugMain = true, curSite = {
             $('div.content').prev().after(injectComponent);
         }
     }).collectPics(function (doc) {
-        debugger
         let imgE = []
         let currentImgSrc = $(".content img").attr("src").replace("//", "/");
         log("currentImgSrc: " + currentImgSrc);
@@ -3272,10 +3260,10 @@ let isDebugMain = true, curSite = {
                 }
             }
         }
-    }).collectPics(function (doc, aImgTagPackaging) {
+    }).collectPics(function (doc, packageLabel) {
         let images;
         images = $(doc).find(".entry-content img");
-        let a_imgTag = aImgTagPackaging(images);
+        let a_imgTag = packageLabel(images);
         log("New a_imgTag Object: \n", $(a_imgTag));
         return $(a_imgTag);
     }, function (imgE) {
@@ -3474,7 +3462,6 @@ let isDebugMain = true, curSite = {
             $("body").css("overflow", "unset");
         }, 100);
     }).switchAggregationBtn(function () {
-
         $('div.photos').hide();
         $('div.pager').hide();
         //android
@@ -3486,7 +3473,7 @@ let isDebugMain = true, curSite = {
         let currentHref = window.location.href;
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/\/(.*?\/)(.*?)(?:\/\d*\.html)/m);
+        let match = currentPathname.match(/\/(.*?\/)(.*?)(?:(\/\d*)?\.html)/m);
         log("match: \n", match);
         let skip1 = currentHref.match(/\/photo\//g);
         if (match && !isEmpty(skip1)) {
@@ -3513,9 +3500,14 @@ let isDebugMain = true, curSite = {
             }
             let photoCount = $('div[ target="photoCount"]').text().match(/\d*/m)[0];
             log("photoCount # ", photoCount);
-            if (photoCount <= 100) {
+            if (menu_disable("getJsonValue", "menu_aggregateLimit")) {
+                if (photoCount <= 100) {
+                    $('div.article').slice(1, 2).after(injectComponent);
+                }
+            } else {
                 $('div.article').slice(1, 2).after(injectComponent);
             }
+
         }
     }).collectPics(function (doc) {
         let imgE = [];
@@ -3818,8 +3810,6 @@ let isDebugMain = true, curSite = {
             $("iframe").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        // debugger
-
         $('.wp-block-media-text').next().nextAll().hide();
         //android
     }, function () {
@@ -4080,7 +4070,6 @@ let isDebugMain = true, curSite = {
         pageUrls.push(currentPathname.match(/(?<=\/).*/g)[0]);
         $('#gallery').prev().after(injectComponent);
     }).collectPics(function (doc) {
-        debugger
         doc = document.getElementById("gallery").querySelectorAll('.thumb-photo');
         log("doc \n", doc);
         let imgE = [];
@@ -4124,7 +4113,6 @@ let isDebugMain = true, curSite = {
     }).collectPics(function (doc) {
         let imgE = [];
         let item = $(doc).find(".aligncenter");
-        debugger
         $(item).each(function () {
             let src = $(this).attr("src");
             // log("src :",src);
@@ -4348,7 +4336,6 @@ let isDebugMain = true, curSite = {
         }
     }).collectPics(function (doc) {
         let item = $(doc).find(".g1-content-narrow img");
-        debugger
         return item;
     }, function (imgE) {
         $(imgE).attr({
@@ -4380,14 +4367,12 @@ let isDebugMain = true, curSite = {
     }).collectPics(function (doc) {
         let imgE = [];
         let item = $(doc).find(".entry-content img");
-        debugger
         $(item).each(function () {
             if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("src");
                 imgE.push($("<img src=" + src + "></img>"));
             }
         });
-        debugger
         return $(imgE);
     }, function (imgE) {
         $(imgE).attr({
@@ -4451,7 +4436,7 @@ let isDebugMain = true, curSite = {
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find("div.kt-tabs-content-wrap img");
-        debugger
+
         $(item).each(function () {
             if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("data-orig-file");
@@ -4536,7 +4521,7 @@ let isDebugMain = true, curSite = {
     }).collectPics(function (doc) {
         let imgE = []
         let item = $(doc).find(".aligncenter");
-        debugger
+
         $(item).each(function () {
             if (/lazy/.test(this.className)) { } else {
                 let src = $(this).attr("src");
@@ -4664,8 +4649,7 @@ let isDebugMain = true, curSite = {
 
     /* --------------------------------------------www.xinwenba.net------------------------------------- */
 
-    injectBtns().domain(site.xinwenba.hostnames).fancyBoxActivated(1).switchAggregationBtn(function () {
-        imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
+    injectBtns().domain(site.xinwenba.hostnames).switchAggregationBtn(function () {
         $('.picture').hide();
         $('div.web').hide();
         $('div.paging').hide();
@@ -4677,6 +4661,9 @@ let isDebugMain = true, curSite = {
         //android
         $('.view_img p').show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
+        //关闭FancyBox缩略图
+        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
+        imagePluginSwitch[0].isOpenAutoSlidingPosition = true;
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*(?=-)/m);
@@ -4788,7 +4775,7 @@ let isDebugMain = true, curSite = {
 
     /* --------------------------------------------dongtidemi.com--------------------------------------- */
 
-    injectBtns().domain(site.dongtidemi.hostnames).fancyBoxActivated(1).removeAD(function () {
+    injectBtns().domain(site.dongtidemi.hostnames).removeAD(function () {
         setInterval(function () {
             $("div[class^=wpcom_myimg]").remove();
         }, 100);
@@ -4799,6 +4786,8 @@ let isDebugMain = true, curSite = {
         $('.entry-content').show();
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
+        //关闭FancyBox缩略图
+        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         if (currentPathname) {
@@ -5217,12 +5206,14 @@ let isDebugMain = true, curSite = {
     }).start();
     /* --------------------------------------------cydmyz.com------------------------------------------ */
 
-    injectBtns().domain(site.cydmyz.hostnames).fancyBoxActivated(1).removeAD(function () {
+    injectBtns().domain(site.cydmyz.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
         $('.entry-wrapper').hide();
     }, function () {
         $('.entry-wrapper').show();
     }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        //关闭FancyBox缩略图
+        imagePluginSwitch[0].isFancyBoxAutoStartFalse = true;
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/)\d+\.html/m);
@@ -5255,43 +5246,3 @@ let isDebugMain = true, curSite = {
     }).start();
 
 })();
-
-
-function switchVId(vId) {
-    $('#player-unavailable').not('.hid').addClass('hid');
-    let text = $('#unavailable-message').text();
-    if (text && text.indexOf('内容警告') != -1) {
-        log('内容警告::\n');
-        $('#player-api').removeClass('off-screen-target').html('<iframe src="https://www.youtube.com/embed/' +
-            vId +
-            '" width="100%" height="100%" frameborder="0" webkitallowfullscreen="" mozallowfullscreen="" allowfullscreen=""></iframe>');
-        return true;
-    }
-    return false;
-}
-
-//注入JS：jquery
-function injectJs(e) {
-    if (e.jQuery) {
-        log('jquery available');
-    } else {
-        let ele = e.document.createElement('script');
-        ele.src = "https://cdn.staticfile.org/jquery/1.12.4/jquery.min.js";
-        e.document.body.appendChild(ele);
-        let id = e.setInterval(function () {
-            if (e.jQuery) {
-                e.clearInterval(id);
-            }
-        }, 100);
-    }
-}
-
-//等待JQuery加载完毕
-function dependenceJQuery(e, callback) {
-    let id = e.setInterval(function () {
-        if (e.jQuery) {
-            e.clearInterval(id);
-            callback;
-        }
-    }, 100);
-}
