@@ -151,3 +151,6 @@ axutongxue.com###abc
 ! 2022-3-1 https://xchina.co
 ||cll.xlyzjs.com
 ||www.eggabc.com
+
+! 2023-03-01 https://www.xgmn01.com
+||www.xgmn01.com/wang/*$script,domain=www.xgmn01.com
