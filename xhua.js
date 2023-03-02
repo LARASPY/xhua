@@ -1358,7 +1358,7 @@
             return GM_getValue(key)[domainId];
         }
         function addJson() {
-            if (!checkJson()) { console.error('网站域名id不存在！'); return }
+            if (!checkJson()) { alert("网站不能进行限制！"); console.error('网站不能进行限制！'); return }
             let _Json = GM_getValue(key); // 读取网站列表
             _Json[domainId] = true;// 设置网站域名id
             GM_setValue(key, _Json); // 写入配置
