@@ -7,12 +7,14 @@ function addStateMent(head, type, src, textContent, setAttribute) {
   let statement = document.createElement(type);
   if (src && type === "script") {
     statement.src = src;
+    statement.id = "fancyScript";
   } else if (type === "link") {
     statement.href = src;
+    statement.id = "fancyLink";
   }
   if (textContent) statement.textContent = textContent;
   if (setAttribute) {
-    // log(' # ',setAttribute);
+    log(' # ', setAttribute);
     for (const [key, value] of Object.entries(setAttribute)) {
       statement.setAttribute(key, value);
     }
@@ -81,26 +83,34 @@ function fancyBoxStart(document) {
     "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.css",
   ];
   let relStyle = { rel: "stylesheet" };
-  let typeStyle = { name: "type", value: "text/css" };
+  let typeStyle = { name: "type", value: "text/css", id: "fancyStyle" };
   new Promise(function (resolve, reject) {
-    let id = setInterval(function () {
+    let id = setInterval(async function () {
       srcList.push(
         "https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0.31/dist/fancybox.umd.js"
       );
       let loadingBox = document.querySelector('.loading-box');
       let loadingP;
-      if (loadingBox!==null) {
+      if (loadingBox !== null) {
         loadingP = loadingBox.querySelector('.loading');
       } else {
         console.error(" # ", "Loading-Box non-existent!!!");
         return;
       }
       for (let src of srcList) {
-        addStateMent(head, "script", src);
+        if (document.querySelectorAll('#fancyScript').length <= srcList.length) addStateMent(head, "script", src);
       }
       log(' # ', "Fancybox loading...");
       try {
         if (Fancybox && $) {
+          await new Promise((resolve, reject) => {
+            let id = setInterval(() => {
+              if (document.getElementsByClassName("loading-box")[0].style.opacity == 0) {
+                clearInterval(id);
+                resolve();
+              }
+            }, 50);
+          });
           log(' # ', "Fancybox && $ Initialization succeeded!!!");
           loadingP.innerHTML = 'FancyBox succeeded!';
           $(loadingP).parent().css({ 'opacity': '0', 'z-index': '999999' });
@@ -109,7 +119,7 @@ function fancyBoxStart(document) {
           setTimeout(() => {
             alphaPlay(loadingBox, "hiden");
             loadingBox.style["z-index"] = "-1";
-          }, 5000);
+          }, 2000);
           clearInterval(id);
           resolve();
         }
@@ -117,9 +127,8 @@ function fancyBoxStart(document) {
         console.error(' # ', error);
       }
     }, 100);
-  })
-    .then(function () {
-      let fancyBoxCssAdditon = `
+  }).then(function () {
+    let fancyBoxCssAdditon = `
       a[data-fancybox] img{cursor:zoom-in}
       .fancybox__container{--carousel-button-bg:rgb(0 0 0 / 44%);--carousel-button-svg-width:24px;--carousel-button-svg-height:24px;--carousel-button-svg-stroke-width:2.5;--carousel-button-svg-filter:none}
       .fancybox__nav{--carousel-button-svg-width:22px;--carousel-button-svg-height:22px;--carousel-button-svg-stroke-width:3}
@@ -132,118 +141,117 @@ function fancyBoxStart(document) {
       .fancybox__thumb{border-radius:6px;box-shadow:0 4px 6px -1px rgba(0,0,0,0.3),0 2px 4px -1px rgba(0,0,0,0.26)}
       .is-nav-selected .fancybox__thumb{transform:scale(1.25)}
       .is-nav-selected .fancybox__thumb::after{display:none}`;
-      addStateMent(head, "link", fancyboxCssArrr[0], null, relStyle);
-      if (!isMobile()) {
-        addStateMent(head, "style", null, fancyBoxCssAdditon, typeStyle);
-        return "PC OK";
+    if (document.querySelectorAll('#fancyLink').length <= srcList.length) addStateMent(head, "link", fancyboxCssArrr[0], null, relStyle);
+    if (!isMobile()) {
+      if (document.querySelectorAll('#fancyStyle').length <= srcList.length) addStateMent(head, "style", null, fancyBoxCssAdditon, typeStyle);
+      return "PC OK";
+    }
+    return "Android OK";
+  }).then(function (value) {
+    log(' # ', value);
+    let imagePluginSwitch = [
+      {
+        isFancyBox: true,
+        isFancyBoxFullScreen: false,
+        isFancyBoxAutoStartFalse: false,
+      },
+    ];
+    // 观察者 MutationObserver事件
+    function type(param) {
+      // es6中null的类型为object
+      if (param === null) {
+        return param + "";
       }
-      return "Android OK";
-    })
-    .then(function (value) {
-      log(' # ', value);
-      let imagePluginSwitch = [
-        {
-          isFancyBox: true,
-          isFancyBoxFullScreen: false,
-          isFancyBoxAutoStartFalse: false,
-        },
-      ];
-      // 观察者 MutationObserver事件
-      function type(param) {
-        // es6中null的类型为object
-        if (param === null) {
-          return param + "";
-        }
-        if (typeof param === "object") {
-          let val = Object.prototype.toString.call(param).split(" ")[1];
-          let type = val.substr(0, val.length - 1).toLowerCase();
-          return type;
-        } else {
-          return typeof param;
-        }
+      if (typeof param === "object") {
+        let val = Object.prototype.toString.call(param).split(" ")[1];
+        let type = val.substr(0, val.length - 1).toLowerCase();
+        return type;
+      } else {
+        return typeof param;
       }
-      let slideIndex = null;
-      const ContentContainer = document.querySelector("body");
-      const configObserver = {
-        childList: true,
-        subtree: true,
-        attributeFilter: ["class"],
-      };
-      // 当观察到突变时执行的回调函数
-      const callbacks = function (mutationsList) {
-        mutationsList.forEach(function (item, index) {
-          // log(' # ',type(item.type) + " " + item.type);
-          if ("attributes" === item.type) {
-            if (
-              item.target.className ===
-              "fancybox__carousel is-draggable"
-            ) {
-              log(' # ', item);
-              openEvent(item);
-            } else if (
-              item.target.className ===
-              "fancybox__container is-animated is-closing"
-            ) {
-              log(' # ', item);
-              closeEvent();
-            }
+    }
+    let slideIndex = null;
+    const ContentContainer = document.querySelector("body");
+    const configObserver = {
+      childList: true,
+      subtree: true,
+      attributeFilter: ["class"],
+    };
+    // 当观察到突变时执行的回调函数
+    const callbacks = function (mutationsList) {
+      mutationsList.forEach(function (item, index) {
+        // log(' # ',type(item.type) + " " + item.type);
+        if ("attributes" === item.type) {
+          if (
+            item.target.className ===
+            "fancybox__carousel is-draggable"
+          ) {
+            log(' # ', item);
+            openEvent(item);
+          } else if (
+            item.target.className ===
+            "fancybox__container is-animated is-closing"
+          ) {
+            log(' # ', item);
+            closeEvent();
           }
+        }
+      });
+    };
+    // 创建一个链接到回调函数的观察者实例
+    const Observer = new MutationObserver(callbacks);
+    ContentContainer && Observer.observe(ContentContainer, configObserver);
+    function openEvent(item) {
+      slideIndex =
+        item.target.offsetParent.childNodes[1].firstChild.firstChild
+          .childNodes[0].innerText - 1;
+      if (slideIndex) {
+        log("open - # " + slideIndex + " slide is open!");
+      }
+    }
+    function closeEvent() {
+      log("close - # " + slideIndex + " slide is closed!");
+      let elementById = document.getElementById("imgLocation" + slideIndex);
+      if (elementById) {
+        elementById.scrollIntoView({
+          block: "center",
+          behavior: "smooth",
+          inline: "center",
         });
-      };
-      // 创建一个链接到回调函数的观察者实例
-      const Observer = new MutationObserver(callbacks);
-      ContentContainer && Observer.observe(ContentContainer, configObserver);
-      function openEvent(item) {
-        slideIndex =
-          item.target.offsetParent.childNodes[1].firstChild.firstChild
-            .childNodes[0].innerText - 1;
-        if (slideIndex) {
-          log("open - # " + slideIndex + " slide is open!");
-        }
+      } else {
+        console.error(" # ", "未定位id！");
       }
-      function closeEvent() {
-        log("close - # " + slideIndex + " slide is closed!");
-        let elementById = document.getElementById("imgLocation" + slideIndex);
-        if (elementById) {
-          elementById.scrollIntoView({
-            block: "center",
-            behavior: "smooth",
-            inline: "center",
-          });
-        } else {
-          console.error(" # ", "未定位id！");
-        }
+    }
+    if (imagePluginSwitch[0].isFancyBox) {
+      if (imagePluginSwitch[0].isFancyBoxFullScreen) {
+        Fancybox.bind("[data-fancybox='autoPageImages']", {
+          Toolbar: false,
+          animated: false,
+          dragToClose: false,
+          showClass: false,
+          hideClass: false,
+          closeButton: "top",
+          Image: {
+            click: "close",
+            wheel: "slide",
+            zoom: false,
+            fit: "cover",
+          },
+          Thumbs: { minScreenHeight: 0 },
+        });
+      } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
+        Fancybox.bind("[data-fancybox='autoPageImages']", {
+          Thumbs: {
+            autoStart: false,
+            Carousel: { fill: false, center: true },
+          },
+        });
+      } else {
+        Fancybox.bind("[data-fancybox='autoPageImages']", {
+          Thumbs: { Carousel: { fill: false, center: true } },
+        });
       }
-      if (imagePluginSwitch[0].isFancyBox) {
-        if (imagePluginSwitch[0].isFancyBoxFullScreen) {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Toolbar: false,
-            animated: false,
-            dragToClose: false,
-            showClass: false,
-            hideClass: false,
-            closeButton: "top",
-            Image: {
-              click: "close",
-              wheel: "slide",
-              zoom: false,
-              fit: "cover",
-            },
-            Thumbs: { minScreenHeight: 0 },
-          });
-        } else if (imagePluginSwitch[0].isFancyBoxAutoStartFalse) {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Thumbs: {
-              autoStart: false,
-              Carousel: { fill: false, center: true },
-            },
-          });
-        } else {
-          Fancybox.bind("[data-fancybox='autoPageImages']", {
-            Thumbs: { Carousel: { fill: false, center: true } },
-          });
-        }
-      }
-    });
+    }
+  });
 }
 fancyBoxStart(window.document);
