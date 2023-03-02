@@ -152,5 +152,5 @@ axutongxue.com###abc
 ||cll.xlyzjs.com
 ||www.eggabc.com
 
-! 2023-03-01 https://www.xgmn01.com
-||www.xgmn01.com/wang/*$script,domain=www.xgmn01.com
+! 2023-03-02 https://www.xgmn02.com
+||www.xgmn02.com/wang/*$script,domain=www.xgmn02.com
