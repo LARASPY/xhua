@@ -154,3 +154,6 @@ axutongxue.com###abc
 
 ! 2023-03-02 https://www.xgmn02.com
 ||www.xgmn02.com/wang/*$script,domain=www.xgmn02.com
+
+! 2023-03-03 https://xchina.co
+xchina.co##a[href*="xchina.tv/redirect"]:remove()
