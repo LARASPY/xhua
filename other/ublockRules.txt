@@ -157,3 +157,11 @@ axutongxue.com###abc
 
 ! 2023-03-03 https://xchina.co
 xchina.co##a[href*="xchina.tv/redirect"]:remove()
+
+! 2023-03-04 https://xchina.tv
+xchina.tv##.push-bottom
+xchina.tv##.push-top
+xchina.tv##.slider-ad
+xchina.tv##div.banner_ad.article > [href]
+xchina.tv##.modal.modalAd
+xchina.tv##.current.blocker.jquery-modal

@@ -114,7 +114,7 @@
     }
   },
   "小黄书 - 搜索": {
-    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "host": "/(tw|kr)?(\\.)?xchina\\.(co|tv)/",
     "url": "/^\\/search\\/.+\\/.*\\.html$/",
     "pager": {
       "nextL": "a.next",
@@ -124,7 +124,7 @@
     }
   },
   "小黄书 - 清单": {
-    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "host": "/(tw|kr)?(\\.)?xchina\\.(co|tv)/",
     "url": "/^\\/photo\\//",
     "style": ".photos > div.item {display: none !important;}",
     "pager": {
@@ -139,7 +139,7 @@
     }
   },
   "小黄书 - 原图": {
-    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "host": "/(tw|kr)?(\\.)?xchina\\.(co|tv)/",
     "url": "/^\\/photoShow\\.php/",
     "style": ".container>img {max-width: 99% !important;display: block !important;margin: 0 auto !important;}",
     "pager": {
@@ -152,7 +152,7 @@
     }
   },
   "小黄书 - 分类": {
-    "host": "/(tw|kr)?(\\.)?xchina\\.co/",
+    "host": "/(tw|kr)?(\\.)?xchina\\.(co|tv)/",
     "url": "/^\\/(photos|videos|models)(\\/|\\.html)/",
     "pager": {
       "blank": 3,
