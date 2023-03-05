@@ -32,21 +32,25 @@
   > >
   > > **<kbd>Alt</kbd> + <kbd>F8</kbd>：打开各网站链接界面。**
   >
-  > **Ⅳ.** 使用 `免费私房图` 、 `心动美图` 、 `elitebabes` ，前提是需要在 uBlock Origin `控制面板`*（浏览器右上角 uBlock Origin 扩展图标内的三个小齿轮）*中，添加 `静态规则` 来去除广告，不然该网站用不了。去广告规则如链接：[ublock 其他去广告规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt) 。
+  > **Ⅳ.** 部分网站说明
   >
-  > _注：当然直接导入规则链接更方便。打开 uBlock Origin `控制面板`，点击 `规则列表 -> 导入 ` 复制上面的 去广告规则链接**地址** 进文本框，再点击应用更改。_
+  > > ● 使用 `免费私房图` 、 `心动美图` 、 `elitebabes` ，前提是需要在 uBlock Origin `控制面板`*（浏览器右上角 uBlock Origin 扩展图标内的三个小齿轮）*中，添加 `静态规则` 来去除广告，不然该网站用不了。去广告规则如链接：[ublock 其他去广告规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/ublockRules.txt) 。
+  > >
+  > > _注：当然直接导入规则链接更方便。打开 uBlock Origin `控制面板`，点击 `规则列表 -> 导入 ` 复制上面的 去广告规则链接**地址** 进文本框，再点击应用更改。_
+  > >
+  > > ● <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code></a> 请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
+  > >
+  > > ● `小黄书` 进行了聚合限制，想要取消限制。可以在 Tampermonkey 右上角，点击 `❌聚合已限制` 来取消。🆕
   >
-  > **Ⅴ.** <a href='https://www.nlegs.com/' target='_blank'><code>Nlegs</code></a> 请自行翻页，可能你还需要 <code>[如何绕过烦人的 hCaptcha & Cloudflare Captcha](https://blog.skk.moe/post/bypass-hcaptcha/)</code>
+  > **Ⅴ.** 关于手机浏览器选择，参考我之前的[评论](https://sleazyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua/discussions/142439)。
   >
-  > **Ⅵ.** 关于手机浏览器选择，参考我之前的[评论](https://sleazyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua/discussions/142439)。
-  >
-  > **Ⅶ.** 关于手机版的网址链接跳转，如果使用本油猴脚本**脚本适配网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个 [`Markdown网站`](http://jbt.github.io/markdown-editor/) ，Markdown 代码在 <a href='https://github.com/LARASPY/xhua' target='_blank' ><code>LARASPY</code></a> git 仓库里面，将仓库里面的 [**`WebsiteMark.md`**](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/WebsiteMark.md) 代码，复制到 [`Markdown网站`](http://jbt.github.io/markdown-editor/) 里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
+  > **Ⅵ.** 关于手机版的网址链接跳转，如果使用本油猴脚本**脚本适配网址**里面的网址，点击它会刷新本脚本网页，所以用起来不是很舒服。如果想点击链接就跳转到新网页，可以使用这个 [`Markdown网站`](http://jbt.github.io/markdown-editor/) ，Markdown 代码在 <a href='https://github.com/LARASPY/xhua' target='_blank' ><code>LARASPY</code></a> git 仓库里面，将仓库里面的 [**`WebsiteMark.md`**](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/WebsiteMark.md) 代码，复制到 [`Markdown网站`](http://jbt.github.io/markdown-editor/) 里面，然后点击保存按钮，就可以愉快的使用了，当然还可以点击顶部倒数第二个按钮(Reading Mode)，只查看 Markdown 页面，体验更佳。
   >
   > `注:WebsiteMark.md 直链¹更新不及时，原生²更新及时,但是原生² 一般只有翻墙才能访问。`
   >
   > ***
   >
-  > **Ⅷ.** 🍁 **该脚本应该基本就是这样了**，以后要是有较好的图站再来添加聚合。后续适配网站主要以 [`自动无缝翻页`](https://greasyfork.org/zh-CN/scripts/419215-%E8%87%AA%E5%8A%A8%E6%97%A0%E7%BC%9D%E7%BF%BB%E9%A1%B5) 来适配。
+  > **Ⅶ.** 🍁 **该脚本应该基本就是这样了**，以后要是有较好的图站再来添加聚合。后续适配网站主要以 [`自动无缝翻页`](https://greasyfork.org/zh-CN/scripts/419215-%E8%87%AA%E5%8A%A8%E6%97%A0%E7%BC%9D%E7%BF%BB%E9%A1%B5) 来适配。
   >
   > > 首先如果遇到 `网站失效` ,一般就是脚本的域名网址不起作用了。可以自行在 `脚本头部` 添加 `@include` 匹配项，比如像下面示例中的 `Mrcong` 例子：
   >
@@ -77,8 +81,6 @@
   > **Ⅷ.** 新添加了【[自动无缝翻页](https://greasyfork.org/zh-CN/scripts/419215-%E8%87%AA%E5%8A%A8%E6%97%A0%E7%BC%9D%E7%BF%BB%E9%A1%B5)】脚本自定义规则： [AutoPage 无缝翻页规则](https://ghproxy.com/https://raw.githubusercontent.com/LARASPY/xhua/master/other/autoPager/autoCustomRules.json)。
   >
   > _注：复制粘贴到脚本 `自定义翻页规则` 上面, 覆盖默认的 `{ }` 保存（浏览器右上角 Tampermonkey 扩展图标内的脚本菜单）_
-  >
-  > **Ⅸ.** `小黄书` 进行了聚合限制，想要取消限制。可以在 Tampermonkey 右上角，点击 `❌聚合已限制` 来取消。🆕
   >
   > 祝你使用愉快！！！
   >
