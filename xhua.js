@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.40
+// @version      4.41
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -119,14 +119,14 @@
             //支持中文https://zh.hentai-cosplays.com/
             id: 0,
             name: "Hentai Cosplay",
-            hostnames: ["hentai-cosplays.com"],
+            hostnames: ["hentai-cosplays.com", "zh.hentai-cosplays.com"],
             disablepopUpMenu: false,
         },
         Pron: {
             //支持中文https://zh.porn-images-xxx.com/
             id: 1,
             name: "Porn Image",
-            hostnames: ["porn-images-xxx.com"],
+            hostnames: ["porn-images-xxx.com", "zh.porn-images-xxx.com"],
             pattern: /https?\:\/\/(\w+\.)?porn-image\w+-xxx\.com/,
             disablepopUpMenu: false,
         },
@@ -1712,7 +1712,6 @@
             $("#header .right-menu").nextAll().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-
         curSite.isAdjustDomainName = true;
         $('#display_image_detail').hide();
         $('#post').hide();
@@ -1752,16 +1751,8 @@
                 let totalPageCnt = maxpage;
                 // bug: \n https://zh.hentai-cosplays.com/image/--835/
                 // /image/333-jc-selfie-images-self-portrait-photos-taken-by-female-junior-high-school-students-have-different-eroticism/
-
-                let partPreUrl = null;
-                let suffixUrl = null;
-                if (partPreUrl == null) {
-                    suffixUrl = "";
-                    partPreUrl = window.location.pathname.match(/\/((?!(page|com))[a-zA-Z])+\/[-a-zA-Z0-9]+\//g);
-                } else {
-                    partPreUrl = window.location.pathname.match(/[a-zA-Z]+\/\w+[-a-zA-Z0-9]+\//g);
-                }
-                suffixUrl = 'page/';
+                let partPreUrl = window.location.pathname.match(/\w+(?<!(page|com))\/[-\w]+\//g);
+                let suffixUrl = 'page/';
                 log("partPreUrl: ", partPreUrl);
                 for (let i = 1; i <= totalPageCnt; i++) {
                     let pageUrl = partPreUrl + suffixUrl + i + '/';
@@ -1769,7 +1760,6 @@
                     pageUrls.push(pageUrl);
                 }
             }
-
             if (os.isAndroid) {
                 $('ul#detail_list').prev().after(injectComponent);
             } else {
