@@ -82,6 +82,20 @@
   >
   > _注：复制粘贴到脚本 `自定义翻页规则` 上面, 覆盖默认的 `{ }` 保存（浏览器右上角 Tampermonkey 扩展图标内的脚本菜单）_
   >
+  > **Ⅸ.** 聚合图片示例 🆕
+  >
+  > > <details>
+  > > <summary>展开 示例</summary>
+  > > <div style="width: 100%;display: flex;">
+  > > <div style="width: 50%;font-weight:900">初始态：</div>
+  > > <div style="width: 50%;font-weight:900">点击后：</div>
+  > > </div>
+  > > <div style="display: flex;">
+  > > <img src="https://greasyfork.s3.us-east-2.amazonaws.com/kbu776v9v0m2def7d1qlbukq58vn" style="height:100%;width:50%;flex:1;margin-right:1px;">
+  > > <img src="https://greasyfork.s3.us-east-2.amazonaws.com/ulsmh18sxqc091iheagbmh5l7i5z" style="height:100%;width:50%;flex:1;margin-right:1px;">
+  > > </div>
+  > > </details>
+  >
   > 祝你使用愉快！！！
   >
   > ***
