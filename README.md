@@ -84,17 +84,7 @@
   >
   > **Ⅸ.** 聚合图片示例 🆕
   >
-  > > <details>
-  > > <summary>展开 示例</summary>
-  > > <div style="width: 100%;display: flex;">
-  > > <div style="width: 50%;font-weight:900">初始态：</div>
-  > > <div style="width: 50%;font-weight:900">点击后：</div>
-  > > </div>
-  > > <div style="display: flex;">
-  > > <img src="https://greasyfork.s3.us-east-2.amazonaws.com/kbu776v9v0m2def7d1qlbukq58vn" style="height:100%;width:50%;flex:1;margin-right:1px;">
-  > > <img src="https://greasyfork.s3.us-east-2.amazonaws.com/ulsmh18sxqc091iheagbmh5l7i5z" style="height:100%;width:50%;flex:1;margin-right:1px;">
-  > > </div>
-  > > </details>
+  > > [![初始态](https://greasyfork.s3.us-east-2.amazonaws.com/xniyt1ht21qchrtd8ysdinhh4sb7)](https://sleazyfork.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNmlUQVE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--40f97ed117d278fa5e4f44b1b1f620fe6af081f8/example01.jpg?locale=zh-CN)&nbsp;&nbsp;[![打开态](https://greasyfork.s3.us-east-2.amazonaws.com/ouwc8dumxkubgikjr9gneomtyeo9)](https://sleazyfork.org/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBNm1UQVE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--29f97d755a7a770cbcdca2e51c126dd0cdee1a5b/example02.jpg?locale=zh-CN)
   >
   > 祝你使用愉快！！！
   >
