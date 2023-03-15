@@ -2968,12 +2968,10 @@
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-            if (os.isPc) {
-                $("body").css({
-                    "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
-                });
-                $(".page-link").last().prev().prev().after(injectComponent);
-            }
+            $("body").css({
+                "font-family": '-apple-system,BlinkMacSystemFont,Tahoma,Arial,"Hiragino Sans GB","Microsoft YaHei",serif'
+            });
+            $(".page-link").last().prev().prev().after(injectComponent);
         }
     }).collectPics(function (doc, packageLabel) {
         let images;
@@ -3061,7 +3059,6 @@
         }, 100);
     }).switchAggregationBtn(function () {
         //FancyBox
-
         $("div#content>div[style^=text]").hide();
         $("#content>div>img").hide();
         $("table[align]").hide();
@@ -3100,9 +3097,7 @@
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
             }
-            if (os.isPc) {
-                $('#content img').first().parent().prepend(injectComponent);
-            }
+            $('#content img').first().parent().prepend(injectComponent);
         }
     }).collectPics(function (doc) {
         let imgE = [];
