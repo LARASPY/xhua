@@ -5098,10 +5098,12 @@
         $('.content').hide();
         $('.ArticleImageBox').hide();
         $('.article_page').hide();
+        $('.dede_pages').hide();
     }, function () {
         $('.content').show();
         $('.ArticleImageBox').show();
         $('.article_page').show();
+        $('.dede_pages').show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
