@@ -544,7 +544,7 @@
     }
   },
   "美女目录网_list": {
-    "host": "www.mnmulu.com",
+    "host": ["www.mnmulu.com","www.girldir.com"],
     "url": "/(^\\/photos\\/.*_list\\/)|\\/search\\//",
     "blank": 3,
     "pager": {
@@ -556,7 +556,7 @@
     }
   },
   "美女目录网": {
-    "host": "www.mnmulu.com",
+    "host": ["www.mnmulu.com","www.girldir.com"],
     "url": "/^\\/photos\\//",
     "pager": {
       "type": 3,
