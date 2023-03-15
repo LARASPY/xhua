@@ -74,7 +74,7 @@
 // @include      /https?\:\/\/www\.f\d+m(n|m)\.com/
 // @include      /https?\:\/\/www\.446m\.com/
 // @include      /https?\:\/\/www\.elitebabes\.com/
-// @include      /https?\:\/\/m\.kaka234\.cc/
+// @include      /https?\:\/\/(www|m)\.kaka234\.cc/
 // @include      /https?\:\/\/www\.ikmn\.\w{0,3}/
 // @include      /https?\:\/\/cydmyz.com/
 //
@@ -586,7 +586,7 @@
             id: 59,
             name: "卡卡美女",
             hostnames: ["m.kaka234.cc"],
-            pattern: /https?\:\/\/m\.kaka234\.cc/,
+            pattern: /https?\:\/\/(www|m)\.kaka234\.cc/,
             disablepopUpMenu: false,
         },
         ikmn: {
@@ -5095,41 +5095,58 @@
 
     injectBtns().domain(site.kaka234.hostnames).removeAD(function () {
     }).switchAggregationBtn(function () {
-
+        $('.content').hide();
         $('.ArticleImageBox').hide();
+        $('.article_page').hide();
     }, function () {
+        $('.content').show();
         $('.ArticleImageBox').show();
-    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+        $('.article_page').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/(?<=\/).*/m);
+        let match = currentPathname.match(/(?<=\/)(.*\/)(\d*)(_\d*)?\.html/m);
         log("match: \n", match);
-        let search = window.location.search;
-        if (match) {
+        if (!isEmpty(match[0])) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = match[2];
+            let suffixUrl = '.html';
+            let limitPageMatch = null;
+            limitPageMatch = $('.article_page').prop("outerHTML");
+            if (os.isPc) limitPageMatch = $('.dede_pages').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
             let pageUrl;
-            pageUrl = match[0] + search;
-            log('push pageUrl:\n', pageUrl);
-            pageUrls.push(pageUrl);
-            $('.PsBox').after(injectComponent);
-        }
-        let id = setInterval(function () {
-            let item = $("#c_container");
-            if (item) {
-                log("item #", item);
-                clearInterval(id);
-                let imgs = $(document).find(".ArticleImageBox img");
-                log("imgs #", imgs);
-                $.each(imgs.clone(), function (index, value) {
-                    // log("value #", value);
-                    let img = $(value);
-                    img.attr({ 'label': "sl", "data-fancybox": "images", 'id': 'imgLocation' + index, 'width': '100%' });
-                    img.removeAttr("height");
-                    item.append(img);
-                });
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\<a\>.*?(\d+).*?\<\/a\>/m);
+                totalPageCnt = totalPics[1]
+                log('totalPageCnt', totalPageCnt);
             }
-        }, 100);
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i === 1) {
+                    pageUrl = partPreUrl + pageId + suffixUrl;
+                } else {
+                    pageUrl = partPreUrl + pageId + '_' + i + suffixUrl;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+            if (os.isPc) {
+                $('.Title').after(injectComponent);
+            } else {
+                $('.PsBox').after(injectComponent);
+            }
+        }
     }).collectPics(function (doc) {
+        let imgE;
+        imgE = $(doc).find('.ArticleImageBox img,.content img');
+        return imgE;
     }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%',
+            'height': '100%'
+        });
     }).start();
 
     /* --------------------------------------------www.ikmn.top---------------------------------------- */
