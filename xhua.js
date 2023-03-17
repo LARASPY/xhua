@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.42
+// @version      4.43
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -4543,9 +4543,9 @@
         }
     }).collectPics(function (doc) {
         let imgE = []
-        let item = $(doc).find("figure a");
+        let item = $(doc).find("figure a>img,figure img");
         $(item).each(function () {
-            let src = $(this).attr("href");
+            let src = $(this).attr("src");
             imgE.push($("<img src=" + src + "></img>"));
         });
         return $(imgE);
@@ -4763,12 +4763,15 @@
     injectBtns().domain(site.dongtidemi.hostnames).removeAD(function () {
         setInterval(function () {
             $("div[class^=wpcom_myimg]").remove();
+            $(".widget-graphic-cover").remove();
         }, 100);
     }).switchAggregationBtn(function () {
-        $('.entry-content').hide();
+        $('.article-content').hide();
+        $('#posts-pay').hide();
         //android
     }, function () {
-        $('.entry-content').show();
+        $('.article-content').show();
+        $('#posts-pay').hide();
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         //关闭FancyBox缩略图
@@ -4778,7 +4781,7 @@
         if (currentPathname) {
             let pageUrl;
             let PageMatch = null;
-            let pageMatch = $('.entry-head').prop("outerHTML");
+            let pageMatch = $('.article-header').prop("outerHTML");
             log("pageMatch: " + pageMatch);
             let skip = /福利汇/g.exec(pageMatch);
             log("skip: \n", skip);
@@ -4786,7 +4789,7 @@
                 pageUrl = currentPathname;
                 log('push pageUrl:\n', pageUrl);
                 pageUrls.push(pageUrl);
-                $('.entry-head').after(injectComponent);
+                $('.article-header').after(injectComponent);
             }
             GM_addStyle('#c_container img{width: 100%;}');
             let imgs, len;
@@ -4795,7 +4798,7 @@
                 if (item) {
                     log("item #", item);
                     clearInterval(id);
-                    imgs = $(document).find(".entry-content img");
+                    imgs = $(document).find(".article-content img");
                     log("imgs #", imgs);
                     len = imgs.length - 1;
                     $.each(imgs.clone(), function (index, value) {
@@ -4809,7 +4812,7 @@
                     });
                 }
             }, 100);
-            let ContentContainer = document.querySelector(".entry-content");
+            let ContentContainer = document.querySelector(".article-content");
             let configObserver = {
                 childList: true,
                 subtree: true,

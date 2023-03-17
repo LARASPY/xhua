@@ -165,3 +165,15 @@ xchina.tv##.slider-ad
 xchina.tv##div.banner_ad.article > [href]
 xchina.tv##.modal.modalAd
 xchina.tv##.current.blocker.jquery-modal
+
+! 2023-03-15 https://m.entba.net
+m.entba.net##div.web
+
+! 2023-03-16 https://dongti233.com
+||b8971.com
+/https?:\/\/s2\.1231218\.xyz\/uploads\/ad\/.*/$domain=dongti233.com
+dongti233.com##[href="https://b8971.com:1888"]
+dongti233.com##.gutters-5.row
+
+! 2023-03-16 https://m.entba.net
+m.entba.net##[href^="https://solo.rg-finishing.com/c1.html"]
