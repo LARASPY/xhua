@@ -177,3 +177,6 @@ dongti233.com##.gutters-5.row
 
 ! 2023-03-16 https://m.entba.net
 m.entba.net##[href^="https://solo.rg-finishing.com/c1.html"]
+
+! 2023-03-28 https://xchina.tv
+xchina.tv##div.banner_ad.article:style(height:0px !important;padding:0px !important)
