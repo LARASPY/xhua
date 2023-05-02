@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.43
+// @version      4.44
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -50,7 +50,7 @@
 // @include      /https?\:\/\/xartmodel.net/
 // @include      /https?\:\/\/hotgirl.asia/
 // @include      /https?\:\/\/hotgirlchina.com/
-// @include      /https?\:\/\/blog.baobua.com/
+// @include      /https?\:\/\/blog.baobua.(com|net)/
 // @include      /https?\:\/\/buondua.com/
 // @include      /https?\:\/\/www.4kup.net/
 // @include      /https?\:\/\/goddess247.com/
@@ -67,7 +67,7 @@
 // @include      /https?\:\/\/asianpink.net/
 // @include      /https?\:\/\/ryuryu.tw/
 // @exclude      /https?\:\/\/(www|m).xinwenba.net/
-// @include      /https?\:\/\/(www|m).meitu131.com/
+// @include      /https?\:\/\/(www|m).meitu131.(com|net)/
 // @include      /https?\:\/\/dongti(demi)?\w*.(com|net|org)/
 // @include      /https?\:\/\/(www|wap)\.cool18\.com\/(bbs(2|5|6|10)?\/|index.*app=index)/
 // @include      /https?\:\/\/mm.tvv.tw\/archives/
@@ -77,6 +77,11 @@
 // @include      /https?\:\/\/(www|m)\.kaka234\.cc/
 // @include      /https?\:\/\/www\.ikmn\.\w{0,3}/
 // @include      /https?\:\/\/cydmyz.com/
+// @include      /https?\:\/\/.*\/htm_(data|mob)\/\d*\/(8|16)\/\d*\.html/
+// @include      /https?\:\/\/bestgirlsexy\.com/
+// @include      /https?\:\/\/www\.imagefap\.com/
+// @include      /https?\:\/\/www\.cos6\.net/
+// @include      /https?\:\/\/www\.coszip\.com/
 //
 // @exclude      /https?\:\/\/www\.youtube\.com/
 // @connect      *
@@ -418,14 +423,14 @@
             id: 37,
             name: "BAOBUA.COM",
             hostnames: ["blog.baobua.com"],
-            pattern: /https?\:\/\/blog.baobua.com/,
+            pattern: /https?\:\/\/blog.baobua.(com|net)/,
             disablepopUpMenu: false,
         },
         buondua: {
             id: 38,
             name: "Buon Dua",
             hostnames: ["buondua.com"],
-            pattern: /https?\:\/\/buondua.com/,
+            pattern: /https?\:\/\/buondua.com\//,
             disablepopUpMenu: false,
         },
         _4kup: {
@@ -537,7 +542,7 @@
             id: 54,
             name: "MEITU131",
             hostnames: ["www.meitu131.com"],
-            pattern: /https?\:\/\/(www|m).meitu131.com/,
+            pattern: /https?\:\/\/(www|m).meitu131.(com|net)/,
             disablepopUpMenu: false,
         },
         dongtidemi: {
@@ -603,6 +608,41 @@
             pattern: /https?\:\/\/cydmyz.com/,
             disablepopUpMenu: false,
         },
+        t66y: {
+            id: 62,
+            name: "草榴社區",
+            hostnames: ["www.t66y.com"],
+            pattern: /https?\:\/\/.*\/htm_(data|mob)\/\d*\/(8|16)\/\d*\.html/,
+            disablepopUpMenu: false,
+        },
+        bestgirlsexy: {
+            id: 63,
+            name: "BestGirlSexy",
+            hostnames: ["bestgirlsexy.com"],
+            pattern: /https?\:\/\/bestgirlsexy\.com/,
+            disablepopUpMenu: false,
+        },
+        imagefap: {
+            id: 64,
+            name: "Image Fap",
+            hostnames: ["www.imagefap.com"],
+            pattern: /https?\:\/\/www\.imagefap\.com\/(pictures|gallery)\//,
+            disablepopUpMenu: false,
+        },
+        cos6: {
+            id: 65,
+            name: "绅士猫",
+            hostnames: ["www.cos6.net"],
+            pattern: /https?\:\/\/www\.cos6\.net/,
+            disablepopUpMenu: false,
+        },
+        coszip: {
+            id: 66,
+            name: "coszip",
+            hostnames: ["www.coszip.com"],
+            pattern: /https?\:\/\/www\.coszip\.com/,
+            disablepopUpMenu: false,
+        },
     }, imagePluginSwitch = [{
         isFancyBox: true,
         isFancyBoxFullScreen: false,
@@ -637,9 +677,9 @@
             if (isDebug) log("Header # ", o);
             return o;
         },
-        //获取参数
+        //获取参数 http://test.html?isreturn=1&state=102
         getParam: function (dest, name) {
-            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+            let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", 'i');
             let r = dest.match(reg);
             if (r != null) return decodeURI(r[2]);
             return null;
@@ -773,7 +813,7 @@
     }
     //处理site
     function activeCurrentUrl() {
-        let origin = window.location.origin;
+        let href = window.location.href;
         let hostName = window.location.hostname;
         let hostnameArry = null;
         let meet = function (domain) {
@@ -792,11 +832,10 @@
         };
         for (let key in site) {
             if (!isEmpty(site[key].pattern)) {
-                hostnameArry = site[key].pattern.exec(origin);
+                hostnameArry = site[key].pattern.exec(href);
                 if (hostnameArry != null) {
-                    let urlHostName = hostnameArry[0].replace(/https?:\/\//i, "");
-                    site[key].hostnames.push(urlHostName);
-                    log(site[key].name, " : ", "add new hostName: ", urlHostName);
+                    site[key].hostnames.push(hostName);
+                    log(site[key].name, " : ", "add new hostName: ", hostName);
                 }
             } else {
                 log(site[key].name, " : ", 'pattern is empty, never add new hostName.');
@@ -1468,21 +1507,23 @@
                                             // log('html==>', html);
                                             let parser = new DOMParser();
                                             let doc = parser.parseFromString(html, "text/html");
-                                            let imgObj = parseImgsFunc(doc, packageLabel);
+                                            let imgObj = parseImgsFunc(doc, packageLabel, _i);
                                             let imgContainerCssSelector = '#c_' + _i;
                                             log(imgContainerCssSelector);
-                                            $(imgObj).each(function (index) {
-                                                $(this).attr("id", "image");
-                                                log(index, ':\n', $(this).prop('outerHTML'));
-                                                // log(index, ':\n', $(this));
-                                                if (imgStyleFunc) {
-                                                    imgStyleFunc($(this)[0]);
-                                                } else {
-                                                    $(this)[0].style = "width: 100%;height: 100%";
-                                                }
-                                                $(this).attr({ 'label': 'sl' });
-                                                $(imgContainerCssSelector).append('<div class="sl-c-pic">' + $(this).prop('outerHTML') + '</div>');
-                                            });
+                                            if (!isEmpty(imgObj)) {
+                                                $(imgObj).each(function (index) {
+                                                    $(this).attr("id", "image");
+                                                    log(index, ':\n', $(this).prop('outerHTML'));
+                                                    // log(index, ':\n', $(this));
+                                                    if (imgStyleFunc) {
+                                                        imgStyleFunc($(this)[0]);
+                                                    } else {
+                                                        $(this)[0].style = "width: 100%;height: 100%";
+                                                    }
+                                                    $(this).attr({ 'label': 'sl' });
+                                                    $(imgContainerCssSelector).append('<div class="sl-c-pic">' + $(this).prop('outerHTML') + '</div>');
+                                                });
+                                            }
                                             let ContentContainer = document.querySelector("#c_container");
                                             let configObserver = {
                                                 childList: true,
@@ -3827,48 +3868,30 @@
         }, 100);
     }).switchAggregationBtn(function () {
 
-        $('#myimg').hide();
+        $('.carousel,.slide').hide();
+        $('.galeria_img').hide();
         $('#pagination').hide();
         //android
     }, function () {
-        $('#myimg').show();
+        $('.carousel,.slide').show();
+        $('.galeria_img').show();
         $('#pagination').show();
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/\/.*?\//m);
+        let match = currentPathname.match(/(?<=\/).*/im);
         log("match: \n", match);
         if (match) {
-            let totalPageCnt = 1;
-            let partPreUrl = match[0];
-            let pageId = '';
-            let suffixUrl = '/';
-            let limitPageMatch = $('#pagination').prop("outerHTML");
-            log("limitPageMatch: " + limitPageMatch);
-            let pageUrl;
-            if (limitPageMatch != null) {
-                let totalPics = limitPageMatch.match(/\d+(?=<\/a>)/g);
-                totalPageCnt = Math.max.apply(null, totalPics);
-                log('totalPageCnt', totalPageCnt);
-            }
-            for (let i = 1; i <= totalPageCnt; i++) {
-                if (i == 1) {
-                    pageUrl = partPreUrl + pageId + suffixUrl;
-                } else {
-                    pageUrl = partPreUrl + pageId + i + suffixUrl;
-                }
-                log('push pageUrl:\n', pageUrl);
-                pageUrls.push(pageUrl);
-            }
-            $('#myimg').parent().prepend(injectComponent);
+            pageUrls.push(match[0] + "?stype=slideshow");
+            $('.mx-auto').after(injectComponent);
         }
     }).collectPics(function (doc) {
         let imgE = [];
-        let item = $(doc).find("#myimg img");
+        let item = $(doc).find(".carousel-inner img");
         $(item).each(function () {
             let src = $(this).attr("src");
-            imgE.push($(`<img src=${src}>`));
+            if (src) { imgE.push($(this)); }
         });
         log("imgE: \n" + imgE);
         return $(imgE);
@@ -3982,22 +4005,23 @@
             $("#popUpLinks a").css("color", "black");
         }, 100);
     }).switchAggregationBtn(function () {
-
         $('.article-fulltext').hide();
         $('.pagination').hide();
+        $('.article-tags').first().nextAll().filter("hr").hide();
         //android
     }, function () {
         $('.article-fulltext').show();
         $('.pagination').show();
+        $('.article-tags').first().nextAll().filter("hr").show();
         //android
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/\/(.*)/m);
+        let match = currentPathname.match(/(?<=\/).+/m);
         log("match: \n", match);
         if (match) {
             let totalPageCnt = 1;
-            let partPreUrl = match[1];
+            let partPreUrl = match[0];
             let pageId = '';
             let suffixUrl = '';
             let limitPageMatch = $('.pagination').prop("outerHTML");
@@ -4195,10 +4219,9 @@
             $("[src*='.gif']").parent().remove();
         }, 100);
     }).switchAggregationBtn(function () {
-
-        $(".thumbnail").parent().hide();
+        $("#dnav").prev().hide();
     }, function () {
-        $(".thumbnail").parent().show();
+        $("#dnav").prev().show();
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
@@ -4226,11 +4249,12 @@
             //     log('push pageUrl:\n', pageUrl);
             //     pageUrls.push(pageUrl);
             // }
-            pageUrls.push(match);
+            pageUrls.push(match[0]);
             $('.title').first().parent().after(injectComponent);
+            // $('.title').last().after($("#dnav").clone());
         }
     }).collectPics(async function (doc) {
-        let item = $(doc).find(".thumbnail");
+        let item = $("#dnav").prev().find("a");
         let aImgS = [];
         let locateIndex = 0;
         $.each(item, function (index, value) {
@@ -4274,20 +4298,19 @@
                     ),
                     method: 'GET',
                     onload: function (response) {
-                        try {
-                            if (response && response.status && response.status >= 200 && response.status < 300) {
-                                let html = response.responseText;
-                                let parser = new DOMParser();
-                                let doc = parser.parseFromString(html, "text/html");
-                                let item = $(doc).find(".img-res");
-                                parseImgsFunc(item, aImgS[i]);
-                                num++;
-                                if (num === aImgS.length) {
-                                    resolve();
-                                }
+                        if (response && response.status && response.status >= 200 && response.status < 300) {
+                            let html = response.responseText;
+                            let parser = new DOMParser();
+                            let doc = parser.parseFromString(html, "text/html");
+                            let item = $(doc).find(".img-res");
+                            if (item.length == 0) throw new Error("图片集合为空");
+                            parseImgsFunc(item, aImgS[i]);
+                            num++;
+                            if (num === aImgS.length) {
+                                resolve();
                             }
-                        } catch (error) {
-                            err('处理获取到的图片网页时出现问题，请检查！', e, response.responseText);
+                        } else {
+                            err('处理获取到的图片网页时出现问题，请检查！', response.responseText);
                         }
                     },
                     onerror: function (response) {
@@ -4295,6 +4318,8 @@
                     }
                 });
             }
+        }).catch((error) => {
+            err(error);
         });
     }).start();
 
@@ -4861,7 +4886,7 @@
         $('.show_content pre center').show();
         //android
         $('.article-content').show();
-    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
@@ -4914,7 +4939,7 @@
     }, function () {
         $('.blog-details-text').show();
         //android
-    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
@@ -4957,7 +4982,7 @@
     }, function () {
         $('#masonry').show();
         //android
-    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
@@ -5003,7 +5028,7 @@
     }, function () {
         $('.post-content p').show();
         //android
-    }).injectAggregationRef(async function (injectComponent, pageUrls) {
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
         let match = currentPathname.match(/(?<=\/).*/m);
@@ -5252,4 +5277,320 @@
     }, function (imgE) {
     }).start();
 
+    /* --------------------------------------------www.t66y.com---------------------------------------- */
+
+    injectBtns().domain(site.t66y.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+
+        curSite.isAdjustDomainName = true;
+        $('#conttpc').hide();
+
+        //android
+        $('#main>.tpc_cont').hide();
+    }, function () {
+        $('#conttpc').show();
+        //android
+        $('#main>.tpc_cont').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            let item = $('.f16');
+            if (item.length > 0) {
+                item.after(injectComponent);
+            } else {
+                $('#main>.tpc_cont').prev().after(injectComponent);
+            }
+        }
+        GM_addStyle('div#c_container{display:block;text-align:-webkit-center}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                let div_ = $('<div class="tpc_content do_not_catch"></div>');
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find("#conttpc img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    $(value).css({ "max-width": "100%", "padding": "5px 10px", "text-align": "left" })
+                    $(value).attr({ 'label': "sl", 'data-fancybox': 'images', 'id': 'imgLocation' + index })
+                    div_.append($(value));
+                });
+                item.append($(div_));
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------bestgirlsexy.com---------------------------------------- */
+
+    injectBtns().domain(site.bestgirlsexy.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+
+        curSite.isAdjustDomainName = true;
+        $('.elementor-widget-container>p').last().hide();
+        //android
+
+    }, function () {
+        $('.elementor-widget-container>p').last().show();
+        //android
+
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.elementor-widget-container>p').last().prev().after(injectComponent);
+        }
+        GM_addStyle('div#c_container{display:block;text-align:-webkit-center}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                let div_ = $('<div class="tpc_content do_not_catch"></div>');
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $('.elementor-widget-container>p').last().find("img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    $(value).css({ "max-width": "100%", "padding": "5px 10px", "text-align": "left" })
+                    $(value).attr({ 'label': "sl", 'data-fancybox': 'images', 'id': 'imgLocation' + index })
+                    div_.append($(value));
+                });
+                item.append($(div_));
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.imagefap.com-------------------------------------- */
+
+    injectBtns().domain(site.imagefap.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        $("#gallery>table").hide();
+        $("#gallery>form").hide();
+    }, function () {
+        $("#gallery>table").show();
+        $("#gallery>form").show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        if (!(match[0] === '')) {
+            pageUrls.push(match);
+            if ($("#gallery>form").length > 0) {
+                $("#gallery>form").prev().after(injectComponent);
+            } else {
+                $("#gallery>center").after(injectComponent);
+                $("#gallery>table").after($("#gallery>center").clone());
+            }
+        }
+    }).collectPics(async function (doc, packageLabel, index) {
+        let gallery = $(document).find("#gallery");
+        let a_tags = gallery.find("table a");
+        let a_imgDicts = [];
+        let locateIndex = 0;
+        let imgContainerCssSelector = '#c_' + index;
+        $("#injectComponent").append($("<span id='error_'></span>"));
+        $.each(a_tags, function (index, value) {
+            let src = $(value).attr("href");
+            src = window.location.origin + src;
+            a_imgDicts.push({ "src": src, "value": $(value).children()[0], "index": index });
+        });
+        // debugger
+        function parseImgsFunc(img, imgTagDict) {
+            let src = undefined;
+            if (img.length <= 0) {
+                src = $(imgTagDict.value).attr("src")
+                console.error("部分图片丢失！！！\n添加原生模糊图片 # ", imgTagDict.value);
+            } else {
+                src = $(img).attr("src");
+            }
+            let img_new = $("<img src=" + src + "></img>")
+            if (imgStyleFunc) {
+                imgStyleFunc(img_new);
+            } else {
+                img_new.style = "width: 100%;height: 100%";
+            }
+            img_new.attr({ 'label': 'sl', "tabindex": "-1", "id": "imgLocation" + locateIndex });
+            locateIndex++;
+            $(imgContainerCssSelector).append(img_new.prop('outerHTML'));
+            // log("outerHTML:\n", img_new.prop("outerHTML"));
+        }
+        function imgStyleFunc(imgE) {
+            $(imgE).attr({
+                'data-fancybox': 'images',
+                'width': '100%'
+            });
+        }
+
+        await new Promise((resolve, reject) => {
+            let num = 0;
+            for (let i = 0; i < a_imgDicts.length; i++) {
+                let pageUrl = a_imgDicts[i].src;
+                Alpha_Script.obtainHtml({
+                    url: pageUrl,
+                    headers: Alpha_Script.parseHeaders(
+                        "Accept:application/.*\n" +
+                        "cookie:" + document.cookie + "\n" +
+                        'User-Agent' + navigator.userAgent + "\n"
+                    ),
+                    method: 'GET',
+                    onload: function (response) {
+                        if (response && response.status && response.status >= 200 && response.status < 300) {
+                            let html = response.responseText;
+                            let parser = new DOMParser();
+                            let doc = parser.parseFromString(html, "text/html");
+                            let img = doc.querySelectorAll("#mainPhoto");
+                            if (img.length == 0) { img = doc.querySelectorAll(".slideshow img"); }
+                            if (img.length == 0) {
+                                let error_ = doc.querySelector(".text-center").innerText.replace(/^\s+|\s+$/g, "");
+                                $("#error_").text(error_);
+                                setTimeout(() => { window.location.assign("https://www.imagefap.com/human-verification"); }, 1000);
+                                // return new Promise().reject("图片集合为空: " + error_);
+                                throw new Error("图片集合为空: " + error_);
+                            } else {
+                                parseImgsFunc(img, a_imgDicts[i]);
+                                num++;
+                                if (num === a_imgDicts.length) {
+                                    resolve();
+                                }
+                            }
+                        }
+                    },
+                    onerror: function (response) {
+                        log('URL：' + pageUrl, response)
+                    }
+                });
+            }
+        }).catch((error) => {
+            err(error);
+        });
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.cos6.net------------------------------------------ */
+
+    injectBtns().domain(site.cos6.hostnames).removeAD(function () {
+    }).switchAggregationBtn(function () {
+        curSite.isAdjustDomainName = true;
+        $('.article-content').hide();
+        //android
+    }, function () {
+        $('.article-content').show();
+        //android
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/).*/m);
+        log("match: \n", match);
+        let search = window.location.search;
+        if (match) {
+            let pageUrl;
+            pageUrl = match[0] + search;
+            log('push pageUrl:\n', pageUrl);
+            pageUrls.push(pageUrl);
+            $('.article-header').after(injectComponent);
+        }
+        GM_addStyle('div#c_container{display:block;text-align:-webkit-center}');
+        let id = setInterval(function () {
+            let item = $("#c_container");
+            if (item) {
+                log("item #", item);
+                clearInterval(id);
+                let imgs = $(document).find(".article-content img");
+                log("imgs #", imgs);
+                $.each(imgs.clone(), function (index, value) {
+                    // log("value #", value);
+                    $(value).css({ "max-width": "100%", "padding": "5px 10px", "text-align": "left" });
+                    $(value).attr({ 'label': "sl", 'data-fancybox': 'images', 'id': 'imgLocation' + index });
+                    item.append($(value));
+                });
+            }
+        }, 100);
+    }).collectPics(function (doc) {
+    }, function (imgE) {
+    }).start();
+
+    /* --------------------------------------------www.coszip.com--------------------------------------- */
+
+    injectBtns().domain(site.coszip.hostnames).removeAD(function () {
+        GM_addStyle(".header{z-index: unset !important;}")
+    }).switchAggregationBtn(function () {
+        //Function.prototype.constructor = function(){} 无限debugger
+        $('.no_navtext').prev().hide();
+        $('.no_navtext').hide();
+    }, function () {
+        $('.no_navtext').prev().show();
+        $('.no_navtext').show();
+    }).injectAggregationRef(function (injectComponent, pageUrls) {
+        let currentPathname = window.location.pathname;
+        log("currentPathname: \n", currentPathname);
+        let match = currentPathname.match(/(?<=\/)(.*\.html)\/?(\d*)/im);
+        log("match: \n", match);
+        if (match) {
+            let totalPageCnt = 1;
+            let partPreUrl = match[1];
+            let pageId = '';
+            let suffixUrl = '';
+            let limitPageMatch = $('.nav_link').prop("outerHTML");
+            log("limitPageMatch: " + limitPageMatch);
+            let pageUrl;
+            if (limitPageMatch != null) {
+                let totalPics = limitPageMatch.match(/\d+(?=(|\s+)\<\/a\>)/g);
+                if (!isEmpty(totalPics)) {
+                    totalPageCnt = Math.max.apply(null, totalPics);
+                }
+                log('totalPageCnt: ', totalPageCnt);
+            }
+            for (let i = 1; i <= totalPageCnt; i++) {
+                if (i == 1) {
+                    pageUrl = partPreUrl;
+                } else {
+                    pageUrl = partPreUrl + "/" + i;
+                }
+                log('push pageUrl:\n', pageUrl);
+                pageUrls.push(pageUrl);
+            }
+        }
+        GM_addStyle('#injectComponentIn>input{height: unset !important;}');
+        let item = $('pre[data-amp-original-style]');
+        if (item.length > 0) {
+            item.after(injectComponent);
+        } else {
+            $('.content-inner').prepend(injectComponent);
+        }
+
+    }).collectPics(function (doc) {
+        let imgE = [];
+        let item = $(doc).find(".content-inner img");
+        $(item).each(function () {
+            let src = $(this).attr("src");
+            imgE.push($(`<img src=${src}>`));
+        });
+        log("imgE: \n" + imgE);
+        return $(imgE);
+    }, function (imgE) {
+        $(imgE).attr({
+            'data-fancybox': 'images',
+            'width': '100%'
+        });
+    }).start();
 })();

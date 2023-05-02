@@ -328,7 +328,8 @@
       "www.lunu.cc",
       "www.97mm.cc",
       "97mm.cc",
-      "www.63mm.cc"
+      "www.63mm.cc",
+      "26mm.cc"
     ],
     "url": "/^\\/(post|web)\\//",
     "style": "img[src$='.gif'] {display: none !important;}",
@@ -352,7 +353,8 @@
       "www.lunu.cc",
       "www.97mm.cc",
       "97mm.cc",
-      "www.63mm.cc"
+      "www.63mm.cc",
+      "26mm.cc"
     ],
     "url": "return !fun.indexOF(/^\\/(post|web)\\//)",
     "style": "img[src$='.gif'] {display: none !important;}",
@@ -520,7 +522,7 @@
     }
   },
   "Hit-x-Hot": {
-    "host": "hitxhot.com",
+    "host": ["hitxhot.com","hitxhot.org"],
     "url": "/\\/gallerys/",
     "style": ".contain.refill:not(.relatedvideos) {display: none !important;}",
     "pager": {
@@ -534,7 +536,7 @@
     }
   },
   "Hit-x-Hot_分类": {
-    "host": "hitxhot.com",
+    "host": ["hitxhot.com","hitxhot.org"],
     "url": "return !fun.indexOF(/\\/gallerys/)",
     "blank": 3,
     "pager": {
@@ -960,6 +962,18 @@
       "nextL": "a.nextpostslink",
       "pageE": ".modern-articles>li",
       "replaceE": ".wp-pagenavi"
+    }
+  },
+  "thread0806_t66y": {
+    "host": "/.*/",
+    "url": "return (fun.getOne('body>#main+center.gray>a') && fun.indexOF(/\\/thread0806.php/))",
+    "pager": {
+      "type": 3,
+      "nextL": "(//*[@class='pages']//a[contains(text(),'下一')])[last()]",
+      "pageE": "table~.list.t_one,table~.line,#tbody>tr",
+      "replaceE": ".pages",
+      "scrollE":"(//*[@class='pages'])[last()]",
+      "scrollD": 500
     }
   }
 }

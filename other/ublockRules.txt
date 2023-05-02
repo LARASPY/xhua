@@ -28,8 +28,13 @@ www.micmicidol.club##+js(abort-current-inline-script,window.alert,/WARNING! Adul
 ||j8.vjksa.com$image
 ||t01.gqvdcek.cn^$script
 
+! 秀人美女网
 ! 2022-08-31 https://www.xrmn5.com
 ||baby.thinkmore.top$image
+! 2023-04-30 https://www.xrmnw.xyz
+||x.20dh.top/img/20230415.gif$image
+||www.xrmnw.xyz/img/down.js$script
+/https?:\/\/tj\.xiurenb\.top\/g\d{2}\.js/$domain=www.xrmnw.xyz
 
 ! 2022-09-02 https://www.xgmn09.com
 ||xn--2qux23cwrdmnaz3gj3w.xn$script
@@ -180,3 +185,17 @@ m.entba.net##[href^="https://solo.rg-finishing.com/c1.html"]
 
 ! 2023-03-28 https://xchina.tv
 xchina.tv##div.banner_ad.article:style(height:0px !important;padding:0px !important)
+
+! 18comic 漫画
+! 2023-04-30 https://18comic.vip
+! 國際通用網域
+18comic.vip##.in.fade.modal-backdrop
+18comic.org##.in.fade.modal-backdrop
+18comic2.one##.in.fade.modal-backdrop
+! 東南亞路線
+jmcomic1.me##.in.fade.modal-backdrop
+jmcomic.me##.in.fade.modal-backdrop
+! 內地網域
+jm-comic2.cc##.in.fade.modal-backdrop
+jm-comic.org##.in.fade.modal-backdrop
+jmcomic2.group##.in.fade.modal-backdrop
