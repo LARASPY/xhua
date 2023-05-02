@@ -4,7 +4,7 @@
 // @name:zh-TW   圖聚合展示by xhua
 // @name:en      Image aggregation display by xhua
 // @namespace    https://greasyfork.org/zh-CN/scripts/442098-%E5%9B%BE%E8%81%9A%E5%90%88%E5%B1%95%E7%A4%BAby-xhua
-// @version      4.44
+// @version      4.45
 // @description  目标是聚合网页美女图
 // @description:zh-TW 目標是聚合網頁美女圖
 // @description:en  The goal is to aggregate web beauty images
@@ -77,7 +77,7 @@
 // @include      /https?\:\/\/(www|m)\.kaka234\.cc/
 // @include      /https?\:\/\/www\.ikmn\.\w{0,3}/
 // @include      /https?\:\/\/cydmyz.com/
-// @include      /https?\:\/\/.*\/htm_(data|mob)\/\d*\/(8|16)\/\d*\.html/
+// @include      /https?\:\/\/.*\/htm_(data|mob)\/\d*\/\d*\/\d*\.html/
 // @include      /https?\:\/\/bestgirlsexy\.com/
 // @include      /https?\:\/\/www\.imagefap\.com/
 // @include      /https?\:\/\/www\.cos6\.net/
@@ -612,7 +612,7 @@
             id: 62,
             name: "草榴社區",
             hostnames: ["www.t66y.com"],
-            pattern: /https?\:\/\/.*\/htm_(data|mob)\/\d*\/(8|16)\/\d*\.html/,
+            pattern: /https?\:\/\/.*\/htm_(data|mob)\/\d*\/\d+\/\d*\.html/,
             disablepopUpMenu: false,
         },
         bestgirlsexy: {
@@ -5280,11 +5280,23 @@
     /* --------------------------------------------www.t66y.com---------------------------------------- */
 
     injectBtns().domain(site.t66y.hostnames).removeAD(function () {
+        let match = location.pathname.match(/(?<=\/)htm_mob\/\d*\/(4|2)\/\d*\.html/m);
+        // https://cl.6962x.xyz/htm_mob/2305/2/5692588.html
+        // https://cl.6962x.xyz/htm_mob/2305/4/5692632.html
+        if (match[1]) {
+            log("htm_mob: ", match);
+            $(".f24").last().prevAll().remove();
+            $(".f24").remove();
+            let item = $(".sptable_do_not_remove").parent();
+            item.prev().filter(".tpc_icon").remove();
+            item.next().filter(".line").remove();
+            item.remove();
+            $("span[class^='f']").parent().remove();
+            $("#conttpc>img[data-link]").not("#conttpc>img[data-link*=\"img.blr844.com\"]").first().nextUntil("a[target='_blank']").remove();
+        }
     }).switchAggregationBtn(function () {
-
         curSite.isAdjustDomainName = true;
         $('#conttpc').hide();
-
         //android
         $('#main>.tpc_cont').hide();
     }, function () {
@@ -5294,10 +5306,10 @@
     }).injectAggregationRef(function (injectComponent, pageUrls) {
         let currentPathname = window.location.pathname;
         log("currentPathname: \n", currentPathname);
-        let match = currentPathname.match(/(?<=\/).*/m);
+        let match = currentPathname.match(/(?<=\/)htm_(?:data|mob)\/\d*\/(\d+)\/\d*\.html/m);
         log("match: \n", match);
         let search = window.location.search;
-        if (match) {
+        if (match[1] == 8 | match[1] == 16) {
             let pageUrl;
             pageUrl = match[0] + search;
             log('push pageUrl:\n', pageUrl);
