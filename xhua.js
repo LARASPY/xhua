@@ -5283,7 +5283,7 @@
         let match = location.pathname.match(/(?<=\/)htm_mob\/\d*\/(4|2)\/\d*\.html/m);
         // https://cl.6962x.xyz/htm_mob/2305/2/5692588.html
         // https://cl.6962x.xyz/htm_mob/2305/4/5692632.html
-        if (match[1]) {
+        if (match) {
             log("htm_mob: ", match);
             $(".f24").last().prevAll().remove();
             $(".f24").remove();
